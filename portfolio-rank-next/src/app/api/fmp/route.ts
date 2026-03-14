@@ -13,14 +13,6 @@ interface FMPResultError {
 export type FMPResultItem = FMPResultSuccess | FMPResultError;
 
 export async function GET(request: NextRequest) {
-  const apiKey = process.env.FMP_API_KEY;
-  if (!apiKey || apiKey.trim() === "") {
-    return NextResponse.json(
-      { error: "FMP API is not configured" },
-      { status: 503 }
-    );
-  }
-
   const { searchParams } = new URL(request.url);
   const tickersParam = searchParams.get("tickers");
   if (!tickersParam || tickersParam.trim() === "") {
@@ -46,7 +38,7 @@ export async function GET(request: NextRequest) {
 
   for (const ticker of tickers) {
     try {
-      const profile = await fetchCompanyProfile(ticker, apiKey);
+      const profile = await fetchCompanyProfile(ticker);
       results.push(profile);
     } catch {
       results.push({ symbol: ticker, error: true });

@@ -1,20 +1,9 @@
+import YahooFinance from "yahoo-finance2";
+
 /**
- * FMP (Financial Modeling Prep) API helpers.
- * Used only by server-side API routes. Never expose API key to client.
+ * Profile shape returned by our proxy.
+ * Mirrors the previous FMP-based structure so the rest of the app can stay the same.
  */
-
-const FMP_PROFILE_URL = "https://financialmodelingprep.com/api/v3/profile";
-
-/** Raw profile object from FMP API (only fields we use) */
-export interface FMPProfileRaw {
-  symbol: string;
-  sector: string | null;
-  beta: number | null;
-  mktCap: number | null;
-  volAvg: number | null;
-}
-
-/** Extracted profile shape returned by the proxy */
 export interface FMPProfile {
   symbol: string;
   sector: string | null;
@@ -25,56 +14,56 @@ export interface FMPProfile {
 
 const CACHE_TTL_MS = 60 * 60 * 1000; // 60 minutes
 
-const cache = new Map<
-  string,
-  { data: FMPProfile; fetchedAt: number }
->();
+const cache = new Map<string, { data: FMPProfile; fetchedAt: number }>();
 
 function isExpired(entry: { fetchedAt: number }): boolean {
   return Date.now() - entry.fetchedAt > CACHE_TTL_MS;
 }
 
+// Minimal subset of the yahoo-finance2 quoteSummary shape that we care about.
+interface QuoteSummaryPrice {
+  marketCap?: number | null;
+  averageVolume?: number | null;
+}
+
+interface QuoteSummarySummaryDetail {
+  beta?: number | null;
+}
+
+interface QuoteSummaryAssetProfile {
+  sector?: string | null;
+}
+
+interface QuoteSummaryResult {
+  price?: QuoteSummaryPrice;
+  summaryDetail?: QuoteSummarySummaryDetail;
+  assetProfile?: QuoteSummaryAssetProfile;
+}
+
 /**
- * Fetch company profile for one ticker from FMP.
- * Uses in-memory cache (60 min TTL). Does not expose API key.
+ * Fetch company profile for one ticker using yahoo-finance2.
+ * Uses in-memory cache (60 min TTL) and does not require any API key.
  */
-export async function fetchCompanyProfile(
-  ticker: string,
-  apiKey: string
-): Promise<FMPProfile> {
+export async function fetchCompanyProfile(ticker: string): Promise<FMPProfile> {
   const key = ticker.toUpperCase();
   const cached = cache.get(key);
   if (cached && !isExpired(cached)) {
     return cached.data;
   }
 
-  const url = `${FMP_PROFILE_URL}/${encodeURIComponent(ticker)}?apikey=${encodeURIComponent(apiKey)}`;
-  const res = await fetch(url, { next: { revalidate: 0 } });
+  const yahooFinance = new YahooFinance();
+  const result = (await yahooFinance.quoteSummary(key, {
+    modules: ["assetProfile", "summaryDetail", "price"],
+  })) as QuoteSummaryResult;
 
-  if (!res.ok) {
-    throw new Error(`FMP request failed: ${res.status}`);
-  }
-
-  const json = (await res.json()) as FMPProfileRaw[] | { "Error Message"?: string };
-  if (Array.isArray(json) && json.length === 0) {
-    throw new Error("Ticker not found");
-  }
-  if (!Array.isArray(json) || json.length === 0) {
-    const msg = typeof (json as { "Error Message"?: string })["Error Message"] === "string"
-      ? (json as { "Error Message": string })["Error Message"]
-      : "Invalid response";
-    throw new Error(msg);
-  }
-
-  const raw = json[0] as FMPProfileRaw;
-  const data: FMPProfile = {
-    symbol: raw.symbol ?? ticker.toUpperCase(),
-    sector: raw.sector ?? null,
-    beta: raw.beta ?? null,
-    mktCap: raw.mktCap ?? null,
-    volAvg: raw.volAvg ?? null,
+  const profile: FMPProfile = {
+    symbol: key,
+    sector: result.assetProfile?.sector ?? null,
+    beta: result.summaryDetail?.beta ?? null,
+    mktCap: result.price?.marketCap ?? null,
+    volAvg: result.price?.averageVolume ?? null,
   };
 
-  cache.set(key, { data, fetchedAt: Date.now() });
-  return data;
+  cache.set(key, { data: profile, fetchedAt: Date.now() });
+  return profile;
 }
