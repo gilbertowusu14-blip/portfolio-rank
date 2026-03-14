@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 const STORAGE_KEY = "portfolio-rank-form";
 
@@ -50,11 +51,14 @@ function labelColor(label: string): string {
 }
 
 function ResultPage() {
+  const searchParams = useSearchParams();
   const [stored, setStored] = useState<StoredForm | null>(null);
   const [score, setScore] = useState<ScoreResult | null>(null);
   const [ai, setAi] = useState<AiNarrative | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [unlockLoading, setUnlockLoading] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -68,13 +72,21 @@ function ResultPage() {
       try {
         const raw = window.localStorage.getItem(STORAGE_KEY);
         if (raw) {
-          parsed = JSON.parse(raw) as StoredForm;
+          const data = JSON.parse(raw) as unknown;
+          if (
+            data &&
+            typeof data === "object" &&
+            Array.isArray((data as StoredForm).holdings) &&
+            (data as StoredForm).holdings.length > 0
+          ) {
+            parsed = data as StoredForm;
+          }
         }
       } catch {
         parsed = null;
       }
 
-      if (!parsed || parsed.holdings.length === 0) {
+      if (!parsed) {
         if (!cancelled) {
           setStored(null);
           setScore(null);
@@ -149,6 +161,67 @@ function ResultPage() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    const unlocked = searchParams.get("unlocked");
+    const sessionId = searchParams.get("session_id");
+    if (unlocked !== "true" || !sessionId?.trim()) return;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(
+          `/api/verify-payment?session_id=${encodeURIComponent(sessionId)}`
+        );
+        if (!res.ok) return;
+        const data = (await res.json()) as { paid: boolean; sessionData?: string };
+        if (!cancelled && data.paid) {
+          setIsUnlocked(true);
+        }
+      } catch {
+        // ignore
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [searchParams]);
+
+  async function handleUnlock() {
+    const raw = typeof window !== "undefined" ? window.localStorage.getItem(STORAGE_KEY) : null;
+    if (!raw) {
+      setError("No portfolio data found. Please analyse a portfolio first.");
+      return;
+    }
+    let portfolioData: unknown;
+    try {
+      portfolioData = JSON.parse(raw);
+    } catch {
+      setError("Invalid portfolio data.");
+      return;
+    }
+    const sessionData = btoa(
+      encodeURIComponent(JSON.stringify(portfolioData))
+    );
+    setUnlockLoading(true);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionData }),
+      });
+      const json = (await res.json()) as { url?: string; error?: string };
+      if (!res.ok || !json.url) {
+        setError(json.error ?? "Checkout failed. Try again.");
+        return;
+      }
+      window.location.href = json.url;
+    } catch {
+      setError("Checkout failed. Try again.");
+    } finally {
+      setUnlockLoading(false);
+    }
+  }
 
   const scoreValue = score?.score ?? null;
   const label = score?.label ?? "Strong";
@@ -292,11 +365,12 @@ function ResultPage() {
           </div>
         </section>
 
-        {/* Locked section with blur */}
+        {/* Full report section — blurred when locked */}
         <section className="relative mb-16">
-          {/* Blurred premium content */}
           <div className="rounded-2xl border border-zinc-800 bg-zinc-950/80 px-4 py-5 space-y-5 overflow-hidden">
-            <div className="blur-sm pointer-events-none opacity-60">
+            <div
+              className={isUnlocked ? "" : "blur-sm opacity-60"}
+            >
               {/* Subscores */}
               {score && (
                 <div className="space-y-3 mb-4">
@@ -383,7 +457,8 @@ function ResultPage() {
               )}
             </div>
 
-            {/* Dark overlay card */}
+            {/* Dark overlay card — hidden when unlocked */}
+            {!isUnlocked && (
             <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/70 via-zinc-950/85 to-zinc-950/95 flex items-center justify-center px-4">
               <div className="w-full max-w-sm rounded-2xl border border-zinc-700 bg-zinc-950/95 px-5 py-5 shadow-2xl shadow-black/60">
                 <div className="flex items-center gap-2 mb-3">
@@ -425,9 +500,11 @@ function ResultPage() {
                 </div>
                 <button
                   type="button"
-                  className="w-full mb-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 via-rose-500 to-orange-400 text-sm font-semibold py-2.5 text-white shadow-lg shadow-fuchsia-500/30"
+                  onClick={handleUnlock}
+                  disabled={unlockLoading || (!stored && !score)}
+                  className="w-full mb-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 via-rose-500 to-orange-400 text-sm font-semibold py-2.5 text-white shadow-lg shadow-fuchsia-500/30 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  Unlock Full Report — £4
+                  {unlockLoading ? "Redirecting to payment…" : "Unlock Full Report — £4"}
                 </button>
                 <div className="flex items-center justify-between text-[10px] mt-1">
                   <span className="text-emerald-300 font-semibold">
@@ -439,11 +516,13 @@ function ResultPage() {
                 </div>
               </div>
             </div>
+            )}
           </div>
         </section>
       </div>
 
-      {/* Sticky bottom bar */}
+      {/* Sticky bottom bar — hidden when report unlocked */}
+      {!isUnlocked && (
       <div className="fixed bottom-0 left-0 right-0 border-t border-zinc-800 bg-zinc-950/95 backdrop-blur-sm">
         <div className="max-w-xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <div className="flex flex-col">
@@ -454,12 +533,15 @@ function ResultPage() {
           </div>
           <button
             type="button"
-            className="flex-1 rounded-full bg-gradient-to-r from-fuchsia-500 via-rose-500 to-orange-400 text-sm font-semibold py-2.5 text-white text-center shadow-lg shadow-fuchsia-500/30"
+            onClick={handleUnlock}
+            disabled={unlockLoading || (!stored && !score)}
+            className="flex-1 rounded-full bg-gradient-to-r from-fuchsia-500 via-rose-500 to-orange-400 text-sm font-semibold py-2.5 text-white text-center shadow-lg shadow-fuchsia-500/30 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Unlock Now
+            {unlockLoading ? "Redirecting to payment…" : "Unlock Now"}
           </button>
         </div>
       </div>
+      )}
     </div>
   );
 }
