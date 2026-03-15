@@ -138,7 +138,7 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="flex justify-center items-center py-0 mb-0">
+        <div className="flex justify-center items-center py-0 mb-2">
           <img
             src="/brand/bull-mascot.png"
             alt="Rankfolio Bull"
@@ -353,7 +353,7 @@ export default function Home() {
         </section>
 
         {/* Section 6 — Free score */}
-        <section className="py-24 text-center">
+        <section className="pt-8 pb-16 text-center">
           <h2 className="font-heading text-2xl font-semibold text-white">
             Start With a{" "}
             <span style={{ color: ACCENT_GOLD }}>Free</span> Portfolio Score
