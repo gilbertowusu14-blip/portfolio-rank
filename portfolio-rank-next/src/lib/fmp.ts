@@ -1,8 +1,10 @@
 import YahooFinance from "yahoo-finance2";
 
+const TICKER_FETCH_TIMEOUT_MS = 5000;
+
 /**
  * Profile shape returned by our proxy.
- * Mirrors the previous FMP-based structure so the rest of the app can stay the same.
+ * type is "stock" or "etf" so holdings can be passed correctly to scoring and AI.
  */
 export interface FMPProfile {
   symbol: string;
@@ -10,6 +12,7 @@ export interface FMPProfile {
   beta: number | null;
   mktCap: number | null;
   volAvg: number | null;
+  type: "stock" | "etf";
 }
 
 const CACHE_TTL_MS = 60 * 60 * 1000; // 60 minutes
@@ -38,11 +41,12 @@ interface QuoteSummaryResult {
   price?: QuoteSummaryPrice;
   summaryDetail?: QuoteSummarySummaryDetail;
   assetProfile?: QuoteSummaryAssetProfile;
+  quoteType?: string | null;
 }
 
 /**
- * Fetch company profile for one ticker using yahoo-finance2.
- * Uses in-memory cache (60 min TTL) and does not require any API key.
+ * Fetch company or ETF profile for one ticker using yahoo-finance2.
+ * Uses in-memory cache (60 min TTL). Throws if ticker is not found or fetch exceeds 5s.
  */
 export async function fetchCompanyProfile(ticker: string): Promise<FMPProfile> {
   const key = ticker.toUpperCase();
@@ -51,19 +55,35 @@ export async function fetchCompanyProfile(ticker: string): Promise<FMPProfile> {
     return cached.data;
   }
 
-  const yahooFinance = new YahooFinance();
-  const result = (await yahooFinance.quoteSummary(key, {
-    modules: ["assetProfile", "summaryDetail", "price"],
-  })) as QuoteSummaryResult;
+  const fetchProfile = async (): Promise<FMPProfile> => {
+    const yahooFinance = new YahooFinance();
+    const result = (await yahooFinance.quoteSummary(key, {
+      modules: ["assetProfile", "summaryDetail", "price"],
+    })) as QuoteSummaryResult;
 
-  const profile: FMPProfile = {
-    symbol: key,
-    sector: result.assetProfile?.sector ?? null,
-    beta: result.summaryDetail?.beta ?? null,
-    mktCap: result.price?.marketCap ?? null,
-    volAvg: result.price?.averageVolume ?? null,
+    const isEtf =
+      (result.quoteType?.toUpperCase?.() ?? "") === "ETF" ||
+      (result.assetProfile?.sector == null && result.price?.marketCap != null);
+
+    const profile: FMPProfile = {
+      symbol: key,
+      sector: isEtf ? "ETF" : (result.assetProfile?.sector ?? null),
+      beta: result.summaryDetail?.beta ?? null,
+      mktCap: result.price?.marketCap ?? null,
+      volAvg: result.price?.averageVolume ?? null,
+      type: isEtf ? "etf" : "stock",
+    };
+
+    cache.set(key, { data: profile, fetchedAt: Date.now() });
+    return profile;
   };
 
-  cache.set(key, { data: profile, fetchedAt: Date.now() });
-  return profile;
+  const timeoutPromise = new Promise<never>((_, reject) =>
+    setTimeout(
+      () => reject(new Error(`Ticker ${key} timed out after ${TICKER_FETCH_TIMEOUT_MS / 1000}s`)),
+      TICKER_FETCH_TIMEOUT_MS
+    )
+  );
+
+  return Promise.race([fetchProfile(), timeoutPromise]);
 }

@@ -14,7 +14,7 @@ const LOADING_MESSAGES = [
 ];
 
 interface StoredForm {
-  holdings: { ticker: string; weight: number }[];
+  holdings: { ticker: string; weight: number; type?: string }[];
   riskTolerance: string;
   timeHorizon: string;
 }
@@ -112,7 +112,7 @@ function ResultPage() {
           holdings: parsed.holdings.map((h) => ({
             ticker: h.ticker.toUpperCase(),
             weight: h.weight,
-            type: "Stock",
+            type: h.type ?? "stock",
           })),
           riskTolerance: parsed.riskTolerance,
           timeHorizon: parsed.timeHorizon,

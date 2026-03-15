@@ -17,6 +17,10 @@ interface HoldingRow {
 
 const STORAGE_KEY = "portfolio-rank-form";
 
+type FMPResultItem =
+  | { symbol: string; type: "stock" | "etf"; [key: string]: unknown }
+  | { symbol: string; error: true };
+
 function AnalyzePage() {
   const router = useRouter();
   const [holdings, setHoldings] = useState<HoldingRow[]>([
@@ -25,6 +29,8 @@ function AnalyzePage() {
   const [riskTolerance, setRiskTolerance] = useState<RiskTolerance>("Balanced");
   const [timeHorizon, setTimeHorizon] = useState<TimeHorizon>("3–7yr");
   const [weightError, setWeightError] = useState<string | null>(null);
+  const [tickerErrors, setTickerErrors] = useState<string[]>([]);
+  const [submitLoading, setSubmitLoading] = useState(false);
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
   const totalWeight = holdings.reduce((sum, h) => sum + (Number.isNaN(h.weight) ? 0 : h.weight), 0);
@@ -50,6 +56,7 @@ function AnalyzePage() {
       )
     );
     setWeightError(null);
+    setTickerErrors([]);
   }
 
   function removeHolding(index: number) {
@@ -58,21 +65,47 @@ function AnalyzePage() {
     setWeightError(null);
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setWeightError(null);
+    setTickerErrors([]);
     if (Math.abs(totalWeight - 100) > 0.01) {
       setWeightError("Weights must sum to 100%");
       return;
     }
-    const payload = {
-      holdings: holdings.filter((h) => h.ticker.trim() !== ""),
-      riskTolerance,
-      timeHorizon,
-    };
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    const filtered = holdings.filter((h) => h.ticker.trim() !== "");
+    if (filtered.length === 0) return;
+
+    const tickers = [...new Set(filtered.map((h) => h.ticker.trim().toUpperCase()))];
+    setSubmitLoading(true);
+    try {
+      const res = await fetch(`/api/fmp?tickers=${encodeURIComponent(tickers.join(","))}`);
+      const data = (await res.json()) as FMPResultItem[];
+      const failed = data.filter((item): item is { symbol: string; error: true } => "error" in item && item.error).map((item) => item.symbol);
+      if (failed.length > 0) {
+        setTickerErrors(failed);
+        return;
+      }
+      const typeByTicker: Record<string, "stock" | "etf"> = {};
+      data.forEach((item) => {
+        if (!("error" in item) && item.type) typeByTicker[item.symbol] = item.type;
+      });
+      const payload = {
+        holdings: filtered.map((h) => ({
+          ticker: h.ticker.trim(),
+          weight: h.weight,
+          type: typeByTicker[h.ticker.trim().toUpperCase()] ?? "stock",
+        })),
+        riskTolerance,
+        timeHorizon,
+      };
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      }
+      router.push("/result");
+    } finally {
+      setSubmitLoading(false);
     }
-    router.push("/result");
   }
 
   const onMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -185,6 +218,15 @@ function AnalyzePage() {
                 {weightError}
               </p>
             )}
+            {tickerErrors.length > 0 && (
+              <div className="mt-3 space-y-1" role="alert">
+                {tickerErrors.map((t) => (
+                  <p key={t} className="text-sm text-red-400">
+                    Ticker {t} not found — please check and try again
+                  </p>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Risk tolerance card */}
@@ -226,16 +268,17 @@ function AnalyzePage() {
           <button
             ref={submitBtnRef}
             type="submit"
+            disabled={submitLoading}
             onMouseMove={onMouseMove}
             onMouseLeave={onMouseLeave}
             onMouseEnter={onMouseEnter}
-            className="w-full rounded-full font-semibold py-4 text-white transition-all"
+            className="w-full rounded-full font-semibold py-4 text-white transition-all disabled:opacity-70 disabled:cursor-not-allowed"
             style={{
               background: "#f59e0b",
               boxShadow: "0 0 30px rgba(245,158,11,0.4)",
             }}
           >
-            Calculate Score
+            {submitLoading ? "Checking tickers…" : "Calculate Score"}
           </button>
         </form>
       </div>

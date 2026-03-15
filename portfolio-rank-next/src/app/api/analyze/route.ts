@@ -66,14 +66,19 @@ export async function POST(request: NextRequest) {
       profiles.push(profile);
     } catch {
       return NextResponse.json(
-        { error: `Failed to fetch data for ticker ${ticker}` },
+        { error: `Ticker ${ticker} not found — please check and try again` },
         { status: 502 }
       );
     }
   }
 
+  const holdingsWithType: PortfolioHolding[] = normalizedHoldings.map((h) => {
+    const profile = profiles.find((p) => p.symbol === h.ticker);
+    return { ...h, type: profile?.type ?? h.type ?? "stock" };
+  });
+
   const result = scorePortfolio({
-    holdings: normalizedHoldings,
+    holdings: holdingsWithType,
     profiles,
     riskTolerance,
     timeHorizon,
