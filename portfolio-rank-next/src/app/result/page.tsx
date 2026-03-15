@@ -39,14 +39,14 @@ interface AiNarrative {
 function labelColor(label: string): string {
   switch (label) {
     case "Elite":
-      return "bg-emerald-500/20 text-emerald-300 border-emerald-500/40";
+      return "bg-emerald-500/20 text-emerald-400 border-emerald-500/40";
     case "Strong":
-      return "bg-sky-500/20 text-sky-300 border-sky-500/40";
+      return "bg-sky-500/20 text-sky-400 border-sky-500/40";
     case "Average":
-      return "bg-amber-500/20 text-amber-300 border-amber-500/40";
+      return "bg-amber-500/20 text-amber-400 border-amber-500/40";
     case "Weak":
     default:
-      return "bg-rose-500/20 text-rose-300 border-rose-500/40";
+      return "bg-red-500/20 text-red-400 border-red-500/40";
   }
 }
 
@@ -244,26 +244,39 @@ function ResultPage() {
       : 0;
 
   return (
-    <div className="min-h-screen text-zinc-50 pb-24" style={{ backgroundColor: "#0a0a0a" }}>
-      <div className="max-w-xl mx-auto px-4 pt-6 pb-4">
+    <div className="min-h-screen text-white pb-24" style={{ backgroundColor: "#0a0a0a" }}>
+      {/* Navbar */}
+      <nav className="sticky top-0 z-50 backdrop-blur-md bg-[#0a0a0a]/70 border-b border-white/10">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+          <Link href="/" className="flex items-center gap-2">
+            <img src="/brand/bull-head.png" alt="Rankfolio" className="h-16 w-auto" />
+            <span className="font-bold text-lg">
+              <span className="text-white">Rank</span>
+              <span className="text-yellow-400">folio</span>
+            </span>
+          </Link>
+        </div>
+      </nav>
+
+      <div className="max-w-md mx-auto px-4 pt-6 pb-4 text-center">
         <Link
           href="/analyze"
-          className="text-sm text-zinc-400 hover:text-zinc-200 mb-4 inline-block"
+          className="text-slate-400 hover:text-yellow-400 transition-colors mb-4 inline-block"
         >
           ← Back to analyse
         </Link>
 
         <header className="mb-6">
-          <h1 className="font-heading text-2xl font-semibold tracking-tight mb-1">
+          <h1 className="font-heading text-2xl font-bold tracking-tight mb-1 text-white">
             Your Free Rankfolio™ Preview
           </h1>
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-slate-400">
             Take a screenshot and share with your friends!
           </p>
         </header>
 
         {stored && (
-          <p className="text-xs text-zinc-500 mb-4">
+          <p className="text-xs text-slate-500 mb-4">
             {stored.holdings.length} holding
             {stored.holdings.length !== 1 ? "s" : ""} · {stored.riskTolerance} ·{" "}
             {stored.timeHorizon}
@@ -271,20 +284,18 @@ function ResultPage() {
         )}
 
         {/* Score card */}
-        <section className="mb-8 rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800/80 px-5 py-6 shadow-lg shadow-black/40">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <div className="text-xs uppercase tracking-[0.18em] text-zinc-500 mb-1">
-                Rankfolio Score
-              </div>
-              <div className="flex items-baseline gap-2">
-                <span className="font-heading text-4xl font-semibold leading-none">
-                  {displayScore !== null ? displayScore.toFixed(1) : "–"}
-                </span>
-                <span className="text-sm text-zinc-500">/10</span>
-              </div>
+        <section className="mb-8 rounded-2xl bg-[#111111] border border-yellow-500/20 p-6">
+          <div className="flex flex-col items-center gap-3 mb-4">
+            <div className="text-xs uppercase tracking-[0.18em] text-yellow-400">
+              Rankfolio Score
             </div>
-            <div className="flex flex-col items-end gap-2">
+            <div className="flex items-baseline gap-2 justify-center">
+              <span className="font-heading text-4xl font-bold leading-none text-white">
+                {displayScore !== null ? displayScore.toFixed(1) : "–"}
+              </span>
+              <span className="text-sm text-slate-500">/10</span>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-2">
               <span
                 className={`px-3 py-1 rounded-full border text-xs font-medium ${labelColor(
                   label
@@ -292,7 +303,7 @@ function ResultPage() {
               >
                 {label}
               </span>
-              <div className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-500/40 px-3 py-1 text-xs font-medium text-emerald-300">
+              <div className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium text-[#0a0a0a] bg-[#f59e0b]">
                 <span>
                   {displayDelta !== null
                     ? `Potential +${displayDelta.toFixed(1)} ↑`
@@ -303,7 +314,7 @@ function ResultPage() {
           </div>
 
           <div className="space-y-2">
-            <div className="flex justify-between text-[11px] text-zinc-500">
+            <div className="flex justify-between text-[11px] text-slate-500">
               <span>Current</span>
               {targetScore !== null && (
                 <span>
@@ -315,14 +326,14 @@ function ResultPage() {
                 </span>
               )}
             </div>
-            <div className="relative h-3 w-full rounded-full bg-zinc-900 overflow-hidden">
+            <div className="relative h-3 w-full rounded-full bg-[#1a1a1a] overflow-hidden">
               <div
-                className="absolute left-0 top-0 h-full bg-gradient-to-r from-sky-400 to-sky-500"
+                className="absolute left-0 top-0 h-full bg-[#f59e0b]"
                 style={{ width: `${Math.min(scorePercent, 100)}%` }}
               />
               {targetPercent > 0 && (
                 <div
-                  className="absolute left-0 top-0 h-full bg-[repeating-linear-gradient(135deg,rgba(16,185,129,0.7)_0,rgba(16,185,129,0.7)_4px,rgba(16,185,129,0.3)_4px,rgba(16,185,129,0.3)_8px)]"
+                  className="absolute left-0 top-0 h-full bg-[repeating-linear-gradient(135deg,rgba(245,158,11,0.8)_0,rgba(245,158,11,0.8)_4px,rgba(245,158,11,0.4)_4px,rgba(245,158,11,0.4)_8px)]"
                   style={{
                     width: `${Math.min(scorePercent + targetPercent, 100)}%`,
                     maskImage: `linear-gradient(to right, transparent ${scorePercent}%, white ${scorePercent}%)`,
@@ -335,25 +346,21 @@ function ResultPage() {
 
         {/* AI assessment */}
         <section className="mb-8">
-          <div className="text-[11px] font-semibold tracking-[0.24em] text-zinc-500 mb-2">
-            AI ASSESSMENT
-          </div>
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 px-4 py-4 space-y-3">
-            <p className="text-sm text-zinc-200 leading-relaxed">
+          <div className="rounded-2xl bg-[#111111] border border-yellow-500/20 p-6 space-y-3">
+            <div className="text-[11px] font-semibold tracking-normal text-yellow-400 mb-2">
+              AI ASSESSMENT
+            </div>
+            <p className="text-sm text-slate-300 leading-relaxed">
               {ai?.summary ??
                 "Your portfolio preview is being generated. Based on your score, you have meaningful strengths but also clear areas to improve."}
             </p>
             {displayTarget !== null && (
-              <p className="text-sm text-emerald-300 flex items-center gap-1">
-                <span>💡</span>
-                <span>
-                  With optimisation, your portfolio could reach{" "}
-                  {displayTarget.toFixed(1)}!
-                </span>
-              </p>
+              <div className="mt-4 px-4 py-3 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm font-semibold text-center">
+                💡 With optimisation, your portfolio could reach {displayTarget.toFixed(1)}
+              </div>
             )}
             {loading && (
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-slate-500">
                 Analysing your holdings with AI…
               </p>
             )}
@@ -367,14 +374,14 @@ function ResultPage() {
 
         {/* Full report section — blurred when locked */}
         <section className="relative mb-16">
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-950/80 px-4 py-5 space-y-5 overflow-hidden">
+          <div className="rounded-2xl bg-[#111111] border border-yellow-500/20 px-4 py-5 space-y-5 overflow-hidden">
             <div
-              className={isUnlocked ? "" : "blur-sm opacity-60"}
+              className={isUnlocked ? "" : "blur-[2px] opacity-70"}
             >
               {/* Subscores */}
               {score && (
                 <div className="space-y-3 mb-4">
-                  <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-[0.18em]">
+                  <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-[0.18em]">
                     Full Metric Breakdown
                   </h2>
                   {(
@@ -394,15 +401,15 @@ function ResultPage() {
                         : "Diversification";
                     return (
                       <div key={key} className="space-y-1">
-                        <div className="flex justify-between text-xs text-zinc-400">
+                        <div className="flex justify-between text-xs text-slate-400">
                           <span>{labelText}</span>
-                          <span className="text-zinc-200 font-medium">
+                          <span className="text-slate-200 font-medium">
                             {value}/100
                           </span>
                         </div>
-                        <div className="h-2 w-full rounded-full bg-zinc-900 overflow-hidden">
+                        <div className="h-2 w-full rounded-full bg-[#1a1a1a] overflow-hidden">
                           <div
-                            className="h-full bg-gradient-to-r from-fuchsia-400 to-sky-400"
+                            className="h-full bg-[#f59e0b]"
                             style={{ width: `${Math.min(value, 100)}%` }}
                           />
                         </div>
@@ -416,40 +423,40 @@ function ResultPage() {
               {ai && (
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-xs font-semibold text-emerald-300 uppercase tracking-[0.18em] mb-1">
+                    <h3 className="text-xs font-semibold text-emerald-400 uppercase tracking-[0.18em] mb-1">
                       Strengths
                     </h3>
-                    <ul className="text-sm text-zinc-200 space-y-1.5 list-disc list-inside">
+                    <ul className="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
                       {ai.strengths.map((item, idx) => (
                         <li key={idx}>{item}</li>
                       ))}
                     </ul>
                   </div>
                   <div>
-                    <h3 className="text-xs font-semibold text-rose-300 uppercase tracking-[0.18em] mb-1">
+                    <h3 className="text-xs font-semibold text-rose-400 uppercase tracking-[0.18em] mb-1">
                       Weaknesses
                     </h3>
-                    <ul className="text-sm text-zinc-200 space-y-1.5 list-disc list-inside">
+                    <ul className="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
                       {ai.weaknesses.map((item, idx) => (
                         <li key={idx}>{item}</li>
                       ))}
                     </ul>
                   </div>
                   <div>
-                    <h3 className="text-xs font-semibold text-sky-300 uppercase tracking-[0.18em] mb-1">
+                    <h3 className="text-xs font-semibold text-sky-400 uppercase tracking-[0.18em] mb-1">
                       Actions
                     </h3>
-                    <ul className="text-sm text-zinc-200 space-y-1.5 list-disc list-inside">
+                    <ul className="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
                       {ai.actions.map((item, idx) => (
                         <li key={idx}>{item}</li>
                       ))}
                     </ul>
                   </div>
                   <div>
-                    <h3 className="text-xs font-semibold text-zinc-300 uppercase tracking-[0.18em] mb-1">
+                    <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-[0.18em] mb-1">
                       Blueprint
                     </h3>
-                    <p className="text-sm text-zinc-200 leading-relaxed">
+                    <p className="text-sm text-slate-300 leading-relaxed">
                       {ai.blueprint}
                     </p>
                   </div>
@@ -459,60 +466,68 @@ function ResultPage() {
 
             {/* Dark overlay card — hidden when unlocked */}
             {!isUnlocked && (
-            <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/70 via-zinc-950/85 to-zinc-950/95 flex items-center justify-center px-4">
-              <div className="w-full max-w-sm rounded-2xl border border-zinc-700 bg-zinc-950/95 px-5 py-5 shadow-2xl shadow-black/60">
+            <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/80 via-[#0a0a0a]/90 to-[#0a0a0a]/95 flex items-center justify-center px-4">
+              <div className="w-full max-w-sm rounded-2xl bg-[#111111] border border-yellow-500/20 px-5 py-5 shadow-2xl">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-lg">🔒</span>
-                  <h2 className="text-sm font-semibold">
+                  <span className="text-lg text-yellow-400">🔒</span>
+                  <h2 className="font-heading text-sm font-semibold text-white">
                     Unlock Your Full Report:
                   </h2>
                 </div>
-                <ul className="text-xs text-zinc-200 space-y-1.5 mb-4">
+                <ul className="text-xs text-slate-300 space-y-1.5 mb-4">
                   <li>
-                    <span className="font-semibold">
+                    <span>
                       Full breakdown of all 6 portfolio metrics
                     </span>
                   </li>
                   <li>
-                    <span className="font-semibold">
+                    <span>
                       3 specific weaknesses dragging your score down
                     </span>
                   </li>
                   <li>
-                    <span className="font-semibold">
+                    <span>
                       Step-by-step action plan to reach your potential
                     </span>
                   </li>
                   <li>
-                    <span className="font-semibold">
+                    <span>
                       Optimised Portfolio Blueprint — what to buy and sell
                     </span>
                   </li>
                   <li>
-                    <span className="font-semibold">
+                    <span>
                       AI-powered analysis of your exact holdings
                     </span>
                   </li>
                 </ul>
 
-                <div className="text-[10px] font-semibold tracking-[0.24em] text-zinc-500 mb-1">
+                <div className="text-[10px] font-semibold tracking-[0.24em] text-slate-500 mb-1">
                   ONE TIME PAYMENT
                 </div>
                 <button
                   type="button"
                   onClick={handleUnlock}
                   disabled={unlockLoading || (!stored && !score)}
-                  className="w-full mb-1.5 rounded-full bg-gradient-to-r from-fuchsia-500 via-rose-500 to-orange-400 text-sm font-semibold py-2.5 text-white shadow-lg shadow-fuchsia-500/30 disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full mb-1.5 rounded-full text-sm font-semibold py-2.5 text-white disabled:opacity-70 disabled:cursor-not-allowed"
+                  style={{
+                    background: "#f59e0b",
+                    boxShadow: "0 0 30px rgba(245,158,11,0.4)",
+                  }}
                 >
-                  {unlockLoading ? "Redirecting to payment…" : "Unlock Full Report — £4"}
+                  {unlockLoading ? "Redirecting to payment…" : "Unlock Full Report — £3.99"}
                 </button>
                 <div className="flex items-center justify-between text-[10px] mt-1">
-                  <span className="text-emerald-300 font-semibold">
+                  <span className="text-slate-500">
                     READY IN 30 SECONDS
                   </span>
-                  <span className="text-orange-300">
+                  <span className="text-yellow-500">
                     ⚠️ Price increase incoming
                   </span>
+                </div>
+                <div className="flex items-center justify-center gap-2 mt-4 text-slate-400 text-sm">
+                  <span>👥</span>
+                  <span>5,000+ portfolio reports completed</span>
                 </div>
               </div>
             </div>
@@ -523,19 +538,20 @@ function ResultPage() {
 
       {/* Sticky bottom bar — hidden when report unlocked */}
       {!isUnlocked && (
-      <div className="fixed bottom-0 left-0 right-0 border-t border-zinc-800 bg-zinc-950/95 backdrop-blur-sm">
+      <div className="fixed bottom-0 left-0 right-0 border-t border-yellow-500/20 bg-[#111111]">
         <div className="max-w-xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-          <div className="flex flex-col">
-            <span className="text-xs text-zinc-400">
-              Unlock Full Report
-            </span>
-            <span className="text-sm font-semibold text-zinc-100">£4</span>
-          </div>
+          <span className="text-white font-medium">
+            Unlock Full Report £3.99
+          </span>
           <button
             type="button"
             onClick={handleUnlock}
             disabled={unlockLoading || (!stored && !score)}
-            className="flex-1 rounded-full bg-gradient-to-r from-fuchsia-500 via-rose-500 to-orange-400 text-sm font-semibold py-2.5 text-white text-center shadow-lg shadow-fuchsia-500/30 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="rounded-full text-sm font-semibold py-2.5 px-6 text-white disabled:opacity-70 disabled:cursor-not-allowed"
+            style={{
+              background: "#f59e0b",
+              boxShadow: "0 0 20px rgba(245,158,11,0.4)",
+            }}
           >
             {unlockLoading ? "Redirecting to payment…" : "Unlock Now"}
           </button>
