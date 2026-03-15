@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -25,9 +25,17 @@ function AnalyzePage() {
   const [riskTolerance, setRiskTolerance] = useState<RiskTolerance>("Balanced");
   const [timeHorizon, setTimeHorizon] = useState<TimeHorizon>("3–7yr");
   const [weightError, setWeightError] = useState<string | null>(null);
+  const submitBtnRef = useRef<HTMLButtonElement>(null);
 
   const totalWeight = holdings.reduce((sum, h) => sum + (Number.isNaN(h.weight) ? 0 : h.weight), 0);
   const canAddRow = holdings.length < 10;
+
+  const totalWeightColor =
+    Math.abs(totalWeight - 100) < 0.01
+      ? "text-yellow-400"
+      : totalWeight > 100
+        ? "text-red-400"
+        : "text-slate-400";
 
   function addHolding() {
     if (!canAddRow) return;
@@ -67,23 +75,63 @@ function AnalyzePage() {
     router.push("/result");
   }
 
+  const onMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const btn = submitBtnRef.current;
+    if (!btn) return;
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    btn.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px) scale(1.05)`;
+    btn.style.boxShadow = "0 0 30px rgba(245,158,11,0.6), 0 8px 25px rgba(245,158,11,0.3)";
+  };
+  const onMouseLeave = () => {
+    const btn = submitBtnRef.current;
+    if (!btn) return;
+    btn.style.transform = "translate(0px, 0px) scale(1)";
+    btn.style.boxShadow = "0 0 30px rgba(245,158,11,0.4)";
+    btn.style.transition = "transform 400ms ease-out, box-shadow 400ms ease-out";
+  };
+  const onMouseEnter = () => {
+    const btn = submitBtnRef.current;
+    if (!btn) return;
+    btn.style.transition = "transform 100ms ease-out, box-shadow 100ms ease-out";
+  };
+
   return (
-    <div className="min-h-screen text-zinc-50 px-4 py-8" style={{ backgroundColor: "#0a0a0a" }}>
-      <div className="max-w-lg mx-auto">
+    <div className="min-h-screen text-white" style={{ backgroundColor: "#0a0a0a" }}>
+      {/* Navbar */}
+      <nav className="sticky top-0 z-50 backdrop-blur-md bg-[#0a0a0a]/70 border-b border-white/10">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+          <Link href="/" className="flex items-center gap-2">
+            <img src="/brand/bull-head.png" alt="Rankfolio" className="h-16 w-auto" />
+            <span className="font-bold text-lg">
+              <span className="text-white">Rank</span>
+              <span className="text-yellow-400">folio</span>
+            </span>
+          </Link>
+        </div>
+      </nav>
+
+      <div className="max-w-lg mx-auto px-4 pt-16 pb-12">
         <Link
           href="/"
-          className="text-sm text-zinc-400 hover:text-zinc-200 mb-6 inline-block"
+          className="text-slate-400 hover:text-yellow-400 transition-colors mb-6 inline-block"
         >
           ← Back
         </Link>
-        <h1 className="font-heading text-2xl font-bold mb-2">Analyse portfolio</h1>
-        <p className="text-zinc-400 mb-8">Enter your holdings and preferences.</p>
+        <h1 className="font-heading text-3xl font-bold text-white mb-2">
+          Analyse Your Portfolio
+        </h1>
+        <p className="text-slate-400 mb-8">
+          Enter your holdings and get an instant AI-powered score
+        </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <label className="text-sm font-medium text-zinc-300">Holdings</label>
-              <span className="text-xs text-zinc-500">
+          {/* Holdings card */}
+          <div className="bg-[#111111] border border-yellow-500/20 rounded-2xl p-6">
+            <div className="flex justify-between items-center mb-3">
+              <label className="text-sm font-medium text-white">Holdings</label>
+              <span className={`text-sm font-medium ${totalWeightColor}`}>
                 Total: {totalWeight.toFixed(1)}%
               </span>
             </div>
@@ -95,7 +143,7 @@ function AnalyzePage() {
                     placeholder="Ticker"
                     value={h.ticker}
                     onChange={(e) => updateHolding(i, "ticker", e.target.value.toUpperCase())}
-                    className="flex-1 rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-zinc-50 placeholder-zinc-500 focus:border-zinc-500 focus:outline-none"
+                    className="flex-1 bg-[#1a1a1a] border border-white/10 rounded-xl text-white placeholder-slate-500 px-4 py-3 focus:border-yellow-500/50 focus:outline-none"
                     maxLength={10}
                   />
                   <input
@@ -108,13 +156,13 @@ function AnalyzePage() {
                     onChange={(e) =>
                       updateHolding(i, "weight", e.target.value === "" ? 0 : parseFloat(e.target.value))
                     }
-                    className="w-20 rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-zinc-50 placeholder-zinc-500 focus:border-zinc-500 focus:outline-none"
+                    className="w-24 bg-[#1a1a1a] border border-white/10 rounded-xl text-white placeholder-slate-500 px-4 py-3 focus:border-yellow-500/50 focus:outline-none"
                   />
                   {holdings.length > 1 && (
                     <button
                       type="button"
                       onClick={() => removeHolding(i)}
-                      className="text-zinc-500 hover:text-red-400 text-sm px-2"
+                      className="text-slate-500 hover:text-red-400 text-sm px-2 transition-colors"
                       aria-label="Remove holding"
                     >
                       Remove
@@ -127,26 +175,27 @@ function AnalyzePage() {
               <button
                 type="button"
                 onClick={addHolding}
-                className="mt-2 text-sm text-zinc-400 hover:text-zinc-200 border border-dashed border-zinc-600 rounded-lg px-4 py-2 w-full"
+                className="mt-3 border border-yellow-500/30 text-yellow-400 rounded-xl py-2 px-4 hover:bg-yellow-500/10 transition-all w-full"
               >
                 Add Holding
               </button>
             )}
             {weightError && (
-              <p className="mt-2 text-sm text-red-400" role="alert">
+              <p className="mt-3 text-sm text-red-400" role="alert">
                 {weightError}
               </p>
             )}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">
+          {/* Risk tolerance card */}
+          <div className="bg-[#111111] border border-yellow-500/20 rounded-2xl p-6">
+            <label className="block text-sm font-medium text-white mb-3">
               Risk tolerance
             </label>
             <select
               value={riskTolerance}
               onChange={(e) => setRiskTolerance(e.target.value as RiskTolerance)}
-              className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-zinc-50 focus:border-zinc-500 focus:outline-none"
+              className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl text-white py-3 px-4 focus:border-yellow-500/50 focus:outline-none"
             >
               {RISK_OPTIONS.map((opt) => (
                 <option key={opt} value={opt}>
@@ -156,14 +205,15 @@ function AnalyzePage() {
             </select>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-300 mb-2">
+          {/* Time horizon card */}
+          <div className="bg-[#111111] border border-yellow-500/20 rounded-2xl p-6">
+            <label className="block text-sm font-medium text-white mb-3">
               Time horizon
             </label>
             <select
               value={timeHorizon}
               onChange={(e) => setTimeHorizon(e.target.value as TimeHorizon)}
-              className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-zinc-50 focus:border-zinc-500 focus:outline-none"
+              className="w-full bg-[#1a1a1a] border border-white/10 rounded-xl text-white py-3 px-4 focus:border-yellow-500/50 focus:outline-none"
             >
               {HORIZON_OPTIONS.map((opt) => (
                 <option key={opt} value={opt}>
@@ -174,8 +224,16 @@ function AnalyzePage() {
           </div>
 
           <button
+            ref={submitBtnRef}
             type="submit"
-            className="w-full rounded-lg bg-zinc-50 text-zinc-950 font-semibold py-3.5 hover:bg-zinc-200 transition-colors"
+            onMouseMove={onMouseMove}
+            onMouseLeave={onMouseLeave}
+            onMouseEnter={onMouseEnter}
+            className="w-full rounded-full font-semibold py-4 text-white transition-all"
+            style={{
+              background: "#f59e0b",
+              boxShadow: "0 0 30px rgba(245,158,11,0.4)",
+            }}
           >
             Calculate Score
           </button>
