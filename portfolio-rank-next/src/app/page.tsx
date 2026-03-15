@@ -23,7 +23,7 @@ export default function Home() {
       />
 
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#0a0f1e]/95 backdrop-blur-sm">
+      <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#0a0f1e]/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <Link href="/" className="text-xl font-bold">
             <span className="text-white">Portfolio</span>
@@ -38,8 +38,8 @@ export default function Home() {
               fontWeight: 700,
               borderRadius: "9999px",
               color: "white",
-              background: "linear-gradient(to right, #ec4899, #9333ea)",
-              boxShadow: "0 0 30px rgba(236,72,153,0.5)",
+              background: "#7c3aed",
+              boxShadow: "0 0 30px rgba(124,58,237,0.6)",
             }}
           >
             Analyse My Portfolio →
@@ -49,7 +49,7 @@ export default function Home() {
 
       <main className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         {/* Section 1 — Hero */}
-        <section className="mb-20 text-center">
+        <section className="pb-28 text-center">
           <h1 className="text-6xl font-black leading-tight tracking-tight md:text-8xl">
             <span className="text-white">How Strong Is Your</span>
             <br />
@@ -63,7 +63,7 @@ export default function Home() {
           </p>
 
           {/* 3 step cards */}
-          <div className="mt-12 grid gap-4 sm:grid-cols-3">
+          <div className="mt-12 grid gap-8 sm:grid-cols-3">
             <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-left">
               <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
               <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
@@ -103,8 +103,8 @@ export default function Home() {
               fontWeight: 700,
               borderRadius: "9999px",
               color: "white",
-              background: "linear-gradient(to right, #ec4899, #9333ea)",
-              boxShadow: "0 0 30px rgba(236,72,153,0.5)",
+              background: "#7c3aed",
+              boxShadow: "0 0 30px rgba(124,58,237,0.6)",
             }}
           >
             Analyse My Portfolio →
@@ -112,26 +112,26 @@ export default function Home() {
           <p className="mt-6 text-sm text-slate-400">
             ⚡ Instant Results • 🔒 No signup required • 📊 AI Powered
           </p>
+          <p className="mt-3 text-sm text-slate-500">
+            Built on 6 professional portfolio risk metrics used by institutional investors
+          </p>
         </section>
 
         {/* Section 2 — Logo carousel */}
-        <section className="my-8">
-          <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6">
-            <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
-            <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
-            <h2 className="mb-8 text-center text-xl font-semibold text-white sm:text-2xl">
-              Analyse portfolios containing the world&apos;s largest companies
-            </h2>
-            <div
-              className="relative overflow-hidden"
-              style={{
-                maskImage:
-                  "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
-                WebkitMaskImage:
-                  "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
-              }}
-            >
-              <div className="pr-scroll-animate flex w-max gap-12 whitespace-nowrap text-slate-400">
+        <section className="py-24">
+          <h2 className="mb-8 text-center text-xl font-semibold text-white sm:text-2xl">
+            Analyse portfolios containing the world&apos;s largest companies
+          </h2>
+          <div
+            className="relative overflow-hidden"
+            style={{
+              maskImage:
+                "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+              WebkitMaskImage:
+                "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+            }}
+          >
+            <div className="pr-scroll-animate flex w-max gap-12 whitespace-nowrap text-slate-400">
                 <span className="text-2xl font-medium">Apple</span>
                 <span className="text-2xl font-medium">Microsoft</span>
                 <span className="text-2xl font-medium">Amazon</span>
@@ -157,59 +157,65 @@ export default function Home() {
                 <span className="text-2xl font-medium">AMD</span>
               </div>
             </div>
-          </div>
         </section>
 
         {/* Section 3 — Stat cards */}
-        <section className="my-8">
+        <section className="py-24 bg-transparent">
           <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6">
             <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
             <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
             <h2 className="mb-8 text-center text-2xl font-semibold text-white">
               Most Portfolios Have Hidden Problems
             </h2>
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-8 sm:grid-cols-3">
               <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-center">
                 <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
                 <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
                 <div
-                  className="text-4xl font-bold"
+                  className="text-5xl font-black"
                   style={{ color: ACCENT_PURPLE }}
                 >
                   72%
                 </div>
-                <p className="mt-2 text-slate-400">
-                  overconcentrated in sector
+                <p className="mt-2 text-slate-400">overconcentrated in sector</p>
+                <p className="mt-1 text-sm text-slate-500">
+                  Retail investors are overconcentrated in a single sector
                 </p>
               </div>
               <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-center">
                 <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
                 <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
                 <div
-                  className="text-4xl font-bold"
+                  className="text-5xl font-black"
                   style={{ color: ACCENT_PURPLE }}
                 >
                   &lt;5
                 </div>
                 <p className="mt-2 text-slate-400">average stocks held</p>
+                <p className="mt-1 text-sm text-slate-500">
+                  Average number of stocks held by retail investors
+                </p>
               </div>
               <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-center">
                 <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
                 <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
                 <div
-                  className="text-4xl font-bold"
+                  className="text-5xl font-black"
                   style={{ color: ACCENT_PURPLE }}
                 >
                   2.3×
                 </div>
                 <p className="mt-2 text-slate-400">higher drawdown risk</p>
+                <p className="mt-1 text-sm text-slate-500">
+                  Higher drawdown risk in undiversified portfolios
+                </p>
               </div>
             </div>
           </div>
         </section>
 
         {/* Section 4 — Average score */}
-        <section className="my-8 flex justify-center">
+        <section className="flex justify-center py-24 bg-white/[0.02]">
           <div className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-center">
             <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
             <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
@@ -261,8 +267,8 @@ export default function Home() {
                 fontWeight: 700,
                 borderRadius: "9999px",
                 color: "white",
-                background: "linear-gradient(to right, #ec4899, #9333ea)",
-                boxShadow: "0 0 30px rgba(236,72,153,0.5)",
+                background: "#7c3aed",
+                boxShadow: "0 0 30px rgba(124,58,237,0.6)",
               }}
             >
               What&apos;s your score? →
@@ -271,14 +277,14 @@ export default function Home() {
         </section>
 
         {/* Section 5 — How scoring works */}
-        <section className="my-8">
+        <section className="py-24 bg-transparent">
           <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6">
             <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
             <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
             <h2 className="mb-10 text-center text-2xl font-semibold text-white">
               How Your Portfolio Score Is Calculated
             </h2>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {[
                 {
                   name: "Diversification",
@@ -331,7 +337,7 @@ export default function Home() {
         </section>
 
         {/* Section 6 — Free score */}
-        <section className="my-8 text-center">
+        <section className="py-24 text-center bg-white/[0.02]">
           <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6">
             <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
             <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
@@ -339,56 +345,72 @@ export default function Home() {
               Start With a{" "}
               <span style={{ color: ACCENT_PURPLE }}>Free</span> Portfolio Score
             </h2>
-            <div className="relative mx-auto mt-8 max-w-md overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-left">
-              <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
-              <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
-              <ul className="space-y-3 text-sm">
-                <li className="flex items-center gap-2 text-emerald-400">
-                  <span>✓</span> Instant portfolio score 0–10
-                </li>
-                <li className="flex items-center gap-2 text-emerald-400">
-                  <span>✓</span> AI summary and key strengths
-                </li>
-                <li className="flex items-center gap-2 text-emerald-400">
-                  <span>✓</span> No signup required
-                </li>
-                <li className="flex items-center gap-2 text-slate-400">
-                  <span>🔒</span> Full 6-metric breakdown
-                </li>
-                <li className="flex items-center gap-2 text-slate-400">
-                  <span>🔒</span> Weaknesses & action plan
-                </li>
-                <li className="flex items-center gap-2 text-slate-400">
-                  <span>🔒</span> Optimised portfolio blueprint
-                </li>
-              </ul>
-              <a
-                href="/analyze"
-                className="mt-6 flex justify-center"
-                style={{
-                  display: "inline-block",
-                  padding: "16px 40px",
-                  fontSize: "18px",
-                  fontWeight: 700,
-                  borderRadius: "9999px",
-                  color: "white",
-                  background: "linear-gradient(to right, #ec4899, #9333ea)",
-                  boxShadow: "0 0 30px rgba(236,72,153,0.5)",
-                }}
-              >
-                Get Your Free Score →
-              </a>
+            <div className="mx-auto mt-8 grid max-w-4xl gap-8 sm:grid-cols-2">
+              <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-left">
+                <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
+                <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
+                <h3 className="text-lg font-semibold text-emerald-400">Free</h3>
+                <ul className="mt-4 space-y-2 text-sm">
+                  <li className="flex items-center gap-2 text-emerald-400">
+                    <span>✓</span> Portfolio score 0–10
+                  </li>
+                  <li className="flex items-center gap-2 text-emerald-400">
+                    <span>✓</span> AI summary
+                  </li>
+                  <li className="flex items-center gap-2 text-emerald-400">
+                    <span>✓</span> Optimization potential
+                  </li>
+                </ul>
+              </div>
+              <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-left">
+                <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
+                <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-semibold text-purple-400">Premium</h3>
+                  <span className="rounded-full bg-purple-500/30 px-2 py-0.5 text-xs font-semibold text-purple-300">£4</span>
+                </div>
+                <ul className="mt-4 space-y-2 text-sm text-slate-400">
+                  <li className="flex items-center gap-2">
+                    <span>🔒</span> Full metric breakdown
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span>🔒</span> 3 strengths & 3 weaknesses
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span>🔒</span> Step-by-step action plan
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span>🔒</span> Optimised portfolio blueprint
+                  </li>
+                </ul>
+              </div>
             </div>
+            <a
+              href="/analyze"
+              className="mt-8 flex justify-center"
+              style={{
+                display: "inline-block",
+                padding: "16px 40px",
+                fontSize: "18px",
+                fontWeight: 700,
+                borderRadius: "9999px",
+                color: "white",
+                background: "#7c3aed",
+                boxShadow: "0 0 30px rgba(124,58,237,0.6)",
+              }}
+            >
+              Get Your Free Score →
+            </a>
           </div>
         </section>
 
         {/* Footer CTA */}
-        <section className="my-8 mb-12">
+        <section className="py-24 mb-12">
           <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-center">
             <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
             <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
             <h2 className="text-2xl font-semibold text-white sm:text-3xl">
-              Is Your Portfolio Actually Good?
+              Your Portfolio Might Be Riskier Than You Think
             </h2>
             <p className="mt-3 text-slate-400">
               Find out in 30 seconds. No signup required.
@@ -403,8 +425,8 @@ export default function Home() {
                 fontWeight: 700,
                 borderRadius: "9999px",
                 color: "white",
-                background: "linear-gradient(to right, #ec4899, #9333ea)",
-                boxShadow: "0 0 30px rgba(236,72,153,0.5)",
+                background: "#7c3aed",
+                boxShadow: "0 0 30px rgba(124,58,237,0.6)",
               }}
             >
               Analyse My Portfolio →
