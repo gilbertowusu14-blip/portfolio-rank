@@ -6,6 +6,13 @@ import { useSearchParams } from "next/navigation";
 
 const STORAGE_KEY = "portfolio-rank-form";
 
+const LOADING_MESSAGES = [
+  "Analysing your holdings...",
+  "Calculating risk exposure...",
+  "Scoring your portfolio...",
+  "Generating your assessment...",
+];
+
 interface StoredForm {
   holdings: { ticker: string; weight: number }[];
   riskTolerance: string;
@@ -56,6 +63,7 @@ function ResultPage() {
   const [score, setScore] = useState<ScoreResult | null>(null);
   const [ai, setAi] = useState<AiNarrative | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [unlockLoading, setUnlockLoading] = useState(false);
@@ -192,6 +200,14 @@ function ResultPage() {
     };
   }, [searchParams]);
 
+  useEffect(() => {
+    if (!stored || (!loading && score && ai)) return;
+    const id = setInterval(() => {
+      setLoadingMessageIndex((i) => (i + 1) % LOADING_MESSAGES.length);
+    }, 1500);
+    return () => clearInterval(id);
+  }, [stored, loading, score, ai]);
+
   async function handleUnlock() {
     const raw = typeof window !== "undefined" ? window.localStorage.getItem(STORAGE_KEY) : null;
     if (!raw) {
@@ -309,6 +325,35 @@ function ResultPage() {
           </p>
         )}
 
+        {stored && (loading || !score || !ai) && (
+          <div
+            className="flex flex-col items-center justify-center py-24 min-h-[280px] rounded-2xl bg-[#0a0a0a] border border-amber-500/20"
+            style={{ backgroundColor: "#0a0a0a" }}
+          >
+            <div
+              className="w-14 h-14 rounded-full border-2 border-amber-500/30 border-t-amber-400 animate-spin mb-6"
+              aria-hidden
+            />
+            <p
+              key={loadingMessageIndex}
+              className="result-loading-message text-amber-400/90 text-sm font-medium min-h-[1.5rem] text-center"
+            >
+              {LOADING_MESSAGES[loadingMessageIndex]}
+            </p>
+            <style dangerouslySetInnerHTML={{ __html: `
+              @keyframes resultLoadingFade {
+                from { opacity: 0; }
+                to { opacity: 1; }
+              }
+              .result-loading-message {
+                animation: resultLoadingFade 0.3s ease-out;
+              }
+            `}} />
+          </div>
+        )}
+
+        {stored && !loading && score && ai && (
+        <>
         {/* Score card */}
         <section className="mb-8 rounded-2xl bg-[#111111] border border-yellow-500/20 p-6">
           <div className="flex flex-col items-center gap-3 mb-4">
@@ -385,11 +430,6 @@ function ResultPage() {
                 💡 With optimisation, your portfolio could reach {displayTarget.toFixed(1)}
               </div>
             )}
-            {loading && (
-              <p className="text-xs text-slate-500">
-                Analysing your holdings with AI…
-              </p>
-            )}
             {error && (
               <p className="text-xs text-amber-400">
                 {error} You can still unlock the full report below.
@@ -430,7 +470,7 @@ function ResultPage() {
                         <div className="flex justify-between text-xs text-slate-400">
                           <span>{labelText}</span>
                           <span className="text-slate-200 font-medium">
-                            {value}/100
+                            {(value / 10).toFixed(1)}/10
                           </span>
                         </div>
                         <div className="h-2 w-full rounded-full bg-[#1a1a1a] overflow-hidden">
@@ -560,6 +600,9 @@ function ResultPage() {
             )}
           </div>
         </section>
+        </>
+        )}
+
       </div>
 
       {/* Sticky bottom bar — hidden when report unlocked */}
