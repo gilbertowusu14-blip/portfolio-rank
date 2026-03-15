@@ -254,7 +254,7 @@ function ResultPage() {
         </Link>
 
         <header className="mb-6">
-          <h1 className="text-2xl font-semibold tracking-tight mb-1">
+          <h1 className="font-heading text-2xl font-semibold tracking-tight mb-1">
             Your Free Rankfolio™ Preview
           </h1>
           <p className="text-sm text-zinc-400">
@@ -278,7 +278,7 @@ function ResultPage() {
                 Rankfolio Score
               </div>
               <div className="flex items-baseline gap-2">
-                <span className="text-4xl font-semibold leading-none">
+                <span className="font-heading text-4xl font-semibold leading-none">
                   {displayScore !== null ? displayScore.toFixed(1) : "–"}
                 </span>
                 <span className="text-sm text-zinc-500">/10</span>

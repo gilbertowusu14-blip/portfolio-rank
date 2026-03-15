@@ -76,7 +76,7 @@ function AnalyzePage() {
         >
           ← Back
         </Link>
-        <h1 className="text-2xl font-bold mb-2">Analyse portfolio</h1>
+        <h1 className="font-heading text-2xl font-bold mb-2">Analyse portfolio</h1>
         <p className="text-zinc-400 mb-8">Enter your holdings and preferences.</p>
 
         <form onSubmit={handleSubmit} className="space-y-6">

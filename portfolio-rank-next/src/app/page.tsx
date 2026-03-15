@@ -87,7 +87,7 @@ export default function Home() {
         {/* Section 1 — Hero */}
         <section className="pb-12 text-center">
           <div className="max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-black text-center leading-tight tracking-tight">
+            <h1 className="font-heading text-4xl md:text-6xl font-black text-center leading-tight tracking-tight">
               <span className="text-white">How Strong Is Your</span>
               <br />
               <span className="text-yellow-400 whitespace-nowrap">
@@ -101,29 +101,23 @@ export default function Home() {
 
             {/* 3 step cards */}
             <div className="mt-12 grid gap-8 sm:grid-cols-3">
-              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-white/[0.03] p-6 text-left">
-                <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
-                <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-yellow-500/5 to-transparent" />
+              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
                 <div className="text-2xl">📋</div>
-                <h3 className="mt-2 font-semibold text-white">Enter Portfolio</h3>
+                <h3 className="font-heading mt-2 font-semibold text-white">Enter Portfolio</h3>
                 <p className="mt-1 text-sm text-slate-400">
                   Add your holdings and weights in seconds
                 </p>
               </div>
-              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-white/[0.03] p-6 text-left">
-                <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
-                <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-yellow-500/5 to-transparent" />
+              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
                 <div className="text-2xl">⚡</div>
-                <h3 className="mt-2 font-semibold text-white">AI Analysis</h3>
+                <h3 className="font-heading mt-2 font-semibold text-white">AI Analysis</h3>
                 <p className="mt-1 text-sm text-slate-400">
                   Our engine scores diversification, risk & more
                 </p>
               </div>
-              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-white/[0.03] p-6 text-left">
-                <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
-                <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-yellow-500/5 to-transparent" />
+              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
                 <div className="text-2xl">📊</div>
-                <h3 className="mt-2 font-semibold text-white">Your Score</h3>
+                <h3 className="font-heading mt-2 font-semibold text-white">Your Score</h3>
                 <p className="mt-1 text-sm text-slate-400">
                   See your grade and where to improve
                 </p>
@@ -154,7 +148,7 @@ export default function Home() {
 
         {/* Section 2 — Logo carousel */}
         <section className="pb-24">
-          <h2 className="mb-8 text-center text-xl font-semibold text-white sm:text-2xl">
+          <h2 className="font-heading mb-8 text-center text-xl font-semibold text-white sm:text-2xl">
             Works with any portfolio of stocks or ETFs
           </h2>
           <div
@@ -169,30 +163,36 @@ export default function Home() {
             <div className="flex w-max gap-12 items-center animate-scroll">
               {CAROUSEL_ICONS.length > 0 && (
                 <>
-                  {CAROUSEL_ICONS.map((si, i) => (
+                  {CAROUSEL_ICONS.map((si, i) => {
+                    const fill = si.hex === "000000" ? "ffffff" : si.hex;
+                    return (
                     <svg
                       key={`1-${si.slug}-${i}`}
                       role="img"
                       viewBox="0 0 24 24"
                       className="w-12 h-12 opacity-80 hover:opacity-100 transition-opacity shrink-0"
-                      style={{ fill: `#${si.hex}` }}
+                      style={{ fill: `#${fill}` }}
                       aria-label={si.title}
                     >
                       <path d={si.path} />
                     </svg>
-                  ))}
-                  {CAROUSEL_ICONS.map((si, i) => (
+                    );
+                  })}
+                  {CAROUSEL_ICONS.map((si, i) => {
+                    const fill = si.hex === "000000" ? "ffffff" : si.hex;
+                    return (
                     <svg
                       key={`2-${si.slug}-${i}`}
                       role="img"
                       viewBox="0 0 24 24"
                       className="w-12 h-12 opacity-80 hover:opacity-100 transition-opacity shrink-0"
-                      style={{ fill: `#${si.hex}` }}
+                      style={{ fill: `#${fill}` }}
                       aria-label={si.title}
                     >
                       <path d={si.path} />
                     </svg>
-                  ))}
+                    );
+                  })}
                 </>
               )}
             </div>
@@ -201,14 +201,12 @@ export default function Home() {
 
         {/* Section 3 — Stat cards */}
         <section className="pt-8 pb-16 bg-transparent">
-          <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-white/[0.03] p-6">
-            <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
-            <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-yellow-500/5 to-transparent" />
-            <h2 className="mb-8 text-center text-2xl font-semibold text-white">
+          <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6">
+            <h2 className="font-heading mb-8 text-center text-2xl font-semibold text-white">
               Most Portfolios Have Hidden Problems
             </h2>
             <div className="grid gap-8 sm:grid-cols-3">
-              <div className="relative rounded-2xl border border-white/15 bg-white/[0.04] p-8 text-center">
+              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
                 <div
                   className="text-5xl font-black"
                   style={{ color: ACCENT_GOLD }}
@@ -220,9 +218,9 @@ export default function Home() {
                   Retail investors are overconcentrated in a single sector
                 </p>
               </div>
-              <div className="relative rounded-2xl border border-white/15 bg-white/[0.04] p-8 text-center">
+              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
                 <div
-                  className="text-5xl font-black"
+                  className="font-heading text-5xl font-black"
                   style={{ color: ACCENT_GOLD }}
                 >
                   &lt;5
@@ -232,9 +230,9 @@ export default function Home() {
                   Average number of stocks held by retail investors
                 </p>
               </div>
-              <div className="relative rounded-2xl border border-white/15 bg-white/[0.04] p-8 text-center">
+              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
                 <div
-                  className="text-5xl font-black"
+                  className="font-heading text-5xl font-black"
                   style={{ color: ACCENT_GOLD }}
                 >
                   2.3×
@@ -252,11 +250,11 @@ export default function Home() {
         <section className="flex justify-center py-24">
           <div className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-center">
             <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
-            <h2 className="text-xl font-semibold text-white">
+            <h2 className="font-heading text-xl font-semibold text-white">
               Average Rankfolio Score
             </h2>
             <div
-              className="mt-4 text-5xl font-bold"
+              className="font-heading mt-4 text-5xl font-bold"
               style={{ color: ACCENT_GOLD }}
             >
               6.3 / 10
@@ -300,7 +298,7 @@ export default function Home() {
         <section className="py-24 bg-transparent">
           <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6">
             <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
-            <h2 className="mb-10 text-center text-2xl font-semibold text-white">
+            <h2 className="font-heading mb-10 text-center text-2xl font-semibold text-white">
               How Your Portfolio Score Is Calculated
             </h2>
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -345,7 +343,7 @@ export default function Home() {
                     {item.icon}
                   </span>
                   <div>
-                    <h3 className="font-semibold text-white">{item.name}</h3>
+                    <h3 className="font-heading font-semibold text-white">{item.name}</h3>
                     <p className="mt-1 text-sm text-slate-400">{item.desc}</p>
                   </div>
                 </div>
@@ -356,14 +354,14 @@ export default function Home() {
 
         {/* Section 6 — Free score */}
         <section className="py-24 text-center">
-          <h2 className="text-2xl font-semibold text-white">
+          <h2 className="font-heading text-2xl font-semibold text-white">
             Start With a{" "}
             <span style={{ color: ACCENT_GOLD }}>Free</span> Portfolio Score
           </h2>
           <div className="mx-auto mt-8 grid max-w-4xl gap-8 sm:grid-cols-2">
               <div className="relative overflow-hidden rounded-2xl bg-[#111111] border border-yellow-500/20 p-6 text-left">
                 <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
-                <h3 className="text-lg font-semibold text-white">Free</h3>
+                <h3 className="font-heading text-lg font-semibold text-white">Free</h3>
                 <ul className="mt-4 space-y-2 text-sm text-slate-400">
                   <li className="flex items-center gap-2">
                     <span className="text-green-400">✓</span> Portfolio score 0–10
@@ -379,7 +377,7 @@ export default function Home() {
               <div className="relative overflow-hidden rounded-2xl bg-[#111111] border border-yellow-500/20 p-6 text-left">
                 <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
                 <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-semibold text-yellow-400">Premium</h3>
+                  <h3 className="font-heading text-lg font-semibold text-yellow-400">Premium</h3>
                   <span className="rounded-full bg-yellow-600 px-2 py-0.5 text-xs font-semibold text-white">£3.99</span>
                 </div>
                 <ul className="mt-4 space-y-2 text-sm text-slate-400">
@@ -407,7 +405,7 @@ export default function Home() {
         <section className="py-24 mb-12">
           <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-center">
             <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
-            <h2 className="text-2xl font-semibold text-white sm:text-3xl">
+            <h2 className="font-heading text-2xl font-semibold text-white sm:text-3xl">
               Your Portfolio Might Be Riskier Than You Think
             </h2>
             <p className="mt-3 text-slate-400">
