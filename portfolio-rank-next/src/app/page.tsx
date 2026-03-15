@@ -1,5 +1,6 @@
 import Link from "next/link";
 import * as SimpleIcons from "simple-icons";
+import MagneticButton from "@/components/MagneticButton";
 
 const ACCENT_GOLD = "#f59e0b";
 
@@ -130,21 +131,9 @@ export default function Home() {
             </div>
 
             <div className="mt-16">
-              <a
-                href="/analyze"
-                style={{
-                  display: "inline-block",
-                  padding: "16px 40px",
-                  fontSize: "18px",
-                  fontWeight: 700,
-                  borderRadius: "9999px",
-                  color: "#0a0a0a",
-                  background: "#f59e0b",
-                  boxShadow: "0 0 30px rgba(245,158,11,0.5)",
-                }}
-              >
+              <MagneticButton href="/analyze">
                 Analyse My Portfolio →
-              </a>
+              </MagneticButton>
               <p className="mt-6 text-sm text-slate-400">
                 ⚡ Instant Results • 🔒 No signup required • 📊 AI Powered
               </p>
@@ -301,22 +290,9 @@ export default function Home() {
             <p className="mt-2 text-xs text-slate-400">
               Weak — Average — Strong — Elite
             </p>
-            <a
-              href="/analyze"
-              className="mt-4"
-              style={{
-                display: "inline-block",
-                padding: "16px 40px",
-                fontSize: "18px",
-                fontWeight: 700,
-                borderRadius: "9999px",
-                color: "#0a0a0a",
-                background: "#f59e0b",
-                boxShadow: "0 0 30px rgba(245,158,11,0.5)",
-              }}
-            >
+            <MagneticButton href="/analyze" className="mt-4">
               What&apos;s your score? →
-            </a>
+            </MagneticButton>
           </div>
         </section>
 
@@ -422,22 +398,9 @@ export default function Home() {
                 </ul>
               </div>
             </div>
-          <a
-            href="/analyze"
-            className="mt-8 flex justify-center"
-            style={{
-              display: "inline-block",
-              padding: "16px 40px",
-              fontSize: "18px",
-              fontWeight: 700,
-              borderRadius: "9999px",
-              color: "#0a0a0a",
-              background: "#f59e0b",
-              boxShadow: "0 0 30px rgba(245,158,11,0.5)",
-            }}
-          >
+          <MagneticButton href="/analyze" className="mt-8 flex justify-center">
             Get Your Free Score →
-          </a>
+          </MagneticButton>
         </section>
 
         {/* Footer CTA */}
@@ -450,22 +413,9 @@ export default function Home() {
             <p className="mt-3 text-slate-400">
               Find out in 30 seconds. No signup required.
             </p>
-            <a
-              href="/analyze"
-              className="mt-6"
-              style={{
-                display: "inline-block",
-                padding: "16px 40px",
-                fontSize: "18px",
-                fontWeight: 700,
-                borderRadius: "9999px",
-                color: "#0a0a0a",
-                background: "#f59e0b",
-                boxShadow: "0 0 30px rgba(245,158,11,0.5)",
-              }}
-            >
+            <MagneticButton href="/analyze" className="mt-6">
               Analyse My Portfolio →
-            </a>
+            </MagneticButton>
           </div>
         </section>
       </main>
