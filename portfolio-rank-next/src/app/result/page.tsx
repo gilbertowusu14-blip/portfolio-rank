@@ -137,10 +137,15 @@ function ResultPage() {
         });
 
         if (aiRes.ok) {
-          const aiJson = (await aiRes.json()) as AiNarrative;
+          const aiJson = (await aiRes.json()) as AiNarrative & { _error?: string };
+          if (aiJson._error) alert("[AI error]: " + aiJson._error);
+          console.log("[Result page] /api/ai returned — aiJson.blueprint (first 200 chars):", aiJson?.blueprint?.slice(0, 200));
+          console.log("[Result page] aiJson.blueprint is fallback?", aiJson?.blueprint?.includes("Your portfolio shows structural concentration risk given the tickers and weights provided"));
           if (!cancelled) {
             setAi(aiJson);
           }
+        } else {
+          console.warn("[Result page] /api/ai !ok:", aiRes.status);
         }
       } catch {
         if (!cancelled) {

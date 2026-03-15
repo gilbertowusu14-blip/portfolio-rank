@@ -1,4 +1,16 @@
+console.log("[AI route] FILE LOADED");
 import { NextRequest, NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
+
+/**
+ * AI narrative (summary, strengths, weaknesses, actions, blueprint) is generated
+ * at ANALYSIS TIME when the result page loads — not at payment time.
+ * Flow: result page → POST /api/analyze → POST /api/ai (this route) → state set.
+ * On Unlock, store-report saves that snapshot to Supabase. Premium page later
+ * retrieves the stored report. So updated prompts only apply to NEW analyses;
+ * clear premium_reports and re-run analyze → result → unlock to see new output.
+ */
 
 interface HoldingInput {
   ticker: string;
@@ -90,18 +102,64 @@ const FALLBACK_RESPONSE: AiNarrative = {
     "1. Diagnosis —\nYour portfolio shows structural concentration risk given the tickers and weights provided. The diversification and concentration subscores indicate where the main gaps are.\n\n2. Risk-Adjusted Reality —\nGrowth quality and valuation risk subscores suggest whether you are being compensated for the risk you take.\n\n3. What an Optimised Version Looks Like —\nA better structure would include more positions and sectors based on your current holdings.\n\n4. Reallocation Logic —\nShifting weights would improve diversification, concentration risk, and drawdown exposure subscores.\n\n5. Crash Resilience —\nDrawdown exposure and sector concentration indicate how this portfolio would behave in a sharp correction.\n\n6. Path Forward —\nAct progressively; start with the single highest-impact change from the actions above.",
 };
 
+function buildPortfolioDataBlock(body: AiRequestBody): string {
+  const holdingsLine =
+    body.holdings
+      .filter((h) => h.ticker?.trim())
+      .map((h) => `${h.ticker.trim()} ${Number(h.weight)}%`)
+      .join(", ") || "none";
+  const subscores = body.subscores;
+  const subscoreLines = [
+    `Diversification ${subscores.diversification}/100`,
+    `Concentration Risk ${subscores.concentrationRisk}/100`,
+    `Growth Quality ${subscores.growthQuality}/100`,
+    `Valuation Risk ${subscores.valuationRisk}/100`,
+    `Drawdown Exposure ${subscores.drawdownExposure}/100`,
+    `Market Comparison ${subscores.marketComparison}/100`,
+  ].join(", ");
+  return [
+    "Portfolio holdings: " + holdingsLine,
+    "Subscores: " + subscoreLines,
+    "Risk profile: " + body.riskTolerance,
+    "Time horizon: " + body.timeHorizon,
+    "Overall score: " + body.score + "/100",
+    "Label: " + body.label,
+  ].join("\n");
+}
+
 export async function POST(request: NextRequest) {
   let body: AiRequestBody;
   try {
     body = (await request.json()) as AiRequestBody;
-  } catch {
-    return NextResponse.json(FALLBACK_RESPONSE);
+  } catch (e) {
+    console.error("[AI route] Request body parse failed — using fallback:", e);
+    return NextResponse.json({ ...FALLBACK_RESPONSE, _error: `Request body parse failed: ${String(e)}` });
   }
 
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    return NextResponse.json(FALLBACK_RESPONSE);
+    console.error("[AI route] OPENAI_API_KEY missing — using fallback");
+    return NextResponse.json({ ...FALLBACK_RESPONSE, _error: "OPENAI_API_KEY missing" });
   }
+
+  const portfolioDataBlock = buildPortfolioDataBlock(body);
+  const userMessage = `${portfolioDataBlock}\n\n---\n\nUsing this exact portfolio data above (tickers, weights, subscores, risk profile, time horizon), generate the JSON response. Every part of your output must reference these concrete numbers and tickers — never give generic advice.`;
+
+  const messages: { role: "system" | "user"; content: string }[] = [
+    { role: "system", content: SYSTEM_PROMPT },
+    { role: "user", content: userMessage },
+  ];
+
+  console.log("[AI route] Request body received:", {
+    holdings: body.holdings,
+    subscores: body.subscores,
+    riskTolerance: body.riskTolerance,
+    timeHorizon: body.timeHorizon,
+    score: body.score,
+    label: body.label,
+  });
+  console.log("[AI route] Full user message sent to OpenAI:\n", userMessage);
+  console.log("[AI route] System prompt length (chars):", SYSTEM_PROMPT.length);
 
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -112,34 +170,44 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: JSON.stringify(body) },
-        ],
+        messages,
         response_format: { type: "json_object" },
       }),
     });
 
     if (!response.ok) {
-      return NextResponse.json(FALLBACK_RESPONSE);
+      const errText = await response.text();
+      console.error("[AI route] OpenAI API !ok:", response.status, errText);
+      return NextResponse.json({ ...FALLBACK_RESPONSE, _error: `OpenAI !ok: ${response.status} ${errText}` });
     }
 
     const json = (await response.json()) as OpenAIChatCompletionResponse;
+    console.log("[AI route] Raw OpenAI response (full):", JSON.stringify(json, null, 2));
     const content = json.choices[0]?.message?.content;
     if (!content) {
-      return NextResponse.json(FALLBACK_RESPONSE);
+      console.error("[AI route] No content in choices[0].message — using fallback");
+      return NextResponse.json({ ...FALLBACK_RESPONSE, _error: "No content in choices[0].message" });
     }
+    console.log("[AI route] Raw content string from OpenAI:", content);
 
     let parsed: AiNarrative;
     try {
       parsed = JSON.parse(content) as AiNarrative;
-    } catch {
-      return NextResponse.json(FALLBACK_RESPONSE);
+    } catch (parseErr) {
+      console.error("[AI route] JSON.parse failed — using fallback. Error:", parseErr);
+      console.error("[AI route] Content that failed to parse:", content.slice(0, 500));
+      return NextResponse.json({ ...FALLBACK_RESPONSE, _error: `JSON.parse failed: ${String(parseErr)}` });
     }
 
+    if (!parsed.blueprint || typeof parsed.blueprint !== "string") {
+      console.error("[AI route] Parsed object missing or invalid blueprint:", typeof parsed?.blueprint);
+      return NextResponse.json({ ...FALLBACK_RESPONSE, _error: `Parsed object missing or invalid blueprint: ${typeof parsed?.blueprint}` });
+    }
+    console.log("[AI route] Returning parsed response, blueprint length:", parsed.blueprint.length);
     return NextResponse.json(parsed);
-  } catch {
-    return NextResponse.json(FALLBACK_RESPONSE);
+  } catch (err) {
+    console.error("[AI route] Caught error — using fallback:", err);
+    return NextResponse.json({ ...FALLBACK_RESPONSE, _error: `Caught: ${String(err)}` });
   }
 }
 
