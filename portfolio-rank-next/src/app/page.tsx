@@ -1,6 +1,38 @@
 import Link from "next/link";
+import * as SimpleIcons from "simple-icons";
 
 const ACCENT_PURPLE = "#7c3aed";
+
+const CAROUSEL_SLUGS = [
+  "apple",
+  "microsoft",
+  "amazon",
+  "nvidia",
+  "google",
+  "tesla",
+  "meta",
+  "netflix",
+  "amd",
+  "samsung",
+  "spotify",
+  "adobe",
+  "paypal",
+  "uber",
+  "airbnb",
+] as const;
+
+function getIcon(slug: string): { path: string; title: string; slug: string; hex: string } | null {
+  const key = "si" + slug.charAt(0).toUpperCase() + slug.slice(1).replace(/\s/g, "");
+  const icon = (SimpleIcons as Record<string, { path: string; title: string; slug: string; hex: string } | undefined>)[key];
+  return icon ?? null;
+}
+
+const CAROUSEL_ICONS = CAROUSEL_SLUGS.map((s) => getIcon(s)).filter(Boolean) as {
+  path: string;
+  title: string;
+  slug: string;
+  hex: string;
+}[];
 
 export default function Home() {
   return (
@@ -11,12 +43,12 @@ export default function Home() {
       <style
         dangerouslySetInnerHTML={{
           __html: `
-            @keyframes pr-scroll {
+            @keyframes scroll {
               0% { transform: translateX(0); }
               100% { transform: translateX(-50%); }
             }
-            .pr-scroll-animate {
-              animation: pr-scroll 30s linear infinite;
+            .animate-scroll {
+              animation: scroll 30s linear infinite;
             }
           `,
         }}
@@ -145,36 +177,41 @@ export default function Home() {
                 "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
             }}
           >
-            <div className="pr-scroll-animate flex w-max gap-12 whitespace-nowrap text-slate-400">
-                <span className="text-2xl font-medium">Apple</span>
-                <span className="text-2xl font-medium">Microsoft</span>
-                <span className="text-2xl font-medium">Amazon</span>
-                <span className="text-2xl font-medium">Nvidia</span>
-                <span className="text-2xl font-medium">Google</span>
-                <span className="text-2xl font-medium">Tesla</span>
-                <span className="text-2xl font-medium">Meta</span>
-                <span className="text-2xl font-medium">Netflix</span>
-                <span className="text-2xl font-medium">Berkshire</span>
-                <span className="text-2xl font-medium">TSMC</span>
-                <span className="text-2xl font-medium">AMD</span>
-                {/* Duplicate for seamless loop */}
-                <span className="text-2xl font-medium">Apple</span>
-                <span className="text-2xl font-medium">Microsoft</span>
-                <span className="text-2xl font-medium">Amazon</span>
-                <span className="text-2xl font-medium">Nvidia</span>
-                <span className="text-2xl font-medium">Google</span>
-                <span className="text-2xl font-medium">Tesla</span>
-                <span className="text-2xl font-medium">Meta</span>
-                <span className="text-2xl font-medium">Netflix</span>
-                <span className="text-2xl font-medium">Berkshire</span>
-                <span className="text-2xl font-medium">TSMC</span>
-                <span className="text-2xl font-medium">AMD</span>
-              </div>
+            <div className="flex w-max gap-12 items-center animate-scroll">
+              {CAROUSEL_ICONS.length > 0 && (
+                <>
+                  {CAROUSEL_ICONS.map((si, i) => (
+                    <svg
+                      key={`1-${si.slug}-${i}`}
+                      role="img"
+                      viewBox="0 0 24 24"
+                      className="w-12 h-12 opacity-80 hover:opacity-100 transition-opacity shrink-0"
+                      style={{ fill: `#${si.hex}` }}
+                      aria-label={si.title}
+                    >
+                      <path d={si.path} />
+                    </svg>
+                  ))}
+                  {CAROUSEL_ICONS.map((si, i) => (
+                    <svg
+                      key={`2-${si.slug}-${i}`}
+                      role="img"
+                      viewBox="0 0 24 24"
+                      className="w-12 h-12 opacity-80 hover:opacity-100 transition-opacity shrink-0"
+                      style={{ fill: `#${si.hex}` }}
+                      aria-label={si.title}
+                    >
+                      <path d={si.path} />
+                    </svg>
+                  ))}
+                </>
+              )}
+            </div>
             </div>
         </section>
 
         {/* Section 3 — Stat cards */}
-        <section className="py-24 bg-transparent">
+        <section className="pt-8 pb-16 bg-transparent">
           <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6">
             <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
             <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
@@ -182,9 +219,7 @@ export default function Home() {
               Most Portfolios Have Hidden Problems
             </h2>
             <div className="grid gap-8 sm:grid-cols-3">
-              <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-center">
-                <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
-                <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
+              <div className="relative rounded-2xl border border-white/15 bg-white/[0.04] p-8 text-center">
                 <div
                   className="text-5xl font-black"
                   style={{ color: ACCENT_PURPLE }}
@@ -196,9 +231,7 @@ export default function Home() {
                   Retail investors are overconcentrated in a single sector
                 </p>
               </div>
-              <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-center">
-                <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
-                <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
+              <div className="relative rounded-2xl border border-white/15 bg-white/[0.04] p-8 text-center">
                 <div
                   className="text-5xl font-black"
                   style={{ color: ACCENT_PURPLE }}
@@ -210,9 +243,7 @@ export default function Home() {
                   Average number of stocks held by retail investors
                 </p>
               </div>
-              <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-center">
-                <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
-                <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
+              <div className="relative rounded-2xl border border-white/15 bg-white/[0.04] p-8 text-center">
                 <div
                   className="text-5xl font-black"
                   style={{ color: ACCENT_PURPLE }}
