@@ -44,38 +44,103 @@ interface QuoteSummaryResult {
   quoteType?: string | null;
 }
 
+// Minimal shape from yahoo-finance2 quote() for fallback mapping.
+interface YahooQuoteLike {
+  symbol?: string | null;
+  quoteType?: string | null;
+  marketCap?: number | null;
+  beta?: number | null;
+  averageDailyVolume3Month?: number | null;
+}
+
 /**
- * Fetch company or ETF profile for one ticker using yahoo-finance2.
+ * Build FMPProfile from a Yahoo quote() result. Use displaySymbol so the profile
+ * is keyed by the ticker we requested (e.g. VUAG), not the resolved symbol (e.g. VUAG.L).
+ */
+function profileFromQuote(quote: YahooQuoteLike, displaySymbol: string): FMPProfile {
+  const qt = (quote.quoteType ?? "").toUpperCase();
+  const isEtf = qt === "ETF";
+  return {
+    symbol: displaySymbol,
+    sector: isEtf ? "ETF" : null,
+    beta: quote.beta ?? null,
+    mktCap: quote.marketCap ?? null,
+    volAvg: quote.averageDailyVolume3Month ?? null,
+    type: isEtf ? "etf" : "stock",
+  };
+}
+
+/**
+ * Fetch company or ETF profile: try quoteSummary first (best for US tickers),
+ * then Yahoo quote() as fallback, then quote(symbol + '.L') for UK/European symbols.
  * Uses in-memory cache (60 min TTL). Throws if ticker is not found or fetch exceeds 5s.
  */
 export async function fetchCompanyProfile(ticker: string): Promise<FMPProfile> {
-  const key = ticker.toUpperCase();
+  const key = ticker.toUpperCase().trim();
   const cached = cache.get(key);
   if (cached && !isExpired(cached)) {
     return cached.data;
   }
 
+  const yahooFinance = new YahooFinance();
+
   const fetchProfile = async (): Promise<FMPProfile> => {
-    const yahooFinance = new YahooFinance();
-    const result = (await yahooFinance.quoteSummary(key, {
-      modules: ["assetProfile", "summaryDetail", "price"],
-    })) as QuoteSummaryResult;
+    // 1. Try quoteSummary first (works well for US tickers)
+    try {
+      const result = (await yahooFinance.quoteSummary(key, {
+        modules: ["assetProfile", "summaryDetail", "price"],
+      })) as QuoteSummaryResult;
+      const hasData =
+        result.price?.marketCap != null ||
+        result.assetProfile?.sector != null ||
+        (result.summaryDetail?.beta != null && !Number.isNaN(result.summaryDetail.beta));
+      if (hasData) {
+        const isEtf =
+          (result.quoteType?.toUpperCase?.() ?? "") === "ETF" ||
+          (result.assetProfile?.sector == null && result.price?.marketCap != null);
+        const profile: FMPProfile = {
+          symbol: key,
+          sector: isEtf ? "ETF" : (result.assetProfile?.sector ?? null),
+          beta: result.summaryDetail?.beta ?? null,
+          mktCap: result.price?.marketCap ?? null,
+          volAvg: result.price?.averageVolume ?? null,
+          type: isEtf ? "etf" : "stock",
+        };
+        cache.set(key, { data: profile, fetchedAt: Date.now() });
+        return profile;
+      }
+    } catch {
+      // fall through to Yahoo quote() fallback
+    }
 
-    const isEtf =
-      (result.quoteType?.toUpperCase?.() ?? "") === "ETF" ||
-      (result.assetProfile?.sector == null && result.price?.marketCap != null);
+    // 2. Yahoo quote() fallback (covers UK/European and UCITS ETFs)
+    try {
+      const quote = (await yahooFinance.quote(key)) as YahooQuoteLike;
+      if (quote?.marketCap != null || quote?.symbol != null) {
+        const profile = profileFromQuote(quote, key);
+        cache.set(key, { data: profile, fetchedAt: Date.now() });
+        return profile;
+      }
+    } catch {
+      // fall through to .L suffix try
+    }
 
-    const profile: FMPProfile = {
-      symbol: key,
-      sector: isEtf ? "ETF" : (result.assetProfile?.sector ?? null),
-      beta: result.summaryDetail?.beta ?? null,
-      mktCap: result.price?.marketCap ?? null,
-      volAvg: result.price?.averageVolume ?? null,
-      type: isEtf ? "etf" : "stock",
-    };
+    // 3. Try with .L suffix for UK listings (e.g. VUAG -> VUAG.L)
+    if (!key.endsWith(".L")) {
+      const ukSymbol = `${key}.L`;
+      try {
+        const quote = (await yahooFinance.quote(ukSymbol)) as YahooQuoteLike;
+        if (quote?.marketCap != null || quote?.symbol != null) {
+          const profile = profileFromQuote(quote, key);
+          cache.set(key, { data: profile, fetchedAt: Date.now() });
+          return profile;
+        }
+      } catch {
+        // fall through to throw
+      }
+    }
 
-    cache.set(key, { data: profile, fetchedAt: Date.now() });
-    return profile;
+    throw new Error(`Ticker ${key} not found`);
   };
 
   const timeoutPromise = new Promise<never>((_, reject) =>
