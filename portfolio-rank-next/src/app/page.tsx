@@ -23,7 +23,7 @@ export default function Home() {
       />
 
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#0a0f1e]/80 backdrop-blur-md">
+      <nav className="sticky top-0 z-50 backdrop-blur-md bg-[#0a0f1e]/70 border-b border-white/10">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <Link href="/" className="text-xl font-bold">
             <span className="text-white">Portfolio</span>
@@ -49,7 +49,7 @@ export default function Home() {
 
       <main className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         {/* Section 1 — Hero */}
-        <section className="pb-28 text-center">
+        <section className="pb-12 text-center">
           <h1 className="text-6xl font-black leading-tight tracking-tight md:text-8xl">
             <span className="text-white">How Strong Is Your</span>
             <br />
@@ -93,34 +93,35 @@ export default function Home() {
             </div>
           </div>
 
-          <a
-            href="/analyze"
-            className="mt-10"
-            style={{
-              display: "inline-block",
-              padding: "16px 40px",
-              fontSize: "18px",
-              fontWeight: 700,
-              borderRadius: "9999px",
-              color: "white",
-              background: "#7c3aed",
-              boxShadow: "0 0 30px rgba(124,58,237,0.6)",
-            }}
-          >
-            Analyse My Portfolio →
-          </a>
-          <p className="mt-6 text-sm text-slate-400">
-            ⚡ Instant Results • 🔒 No signup required • 📊 AI Powered
-          </p>
-          <p className="mt-3 text-sm text-slate-500">
-            Built on 6 professional portfolio risk metrics used by institutional investors
-          </p>
+          <div className="mt-16">
+            <a
+              href="/analyze"
+              style={{
+                display: "inline-block",
+                padding: "16px 40px",
+                fontSize: "18px",
+                fontWeight: 700,
+                borderRadius: "9999px",
+                color: "white",
+                background: "#7c3aed",
+                boxShadow: "0 0 30px rgba(124,58,237,0.6)",
+              }}
+            >
+              Analyse My Portfolio →
+            </a>
+            <p className="mt-6 text-sm text-slate-400">
+              ⚡ Instant Results • 🔒 No signup required • 📊 AI Powered
+            </p>
+            <p className="mt-3 text-sm text-slate-500">
+              Built on 6 professional portfolio risk metrics used by institutional investors
+            </p>
+          </div>
         </section>
 
         {/* Section 2 — Logo carousel */}
         <section className="py-24">
           <h2 className="mb-8 text-center text-xl font-semibold text-white sm:text-2xl">
-            Analyse portfolios containing the world&apos;s largest companies
+            Works with any portfolio of stocks or ETFs
           </h2>
           <div
             className="relative overflow-hidden"
@@ -338,15 +339,12 @@ export default function Home() {
 
         {/* Section 6 — Free score */}
         <section className="py-24 text-center bg-white/[0.02]">
-          <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6">
-            <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
-            <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
-            <h2 className="text-2xl font-semibold text-white">
-              Start With a{" "}
-              <span style={{ color: ACCENT_PURPLE }}>Free</span> Portfolio Score
-            </h2>
-            <div className="mx-auto mt-8 grid max-w-4xl gap-8 sm:grid-cols-2">
-              <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-left">
+          <h2 className="text-2xl font-semibold text-white">
+            Start With a{" "}
+            <span style={{ color: ACCENT_PURPLE }}>Free</span> Portfolio Score
+          </h2>
+          <div className="mx-auto mt-8 grid max-w-4xl gap-8 sm:grid-cols-2">
+              <div className="relative overflow-hidden rounded-2xl bg-white/5 border border-white/10 p-6 text-left">
                 <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
                 <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
                 <h3 className="text-lg font-semibold text-emerald-400">Free</h3>
@@ -362,12 +360,12 @@ export default function Home() {
                   </li>
                 </ul>
               </div>
-              <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-left">
+              <div className="relative overflow-hidden rounded-2xl bg-white/10 border border-purple-500/40 shadow-lg shadow-purple-500/10 p-6 text-left">
                 <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
                 <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
                 <div className="flex items-center gap-2">
                   <h3 className="text-lg font-semibold text-purple-400">Premium</h3>
-                  <span className="rounded-full bg-purple-500/30 px-2 py-0.5 text-xs font-semibold text-purple-300">£4</span>
+                  <span className="rounded-full bg-purple-600 px-2 py-0.5 text-xs font-semibold text-white">£3.99</span>
                 </div>
                 <ul className="mt-4 space-y-2 text-sm text-slate-400">
                   <li className="flex items-center gap-2">
@@ -385,23 +383,22 @@ export default function Home() {
                 </ul>
               </div>
             </div>
-            <a
-              href="/analyze"
-              className="mt-8 flex justify-center"
-              style={{
-                display: "inline-block",
-                padding: "16px 40px",
-                fontSize: "18px",
-                fontWeight: 700,
-                borderRadius: "9999px",
-                color: "white",
-                background: "#7c3aed",
-                boxShadow: "0 0 30px rgba(124,58,237,0.6)",
-              }}
-            >
-              Get Your Free Score →
-            </a>
-          </div>
+          <a
+            href="/analyze"
+            className="mt-8 flex justify-center"
+            style={{
+              display: "inline-block",
+              padding: "16px 40px",
+              fontSize: "18px",
+              fontWeight: 700,
+              borderRadius: "9999px",
+              color: "white",
+              background: "#7c3aed",
+              boxShadow: "0 0 30px rgba(124,58,237,0.6)",
+            }}
+          >
+            Get Your Free Score →
+          </a>
         </section>
 
         {/* Footer CTA */}
