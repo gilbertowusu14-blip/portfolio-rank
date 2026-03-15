@@ -193,22 +193,43 @@ function ResultPage() {
       setError("No portfolio data found. Please analyse a portfolio first.");
       return;
     }
-    let portfolioData: unknown;
+    let portfolioData: StoredForm;
     try {
-      portfolioData = JSON.parse(raw);
+      portfolioData = JSON.parse(raw) as StoredForm;
     } catch {
       setError("Invalid portfolio data.");
       return;
     }
-    const sessionData = btoa(
-      encodeURIComponent(JSON.stringify(portfolioData))
-    );
+    if (!score || !ai) {
+      setError("Report not ready. Please wait for the analysis to complete.");
+      return;
+    }
+    const reportKey = crypto.randomUUID();
     setUnlockLoading(true);
     try {
+      const storeRes = await fetch("/api/store-report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reportKey,
+          report: {
+            score: { ...score },
+            ai: { ...ai },
+            form: portfolioData,
+          },
+        }),
+      });
+      if (!storeRes.ok) {
+        setError("Could not prepare report. Try again.");
+        return;
+      }
+      const sessionData = btoa(
+        encodeURIComponent(JSON.stringify(portfolioData))
+      );
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionData }),
+        body: JSON.stringify({ sessionData, reportKey }),
       });
       const json = (await res.json()) as { url?: string; error?: string };
       if (!res.ok || !json.url) {

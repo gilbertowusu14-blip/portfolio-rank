@@ -3,6 +3,7 @@ import Stripe from "stripe";
 
 interface CheckoutRequestBody {
   sessionData: string;
+  reportKey?: string;
 }
 
 const STRIPE_METADATA_VALUE_MAX_LENGTH = 500;
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { sessionData } = body;
+  const { sessionData, reportKey } = body;
   if (typeof sessionData !== "string" || !sessionData.trim()) {
     return NextResponse.json(
       { error: "Missing or invalid sessionData" },
@@ -57,6 +58,16 @@ export async function POST(request: NextRequest) {
         ? sessionData.slice(0, STRIPE_METADATA_VALUE_MAX_LENGTH)
         : sessionData;
 
+    const metadata: Record<string, string> = { sessionData: metadataSessionData };
+    const reportKeyTrimmed = typeof reportKey === "string" && reportKey.trim() ? reportKey.trim() : null;
+    if (reportKeyTrimmed) {
+      metadata.reportKey = reportKeyTrimmed;
+    }
+
+    const successUrl = reportKeyTrimmed
+      ? `${baseUrl}/result/premium?session_id={CHECKOUT_SESSION_ID}&analysis_id=${encodeURIComponent(reportKeyTrimmed)}`
+      : `${baseUrl}/result/premium?session_id={CHECKOUT_SESSION_ID}`;
+
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       line_items: [
@@ -65,11 +76,9 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
-      success_url: `${baseUrl}/result?session_id={CHECKOUT_SESSION_ID}&unlocked=true`,
+      success_url: successUrl,
       cancel_url: `${baseUrl}/result`,
-      metadata: {
-        sessionData: metadataSessionData,
-      },
+      metadata,
     });
 
     const url = session.url;
