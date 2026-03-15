@@ -25,9 +25,12 @@ export default function Home() {
       {/* Navbar */}
       <nav className="sticky top-0 z-50 backdrop-blur-md bg-[#0a0f1e]/70 border-b border-white/10">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-          <Link href="/" className="text-xl font-bold">
-            <span className="text-white">Portfolio</span>
-            <span style={{ color: ACCENT_PURPLE }}>Rank</span>
+          <Link href="/" className="flex items-center gap-2">
+            <img src="/brand/bull-head.png" alt="PortfolioRank" className="h-16 w-auto" />
+            <span className="font-bold text-lg">
+              <span className="text-white">Portfolio</span>
+              <span className="text-purple-400">Rank</span>
+            </span>
           </Link>
           <a
             href="/analyze"
@@ -50,76 +53,86 @@ export default function Home() {
       <main className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         {/* Section 1 — Hero */}
         <section className="pb-12 text-center">
-          <h1 className="text-6xl font-black leading-tight tracking-tight md:text-8xl">
-            <span className="text-white">How Strong Is Your</span>
-            <br />
-            <span className="text-purple-400">
-              Investment Portfolio?
-            </span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400">
-            Get an instant AI-powered score for your portfolio and discover
-            exactly where it&apos;s leaking performance.
-          </p>
-
-          {/* 3 step cards */}
-          <div className="mt-12 grid gap-8 sm:grid-cols-3">
-            <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-left">
-              <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
-              <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
-              <div className="text-2xl">📋</div>
-              <h3 className="mt-2 font-semibold text-white">Enter Portfolio</h3>
-              <p className="mt-1 text-sm text-slate-400">
-                Add your holdings and weights in seconds
-              </p>
-            </div>
-            <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-left">
-              <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
-              <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
-              <div className="text-2xl">⚡</div>
-              <h3 className="mt-2 font-semibold text-white">AI Analysis</h3>
-              <p className="mt-1 text-sm text-slate-400">
-                Our engine scores diversification, risk & more
-              </p>
-            </div>
-            <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-left">
-              <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
-              <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
-              <div className="text-2xl">📊</div>
-              <h3 className="mt-2 font-semibold text-white">Your Score</h3>
-              <p className="mt-1 text-sm text-slate-400">
-                See your grade and where to improve
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-16">
-            <a
-              href="/analyze"
-              style={{
-                display: "inline-block",
-                padding: "16px 40px",
-                fontSize: "18px",
-                fontWeight: 700,
-                borderRadius: "9999px",
-                color: "white",
-                background: "#7c3aed",
-                boxShadow: "0 0 30px rgba(124,58,237,0.6)",
-              }}
-            >
-              Analyse My Portfolio →
-            </a>
-            <p className="mt-6 text-sm text-slate-400">
-              ⚡ Instant Results • 🔒 No signup required • 📊 AI Powered
+          <div className="max-w-3xl mx-auto">
+            <h1 className="text-4xl md:text-6xl font-black text-center leading-tight tracking-tight">
+              <span className="text-white">How Strong Is Your</span>
+              <br />
+              <span className="text-purple-400 whitespace-nowrap">
+                Investment Portfolio?
+              </span>
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400">
+              Get an instant AI-powered score for your portfolio and discover
+              exactly where it&apos;s leaking performance.
             </p>
-            <p className="mt-3 text-sm text-slate-500">
-              Built on 6 professional portfolio risk metrics used by institutional investors
-            </p>
+
+            {/* 3 step cards */}
+            <div className="mt-12 grid gap-8 sm:grid-cols-3">
+              <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-left">
+                <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
+                <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
+                <div className="text-2xl">📋</div>
+                <h3 className="mt-2 font-semibold text-white">Enter Portfolio</h3>
+                <p className="mt-1 text-sm text-slate-400">
+                  Add your holdings and weights in seconds
+                </p>
+              </div>
+              <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-left">
+                <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
+                <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
+                <div className="text-2xl">⚡</div>
+                <h3 className="mt-2 font-semibold text-white">AI Analysis</h3>
+                <p className="mt-1 text-sm text-slate-400">
+                  Our engine scores diversification, risk & more
+                </p>
+              </div>
+              <div className="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-white/[0.03] p-6 text-left">
+                <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
+                <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-gradient-to-b from-purple-500/5 to-transparent" />
+                <div className="text-2xl">📊</div>
+                <h3 className="mt-2 font-semibold text-white">Your Score</h3>
+                <p className="mt-1 text-sm text-slate-400">
+                  See your grade and where to improve
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-16">
+              <a
+                href="/analyze"
+                style={{
+                  display: "inline-block",
+                  padding: "16px 40px",
+                  fontSize: "18px",
+                  fontWeight: 700,
+                  borderRadius: "9999px",
+                  color: "white",
+                  background: "#7c3aed",
+                  boxShadow: "0 0 30px rgba(124,58,237,0.6)",
+                }}
+              >
+                Analyse My Portfolio →
+              </a>
+              <p className="mt-6 text-sm text-slate-400">
+                ⚡ Instant Results • 🔒 No signup required • 📊 AI Powered
+              </p>
+              <p className="mt-3 text-sm text-slate-500">
+                Built on 6 professional portfolio risk metrics used by institutional investors
+              </p>
+            </div>
           </div>
         </section>
 
+        <div className="flex justify-center items-center py-0 mb-0">
+          <img
+            src="/brand/bull-mascot.png"
+            alt="PortfolioRank Bull"
+            className="w-56 md:w-64 drop-shadow-2xl"
+          />
+        </div>
+
         {/* Section 2 — Logo carousel */}
-        <section className="py-24">
+        <section className="pb-24">
           <h2 className="mb-8 text-center text-xl font-semibold text-white sm:text-2xl">
             Works with any portfolio of stocks or ETFs
           </h2>
