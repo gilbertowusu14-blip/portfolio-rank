@@ -244,7 +244,7 @@ function ResultPage() {
       : 0;
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-50 pb-24">
+    <div className="min-h-screen text-zinc-50 pb-24" style={{ backgroundColor: "#0a0a0a" }}>
       <div className="max-w-xl mx-auto px-4 pt-6 pb-4">
         <Link
           href="/analyze"

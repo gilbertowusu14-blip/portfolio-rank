@@ -8,7 +8,7 @@ export default function ResultLayout({
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-zinc-400">
+        <div className="min-h-screen flex items-center justify-center text-zinc-400" style={{ backgroundColor: "#0a0a0a" }}>
           Loading…
         </div>
       }

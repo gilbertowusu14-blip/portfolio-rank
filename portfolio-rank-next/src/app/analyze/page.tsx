@@ -68,7 +68,7 @@ function AnalyzePage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-50 px-4 py-8">
+    <div className="min-h-screen text-zinc-50 px-4 py-8" style={{ backgroundColor: "#0a0a0a" }}>
       <div className="max-w-lg mx-auto">
         <Link
           href="/"
