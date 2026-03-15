@@ -46,7 +46,27 @@ summary: a 2-3 sentence paragraph for a free preview. Be specific about this act
 strengths: array of exactly 3 strings, each one sentence describing a specific portfolio strength
 weaknesses: array of exactly 3 strings, each one sentence describing a specific portfolio weakness
 actions: array of exactly 3 strings, each a concrete actionable step the investor should take
-blueprint: 3-4 sentence paragraph describing what the optimised portfolio should look like — specific sectors to add, what to reduce, expected benefit`;
+blueprint: a single string containing exactly 6 clearly labelled sections for a premium report. The blueprint must be specific to their actual holdings and subscores — never generic. Reference the actual tickers and subscore values passed in the request. Format each section as: a line with the section number and title exactly as below, followed by 2-4 sentences. Use these exact section headers (each on its own line, followed by a newline and the paragraph):
+
+1. Diagnosis —
+Name the core structural problem with this specific portfolio directly. Reference their actual tickers and what the diversification and concentration scores reveal.
+
+2. Risk-Adjusted Reality —
+Explain in plain English whether this portfolio earns enough return for the risk it takes. Use the growth quality and valuation risk subscores as evidence. Frame it simply — e.g. "you are taking on equity-level risk without equity-level reward."
+
+3. What an Optimised Version Looks Like —
+Give a concrete target structure: number of positions, sectors to add, rough weight ranges. Make it specific to what they're missing based on their actual holdings.
+
+4. Reallocation Logic —
+Explain why those specific changes would improve the portfolio. Reference which subscores would improve and why — diversification, concentration risk, drawdown exposure.
+
+5. Crash Resilience —
+Tell them plainly what would happen to this portfolio in a sharp market downturn or sector selloff (e.g. a 2022-style tech correction). Reference their drawdown exposure score and any single-sector concentration.
+
+6. Path Forward —
+Give 2-3 sentences on how to act on this progressively and realistically. Not all at once. What is the single first move they should make?
+
+No waffle, no filler. Each section must reference the actual portfolio data (tickers, weights, subscores) provided.`;
 
 const FALLBACK_RESPONSE: AiNarrative = {
   summary:
@@ -67,7 +87,7 @@ const FALLBACK_RESPONSE: AiNarrative = {
     "Consider adding one international ETF to reduce US market dependency",
   ],
   blueprint:
-    "An optimised version of this portfolio would hold 8-12 positions across at least 4 sectors, with no single stock exceeding 20% weight. Adding defensive exposure would reduce volatility while maintaining growth potential.",
+    "1. Diagnosis —\nYour portfolio shows structural concentration risk given the tickers and weights provided. The diversification and concentration subscores indicate where the main gaps are.\n\n2. Risk-Adjusted Reality —\nGrowth quality and valuation risk subscores suggest whether you are being compensated for the risk you take.\n\n3. What an Optimised Version Looks Like —\nA better structure would include more positions and sectors based on your current holdings.\n\n4. Reallocation Logic —\nShifting weights would improve diversification, concentration risk, and drawdown exposure subscores.\n\n5. Crash Resilience —\nDrawdown exposure and sector concentration indicate how this portfolio would behave in a sharp correction.\n\n6. Path Forward —\nAct progressively; start with the single highest-impact change from the actions above.",
 };
 
 export async function POST(request: NextRequest) {

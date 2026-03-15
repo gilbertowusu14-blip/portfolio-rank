@@ -46,6 +46,67 @@ function labelColor(label: string): string {
   }
 }
 
+const BLUEPRINT_SECTION_HEADINGS = [
+  "1. Diagnosis —",
+  "2. Risk-Adjusted Reality —",
+  "3. What an Optimised Version Looks Like —",
+  "4. Reallocation Logic —",
+  "5. Crash Resilience —",
+  "6. Path Forward —",
+] as const;
+
+function parseBlueprintSections(blueprint: string): { title: string; body: string }[] {
+  const sections: { title: string; body: string }[] = [];
+  let remaining = blueprint.trim();
+  for (let i = 0; i < BLUEPRINT_SECTION_HEADINGS.length; i++) {
+    const heading = BLUEPRINT_SECTION_HEADINGS[i];
+    const nextHeading = BLUEPRINT_SECTION_HEADINGS[i + 1];
+    const startIdx = remaining.indexOf(heading);
+    if (startIdx === -1) {
+      if (remaining.trim()) sections.push({ title: heading, body: remaining.trim() });
+      break;
+    }
+    const bodyStart = startIdx + heading.length;
+    const bodyEnd = nextHeading
+      ? remaining.indexOf(nextHeading, bodyStart)
+      : remaining.length;
+    const body = remaining.slice(bodyStart, bodyEnd).trim();
+    sections.push({ title: heading.replace(/\s*—\s*$/, ""), body });
+    remaining = nextHeading ? remaining.slice(bodyEnd) : "";
+  }
+  return sections;
+}
+
+function BlueprintCard({ blueprint }: { blueprint: string }) {
+  const sections = parseBlueprintSections(blueprint);
+  return (
+    <section className="rounded-2xl bg-[#0d0d0d] border border-yellow-500/20 p-6">
+      <div className="flex items-center gap-2 mb-4">
+        <span className="text-xl">🗺</span>
+        <h2 className="font-heading text-sm font-semibold text-yellow-400 uppercase tracking-normal">
+          Blueprint
+        </h2>
+      </div>
+      <div className="space-y-4">
+        {sections.map(({ title, body }, idx) => (
+          <div
+            key={idx}
+            className="rounded-xl bg-[#111111] border border-yellow-500/20 p-4"
+          >
+            <h3 className="font-heading text-sm font-semibold text-amber-400 mb-2">
+              {title}
+            </h3>
+            <p className="text-white text-sm leading-relaxed">{body}</p>
+          </div>
+        ))}
+      </div>
+      {sections.length === 0 && (
+        <p className="text-slate-300 leading-relaxed">{blueprint}</p>
+      )}
+    </section>
+  );
+}
+
 export default function PremiumPage() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
@@ -111,7 +172,7 @@ export default function PremiumPage() {
     );
   }
 
-  const { score, ai, form } = report;
+  const { score, ai } = report;
   const displayScore = Number((score.score / 10).toFixed(1));
   const targetScore = Math.min(100, score.score + score.optimizationGap);
   const displayTarget = Number((targetScore / 10).toFixed(1));
@@ -262,43 +323,7 @@ export default function PremiumPage() {
         </section>
 
         {/* Blueprint card */}
-        <section className="rounded-2xl bg-[#0d0d0d] border border-yellow-500/20 p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-xl">🗺</span>
-            <h2 className="font-heading text-sm font-semibold text-yellow-400 uppercase tracking-normal">
-              Blueprint
-            </h2>
-          </div>
-          <p className="text-slate-300 leading-relaxed">
-            {ai.blueprint}
-          </p>
-        </section>
-
-        {/* Optimised Allocation card */}
-        <section className="rounded-2xl bg-[#111111] border border-yellow-500/20 p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-xl">📋</span>
-            <h2 className="font-heading text-sm font-semibold text-yellow-400 uppercase tracking-normal">
-              Optimised Allocation
-            </h2>
-          </div>
-          <p className="text-slate-400 text-sm mb-4">
-            Your current allocation. Use the Blueprint and Actions above to adjust.
-          </p>
-          <div className="space-y-2">
-            {form.holdings
-              .filter((h) => h.ticker.trim())
-              .map((h, idx) => (
-                <div
-                  key={idx}
-                  className="flex justify-between items-center px-4 py-2 rounded-xl bg-[#1a1a1a] border border-white/10 text-sm"
-                >
-                  <span className="text-white font-medium">{h.ticker}</span>
-                  <span className="text-yellow-400">{h.weight.toFixed(1)}%</span>
-                </div>
-              ))}
-          </div>
-        </section>
+        <BlueprintCard blueprint={ai.blueprint} />
       </div>
     </div>
   );
