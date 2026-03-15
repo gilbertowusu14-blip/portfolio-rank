@@ -255,7 +255,7 @@ function ResultPage() {
 
         <header className="mb-6">
           <h1 className="text-2xl font-semibold tracking-tight mb-1">
-            Your Free PortfolioRank™ Preview
+            Your Free Rankfolio™ Preview
           </h1>
           <p className="text-sm text-zinc-400">
             Take a screenshot and share with your friends!
@@ -275,7 +275,7 @@ function ResultPage() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <div className="text-xs uppercase tracking-[0.18em] text-zinc-500 mb-1">
-                PortfolioRank Score
+                Rankfolio Score
               </div>
               <div className="flex items-baseline gap-2">
                 <span className="text-4xl font-semibold leading-none">

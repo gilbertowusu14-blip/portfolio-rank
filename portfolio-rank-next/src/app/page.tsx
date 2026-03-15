@@ -59,10 +59,10 @@ export default function Home() {
       <nav className="sticky top-0 z-50 backdrop-blur-md bg-[#0a0a0a]/70 border-b border-white/10">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/brand/bull-head.png" alt="PortfolioRank" className="h-16 w-auto" />
+            <img src="/brand/bull-head.png" alt="Rankfolio" className="h-16 w-auto" />
             <span className="font-bold text-lg">
-              <span className="text-white">Portfolio</span>
-              <span className="text-yellow-400">Rank</span>
+              <span className="text-white">Rank</span>
+              <span className="text-yellow-400">folio</span>
             </span>
           </Link>
           <a
@@ -147,7 +147,7 @@ export default function Home() {
         <div className="flex justify-center items-center py-0 mb-0">
           <img
             src="/brand/bull-mascot.png"
-            alt="PortfolioRank Bull"
+            alt="Rankfolio Bull"
             className="w-56 md:w-64 drop-shadow-2xl"
           />
         </div>
@@ -253,7 +253,7 @@ export default function Home() {
           <div className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-center">
             <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
             <h2 className="text-xl font-semibold text-white">
-              Average PortfolioRank Score
+              Average Rankfolio Score
             </h2>
             <div
               className="mt-4 text-5xl font-bold"
