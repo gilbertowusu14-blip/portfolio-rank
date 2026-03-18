@@ -41,285 +41,440 @@ export interface ScoreInputs {
   timeHorizon: TimeHorizon;
 }
 
-function clampScore(value: number): number {
-  if (value < 0) return 0;
-  if (value > 100) return 100;
-  return value;
+// --- Tier 1: Broad market ETFs (inherently diversified)
+const TIER1_TICKERS = new Set(
+  [
+    "VUAG",
+    "VWRL",
+    "VTI",
+    "VOO",
+    "SPY",
+    "IWDA",
+    "VUSA",
+    "CSPX",
+    "SWRD",
+    "FWRG",
+    "VWCE",
+    "ISF",
+  ].map((s) => s.toUpperCase())
+);
+
+// --- Tier 2: Sector ETFs (and any ETF not Tier 1)
+const TIER2_TICKERS = new Set(
+  ["QQQ", "XLV", "XLP", "XLE", "XLF", "XLK", "ARKK"].map((s) => s.toUpperCase())
+);
+
+const BLUE_CHIP_MKCAP = 100e9; // $100bn
+const BETA_BLUE_CHIP_MAX = 1.5;
+const SMALL_WEIGHT_PCT = 5;
+const OVERLAP_TIER1_CAP = 88;
+const SECTOR_CLUSTER_PENALTY = 15;
+const MIN_WEIGHT_FOR_DIV_CREDIT = 5;
+
+type Tier = 1 | 2 | 3 | 4;
+
+function getProfile(ticker: string, profiles: FMPProfile[]): FMPProfile | undefined {
+  const key = ticker.toUpperCase();
+  return profiles.find((p) => p.symbol.toUpperCase() === key);
 }
 
-function getSectorForTicker(
-  ticker: string,
-  profiles: FMPProfile[]
-): string | null {
-  const key = ticker.toUpperCase();
-  const profile = profiles.find((p) => p.symbol.toUpperCase() === key);
-  return profile?.sector ?? null;
-}
-
-function getBetaForTicker(ticker: string, profiles: FMPProfile[]): number {
-  const key = ticker.toUpperCase();
-  const profile = profiles.find((p) => p.symbol.toUpperCase() === key);
+function classifyHolding(
+  holding: PortfolioHolding,
+  profile: FMPProfile | undefined
+): Tier {
+  const ticker = holding.ticker.toUpperCase();
+  const type = (holding.type || profile?.type || "").toLowerCase();
+  const isEtf = type === "etf";
+  const mktCap = profile?.mktCap ?? 0;
   const beta = profile?.beta;
-  if (beta === null || beta === undefined || Number.isNaN(beta)) {
-    return 1.0;
+  const betaNum =
+    beta != null && !Number.isNaN(beta) ? beta : isEtf ? 1.0 : 1.4;
+
+  if (TIER1_TICKERS.has(ticker)) return 1;
+  if (isEtf || TIER2_TICKERS.has(ticker)) {
+    return 2;
   }
-  return beta;
+  if (mktCap > BLUE_CHIP_MKCAP && betaNum < BETA_BLUE_CHIP_MAX) {
+    return 3;
+  }
+  return 4;
 }
 
-function calculateDiversificationSubscore(
+function diversificationCredit(tier: Tier): number {
+  switch (tier) {
+    case 1:
+      return 85;
+    case 2:
+      return 50;
+    case 3:
+      return 20;
+    case 4:
+    default:
+      return 5;
+  }
+}
+
+// --- Step 1: Classify all holdings
+function assignTiers(
   holdings: PortfolioHolding[],
   profiles: FMPProfile[]
+): { holding: PortfolioHolding; profile: FMPProfile | undefined; tier: Tier }[] {
+  const valid = holdings.filter((h) => h.weight > 0);
+  return valid.map((holding) => {
+    const profile = getProfile(holding.ticker, profiles);
+    const tier = classifyHolding(holding, profile);
+    return { holding, profile, tier };
+  });
+}
+
+// --- Step 2.1 Diversification Score
+function computeDiversificationScore(
+  classified: { holding: PortfolioHolding; profile: FMPProfile | undefined; tier: Tier }[],
+  profiles: FMPProfile[]
 ): number {
-  const validHoldings = holdings.filter((h) => h.weight > 0);
-  const count = validHoldings.length;
+  if (classified.length === 0) return 0;
 
-  let base: number;
-  if (count === 0) {
-    base = 0;
-  } else if (count <= 2) {
-    base = 10;
-  } else if (count <= 5) {
-    base = 40;
-  } else if (count <= 10) {
-    base = 70;
-  } else if (count <= 15) {
-    base = 90;
-  } else {
-    base = 100;
+  const totalWeight = classified.reduce((s, c) => s + c.holding.weight, 0);
+  if (totalWeight <= 0) return 0;
+
+  const tier1Items = classified.filter((c) => c.tier === 1 && c.holding.weight >= MIN_WEIGHT_FOR_DIV_CREDIT);
+  let tier1Contrib = tier1Items.reduce((s, c) => s + (c.holding.weight / 100) * 85, 0);
+  if (tier1Items.length >= 2) {
+    tier1Contrib = Math.min(tier1Contrib, OVERLAP_TIER1_CAP);
   }
 
-  // Sector concentration penalty: if any single sector > 60% of portfolio, subtract 20.
-  const sectorWeights = new Map<string, number>();
-  for (const holding of validHoldings) {
-    const sector = getSectorForTicker(holding.ticker, profiles);
-    if (!sector) continue;
-    const key = sector.toUpperCase();
-    const existing = sectorWeights.get(key) ?? 0;
-    sectorWeights.set(key, existing + holding.weight);
+  let otherContrib = 0;
+  for (const { holding, tier } of classified) {
+    if (holding.weight < MIN_WEIGHT_FOR_DIV_CREDIT) continue;
+    if (tier === 1) continue;
+    otherContrib += (holding.weight / 100) * diversificationCredit(tier);
   }
 
-  let maxSectorWeight = 0;
-  for (const value of sectorWeights.values()) {
-    if (value > maxSectorWeight) {
-      maxSectorWeight = value;
+  let score = (tier1Contrib + otherContrib) / (totalWeight / 100);
+
+  const sectorCounts = new Map<string, number>();
+  for (const { tier, profile } of classified) {
+    if (tier >= 3 && profile?.sector) {
+      const sec = profile.sector.toUpperCase();
+      sectorCounts.set(sec, (sectorCounts.get(sec) ?? 0) + 1);
+    }
+  }
+  for (const n of sectorCounts.values()) {
+    if (n >= 3) {
+      score -= SECTOR_CLUSTER_PENALTY;
+      break;
     }
   }
 
-  let score = base;
-  if (maxSectorWeight > 60) {
-    score -= 20;
-  }
-
-  return clampScore(score);
+  return Math.max(0, Math.min(100, score));
 }
 
-function calculateConcentrationRiskSubscore(
-  holdings: PortfolioHolding[]
+// --- Step 2.2 Concentration Risk (higher = more risk = worse)
+function computeConcentrationRiskScore(
+  classified: { holding: PortfolioHolding; tier: Tier }[]
 ): number {
-  const validHoldings = holdings.filter((h) => h.weight > 0);
-  if (validHoldings.length === 0) {
-    return 0;
+  if (classified.length === 0) return 0;
+
+  const maxWeight = Math.max(...classified.map((c) => c.holding.weight));
+  const maxItem = classified.find((c) => c.holding.weight === maxWeight)!;
+  const tierMultiplier = { 1: 0.3, 2: 0.6, 3: 0.9, 4: 1.2 } as const;
+  let penalty = maxWeight * tierMultiplier[maxItem.tier];
+  if (maxWeight > 40 && maxItem.tier >= 3) {
+    penalty *= 1.5;
   }
-  const largest = validHoldings.reduce(
-    (max, h) => (h.weight > max ? h.weight : max),
+  return Math.min(100, penalty * 2);
+}
+
+// --- Step 2.3 Growth Quality
+function tierQualityBase(tier: Tier): number {
+  switch (tier) {
+    case 1:
+      return 70;
+    case 2:
+      return 60;
+    case 3:
+      return 65;
+    case 4:
+    default:
+      return 30;
+  }
+}
+
+function computeGrowthQualityScore(
+  classified: { holding: PortfolioHolding; tier: Tier }[]
+): number {
+  if (classified.length === 0) return 0;
+
+  const totalWeight = classified.reduce((s, c) => s + c.holding.weight, 0);
+  if (totalWeight <= 0) return 0;
+
+  const weightedSum = classified.reduce(
+    (s, c) => s + (c.holding.weight / 100) * tierQualityBase(c.tier),
     0
   );
+  let score = (weightedSum / (totalWeight / 100));
 
-  let score: number;
-  if (largest > 50) {
-    score = 10;
-  } else if (largest >= 35) {
-    score = 30;
-  } else if (largest >= 20) {
-    score = 60;
-  } else if (largest >= 10) {
-    score = 80;
-  } else {
-    score = 100;
-  }
+  const hasEtf = classified.some((c) => c.tier === 1 || c.tier === 2);
+  const hasStock = classified.some((c) => c.tier === 3 || c.tier === 4);
+  if (hasEtf && hasStock) score += 10;
 
-  return clampScore(score);
+  return Math.min(100, Math.max(0, score));
 }
 
-function calculateGrowthQualitySubscore(
-  holdings: PortfolioHolding[],
-  profiles: FMPProfile[]
+// --- Step 2.4 Valuation Risk (higher = more risk)
+function valuationRiskBase(tier: Tier): number {
+  switch (tier) {
+    case 1:
+      return 20;
+    case 2:
+      return 40;
+    case 3:
+      return 50;
+    case 4:
+    default:
+      return 80;
+  }
+}
+
+function computeValuationRiskScore(
+  classified: { holding: PortfolioHolding; tier: Tier }[],
+  timeHorizon: TimeHorizon
 ): number {
-  const validHoldings = holdings.filter((h) => h.weight > 0);
-  if (validHoldings.length === 0) {
-    return 0;
+  if (classified.length === 0) return 0;
+
+  const totalWeight = classified.reduce((s, c) => s + c.holding.weight, 0);
+  if (totalWeight <= 0) return 0;
+
+  let score = classified.reduce(
+    (s, c) => s + (c.holding.weight / 100) * valuationRiskBase(c.tier),
+    0
+  );
+  score = score / (totalWeight / 100);
+
+  const longHorizon = timeHorizon === "7yr+";
+  if (longHorizon) score -= 10;
+
+  return Math.max(0, Math.min(100, score));
+}
+
+// --- Step 2.5 Drawdown Exposure (higher = more risk)
+function defaultBetaForTier(tier: Tier): number {
+  switch (tier) {
+    case 1:
+      return 1.0;
+    case 2:
+      return 1.1;
+    case 3:
+      return 1.0;
+    case 4:
+    default:
+      return 1.4;
+  }
+}
+
+function computeDrawdownExposureScore(
+  classified: { holding: PortfolioHolding; profile: FMPProfile | undefined; tier: Tier }[],
+  riskTolerance: RiskTolerance
+): number {
+  if (classified.length === 0) return 0;
+
+  const totalWeight = classified.reduce((s, c) => s + c.holding.weight, 0);
+  if (totalWeight <= 0) return 0;
+
+  let weightedBeta = 0;
+  for (const { holding, profile, tier } of classified) {
+    const beta = profile?.beta;
+    const b = beta != null && !Number.isNaN(beta) ? beta : defaultBetaForTier(tier);
+    weightedBeta += (holding.weight / 100) * b;
+  }
+  weightedBeta /= totalWeight / 100;
+
+  let score = Math.min(100, weightedBeta * 50);
+  if (riskTolerance === "Aggressive") score -= 10;
+  if (riskTolerance === "Conservative") score += 15;
+
+  return Math.max(0, Math.min(100, score));
+}
+
+// --- Step 2.6 Market Comparison
+function computeMarketComparisonScore(
+  classified: { holding: PortfolioHolding; tier: Tier }[]
+): number {
+  const etfWeight = classified
+    .filter((c) => c.tier === 1 || c.tier === 2)
+    .reduce((s, c) => s + c.holding.weight, 0);
+  if (etfWeight <= 0) return 10;
+  return Math.min(80, etfWeight);
+}
+
+// --- Step 3: Fit Score
+function isShortHorizon(timeHorizon: TimeHorizon): boolean {
+  return timeHorizon === "<1yr" || timeHorizon === "1-3yr" || timeHorizon === "1–3yr";
+}
+
+function isLongHorizon(timeHorizon: TimeHorizon): boolean {
+  return timeHorizon === "7yr+";
+}
+
+function getWeightedBeta(
+  classified: { holding: PortfolioHolding; profile: FMPProfile | undefined; tier: Tier }[]
+): number {
+  const totalWeight = classified.reduce((s, c) => s + c.holding.weight, 0);
+  if (totalWeight <= 0) return 1;
+  let sum = 0;
+  for (const { holding, profile, tier } of classified) {
+    const beta = profile?.beta;
+    const b = beta != null && !Number.isNaN(beta) ? beta : defaultBetaForTier(tier);
+    sum += (holding.weight / 100) * b;
+  }
+  return sum / (totalWeight / 100);
+}
+
+function computeRiskFit(weightedBeta: number, riskTolerance: RiskTolerance): number {
+  if (riskTolerance === "Conservative") {
+    if (weightedBeta > 1.2) return 20;
+    if (weightedBeta >= 0.8 && weightedBeta <= 1.2) return 60;
+    return 90;
+  }
+  if (riskTolerance === "Balanced") {
+    if (weightedBeta > 1.4) return 40;
+    if (weightedBeta >= 0.9 && weightedBeta <= 1.4) return 75;
+    return 50;
+  }
+  return 80; // Aggressive
+}
+
+function computeHorizonFit(
+  classified: { holding: PortfolioHolding; tier: Tier }[],
+  timeHorizon: TimeHorizon
+): number {
+  const tier4Weight = classified.filter((c) => c.tier === 4).reduce((s, c) => s + c.holding.weight, 0);
+  const tier12Weight = classified.filter((c) => c.tier === 1 || c.tier === 2).reduce((s, c) => s + c.holding.weight, 0);
+
+  if (isShortHorizon(timeHorizon)) {
+    if (tier4Weight > 20) return 20;
+    return 75;
+  }
+  if (timeHorizon === "3-7yr" || timeHorizon === "3–7yr") {
+    return 70;
+  }
+  if (isLongHorizon(timeHorizon)) {
+    if (tier4Weight > 20 || classified.some((c) => c.tier === 4)) return 80;
+    if (tier12Weight >= 80) return 85;
+    return 75;
+  }
+  return 70;
+}
+
+function computeIntentionality(
+  classified: { holding: PortfolioHolding; tier: Tier }[]
+): number {
+  let score = 50; // base
+
+  const etfCount = classified.filter((c) => c.tier === 1 || c.tier === 2).length;
+  const stockCount = classified.filter((c) => c.tier === 3 || c.tier === 4).length;
+  const tier1Tickers = new Set(classified.filter((c) => c.tier === 1).map((c) => c.holding.ticker.toUpperCase()));
+
+  if (etfCount >= 1 && etfCount <= 3 && stockCount <= 5) score += 20;
+  if (classified.length > 8 && etfCount === 0) score -= 15;
+
+  for (const { holding } of classified) {
+    if (holding.weight < 3) score -= 5;
   }
 
-  let weightedSum = 0;
-  let totalWeight = 0;
-
-  for (const holding of validHoldings) {
-    const sector = getSectorForTicker(holding.ticker, profiles);
-    const normalizedSector = sector ? sector.toLowerCase() : "";
-
-    let sectorScore: number;
-    if (
-      normalizedSector === "technology" ||
-      normalizedSector === "healthcare" ||
-      normalizedSector === "consumer discretionary"
-    ) {
-      sectorScore = 80;
-    } else if (
-      normalizedSector === "financials" ||
-      normalizedSector === "industrials"
-    ) {
-      sectorScore = 60;
-    } else if (
-      normalizedSector === "utilities" ||
-      normalizedSector === "energy" ||
-      normalizedSector === "materials"
-    ) {
-      sectorScore = 40;
-    } else {
-      sectorScore = 50;
+  const overlapPairs = [
+    ["VUAG", "VWRL"],
+    ["VUAG", "SPY"],
+    ["VWRL", "SPY"],
+    ["VTI", "VOO"],
+    ["VTI", "SPY"],
+  ];
+  for (const [a, b] of overlapPairs) {
+    if (tier1Tickers.has(a) && tier1Tickers.has(b)) {
+      score -= 10;
+      break;
     }
-
-    weightedSum += sectorScore * holding.weight;
-    totalWeight += holding.weight;
   }
 
-  if (totalWeight <= 0) {
-    return 0;
-  }
-
-  const score = weightedSum / totalWeight;
-  return clampScore(score);
+  return Math.max(0, Math.min(100, score));
 }
 
-function calculateValuationRiskSubscore(
-  holdings: PortfolioHolding[],
-  profiles: FMPProfile[]
+function computeFitScore(
+  classified: { holding: PortfolioHolding; profile: FMPProfile | undefined; tier: Tier }[],
+  inputs: ScoreInputs
 ): number {
-  const validHoldings = holdings.filter((h) => h.weight > 0);
-  if (validHoldings.length === 0) {
-    return 0;
-  }
+  const weightedBeta = getWeightedBeta(classified);
+  const riskFit = computeRiskFit(weightedBeta, inputs.riskTolerance);
+  const horizonFit = computeHorizonFit(classified, inputs.timeHorizon);
+  const intentionality = computeIntentionality(classified);
 
-  let techWeight = 0;
-
-  for (const holding of validHoldings) {
-    const sector = getSectorForTicker(holding.ticker, profiles);
-    if (!sector) continue;
-    const normalizedSector = sector.toLowerCase();
-    if (normalizedSector === "technology") {
-      techWeight += holding.weight;
-    }
-  }
-
-  let score: number;
-  if (techWeight > 50) {
-    score = 30;
-  } else if (techWeight >= 30) {
-    score = 60;
-  } else {
-    score = 90;
-  }
-
-  return clampScore(score);
+  return (riskFit * 0.4 + horizonFit * 0.35 + intentionality * 0.25);
 }
 
-function calculateDrawdownExposureSubscore(
-  holdings: PortfolioHolding[],
-  profiles: FMPProfile[]
-): number {
-  const validHoldings = holdings.filter((h) => h.weight > 0);
-  if (validHoldings.length === 0) {
-    return 0;
-  }
-
-  let weightedBetaSum = 0;
-  let totalWeight = 0;
-
-  for (const holding of validHoldings) {
-    const beta = getBetaForTicker(holding.ticker, profiles);
-    weightedBetaSum += beta * holding.weight;
-    totalWeight += holding.weight;
-  }
-
-  if (totalWeight <= 0) {
-    return 0;
-  }
-
-  const portfolioBeta = weightedBetaSum / totalWeight;
-
-  let score: number;
-  if (portfolioBeta < 0.8) {
-    score = 90;
-  } else if (portfolioBeta <= 1.2) {
-    score = 70;
-  } else if (portfolioBeta <= 1.6) {
-    score = 50;
-  } else {
-    score = 30;
-  }
-
-  return clampScore(score);
-}
-
-function calculateMarketComparisonSubscore(): number {
-  return 50;
-}
-
-function labelForScore(score: number): ScoreLabel {
-  if (score <= 40) {
-    return "Weak";
-  }
-  if (score <= 60) {
-    return "Average";
-  }
-  if (score <= 80) {
-    return "Strong";
-  }
-  return "Elite";
-}
-
+// --- Step 4 & 5 & 6
 export function scorePortfolio(inputs: ScoreInputs): ScoreResult {
-  const { holdings, profiles } = inputs;
+  const { holdings, profiles, riskTolerance, timeHorizon } = inputs;
 
-  const diversification = calculateDiversificationSubscore(holdings, profiles);
-  const concentrationRisk = calculateConcentrationRiskSubscore(holdings);
-  const growthQuality = calculateGrowthQualitySubscore(holdings, profiles);
-  const valuationRisk = calculateValuationRiskSubscore(holdings, profiles);
-  const drawdownExposure = calculateDrawdownExposureSubscore(
-    holdings,
-    profiles
-  );
-  const marketComparison = calculateMarketComparisonSubscore();
+  const classified = assignTiers(holdings, profiles);
 
-  const internalScore =
-    diversification * 0.25 +
-    concentrationRisk * 0.2 +
-    growthQuality * 0.2 +
-    valuationRisk * 0.15 +
-    drawdownExposure * 0.1 +
-    marketComparison * 0.1;
+  const diversification = computeDiversificationScore(classified, profiles);
+  const concentrationRisk = computeConcentrationRiskScore(classified);
+  const growthQuality = computeGrowthQualityScore(classified);
+  const valuationRisk = computeValuationRiskScore(classified, timeHorizon);
+  const drawdownExposure = computeDrawdownExposureScore(classified, riskTolerance);
+  const marketComparison = computeMarketComparisonScore(classified);
 
-  const clampedInternal = clampScore(internalScore);
-  const finalScore = Math.round(clampedInternal);
+  const structureScore =
+    ((100 - concentrationRisk) * 0.25 +
+      diversification * 0.3 +
+      growthQuality * 0.2 +
+      (100 - valuationRisk) * 0.1 +
+      (100 - drawdownExposure) * 0.1 +
+      marketComparison * 0.05) /
+    10;
 
-  const label = labelForScore(finalScore);
-  const optimizationGap = Math.min(
-    25,
-    Math.round((100 - finalScore) * 0.4)
-  );
+  const fitTotal = computeFitScore(classified, inputs);
+  const fitScore = fitTotal / 10;
+
+  let final: number;
+  if (riskTolerance === "Conservative") {
+    final = fitScore * 0.6 + structureScore * 0.4;
+  } else if (riskTolerance === "Aggressive") {
+    final = fitScore * 0.4 + structureScore * 0.6;
+  } else {
+    final = fitScore * 0.5 + structureScore * 0.5;
+  }
+
+  final = Math.max(1.0, Math.min(10.0, final));
+  final = Math.round(final * 10) / 10;
+
+  let gap = 0;
+  if (diversification < 40) gap += 1.5;
+  if (concentrationRisk > 60) gap += 1.0;
+  if (fitTotal < 50) gap += 1.5;
+  if (growthQuality < 50) gap += 0.5;
+  gap = Math.min(2.5, Math.max(0.3, gap));
+
+  const label: ScoreLabel =
+    final <= 3.9
+      ? "Weak"
+      : final <= 5.9
+        ? "Average"
+        : final <= 7.4
+          ? "Strong"
+          : "Elite";
 
   return {
-    score: finalScore,
+    score: Math.round(final * 10),
     label,
-    optimizationGap,
+    optimizationGap: Math.round(gap * 10),
     subscores: {
-      diversification,
-      concentrationRisk,
-      growthQuality,
-      valuationRisk,
-      drawdownExposure,
-      marketComparison,
+      diversification: Math.round(diversification),
+      concentrationRisk: Math.round(concentrationRisk),
+      growthQuality: Math.round(growthQuality),
+      valuationRisk: Math.round(valuationRisk),
+      drawdownExposure: Math.round(drawdownExposure),
+      marketComparison: Math.round(marketComparison),
     },
   };
 }
-
