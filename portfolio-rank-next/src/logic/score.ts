@@ -445,6 +445,15 @@ export function scorePortfolio(inputs: ScoreInputs): ScoreResult {
     final = fitScore * 0.5 + structureScore * 0.5;
   }
 
+  // Hard cap: if a single non-ETF position dominates (>= 90%),
+  // the portfolio is always "Weak" regardless of risk tolerance.
+  const maxNonEtfWeight = classified
+    .filter((c) => c.tier === 3 || c.tier === 4)
+    .reduce((max, c) => Math.max(max, c.holding.weight), 0);
+  if (maxNonEtfWeight >= 90) {
+    final = Math.min(final, 3.9);
+  }
+
   final = Math.max(1.0, Math.min(10.0, final));
   final = Math.round(final * 10) / 10;
 
