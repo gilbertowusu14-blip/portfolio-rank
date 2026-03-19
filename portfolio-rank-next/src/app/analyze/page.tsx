@@ -79,7 +79,11 @@ function AnalyzePage() {
     try {
       const res = await fetch(`/api/fmp?tickers=${encodeURIComponent(tickers.join(","))}`);
       const data = (await res.json()) as FMPResultItem[];
-      const failed = data.filter((item): item is { symbol: string; error: true } => "error" in item && item.error).map((item) => item.symbol);
+      const failed = data.filter(
+        (item): item is { symbol: string; error: true } =>
+          "error" in item &&
+          (item as { error: unknown }).error === true
+      ).map((item) => item.symbol);
       if (failed.length > 0) {
         setTickerErrors(failed);
         return;
