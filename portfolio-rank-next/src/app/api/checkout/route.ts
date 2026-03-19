@@ -65,8 +65,8 @@ export async function POST(request: NextRequest) {
     }
 
     const successUrl = reportKeyTrimmed
-      ? `${baseUrl}/premium?session_id={CHECKOUT_SESSION_ID}&analysis_id=${encodeURIComponent(reportKeyTrimmed)}`
-      : `${baseUrl}/premium?session_id={CHECKOUT_SESSION_ID}`;
+      ? `${baseUrl}/result/premium?session_id={CHECKOUT_SESSION_ID}`
+      : `${baseUrl}/result/premium?session_id={CHECKOUT_SESSION_ID}`;
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
