@@ -38,10 +38,8 @@ function AnalyzePage() {
 
   const totalWeightColor =
     Math.abs(totalWeight - 100) < 0.01
-      ? "text-yellow-400"
-      : totalWeight > 100
-        ? "text-red-400"
-        : "text-slate-400";
+      ? "text-amber-400"
+      : "text-white";
 
   function addHolding() {
     if (!canAddRow) return;
@@ -164,7 +162,7 @@ function AnalyzePage() {
           <div className="bg-[#111111] border border-yellow-500/20 rounded-2xl p-6">
             <div className="flex justify-between items-center mb-3">
               <label className="text-sm font-medium text-white">Holdings</label>
-              <span className={`text-sm font-medium ${totalWeightColor}`}>
+              <span className={`text-base font-medium ${totalWeightColor}`}>
                 Total: {totalWeight.toFixed(1)}%
               </span>
             </div>
@@ -227,6 +225,9 @@ function AnalyzePage() {
                 ))}
               </div>
             )}
+            <p className="mt-3 text-xs text-slate-500">
+              Rough estimates are fine — weights should add up to 100%
+            </p>
           </div>
 
           {/* Risk tolerance card */}
@@ -278,7 +279,7 @@ function AnalyzePage() {
               boxShadow: "0 0 30px rgba(245,158,11,0.4)",
             }}
           >
-            {submitLoading ? "Checking tickers…" : "Calculate Score"}
+            {submitLoading ? "Checking tickers…" : "Get My Portfolio Score"}
           </button>
         </form>
       </div>

@@ -246,54 +246,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Section 4 — Average score */}
-        <section className="flex justify-center py-24">
-          <div className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-center">
-            <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
-            <h2 className="font-heading text-xl font-semibold text-white">
-              Average Rankfolio Score
-            </h2>
-            <div
-              className="font-heading mt-4 text-5xl font-bold"
-              style={{ color: ACCENT_GOLD }}
-            >
-              6.3 / 10
-            </div>
-            <span
-              className="mt-2 inline-block rounded-full px-4 py-1 text-xs font-semibold"
-              style={{ backgroundColor: `${ACCENT_GOLD}30`, color: ACCENT_GOLD }}
-            >
-              ● MOST COMMON SCORE
-            </span>
-            {/* Simple bell curve SVG */}
-            <div className="mx-auto mt-8 h-32 w-full max-w-xs">
-              <svg
-                viewBox="0 0 200 80"
-                className="w-full"
-                preserveAspectRatio="xMidYMid meet"
-              >
-                <path
-                  d="M 0 60 Q 50 55 100 40 T 200 60"
-                  fill="none"
-                  stroke="rgba(245, 158, 11, 0.5)"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M 0 60 Q 50 55 100 40 T 200 60 L 200 80 L 0 80 Z"
-                  fill="rgba(245, 158, 11, 0.1)"
-                />
-                <circle cx="95" cy="42" r="4" fill={ACCENT_GOLD} />
-              </svg>
-            </div>
-            <p className="mt-2 text-xs text-slate-400">
-              Weak — Average — Strong — Elite
-            </p>
-            <MagneticButton href="/analyze" className="mt-4">
-              What&apos;s your score? →
-            </MagneticButton>
-          </div>
-        </section>
-
         {/* Section 5 — How scoring works */}
         <section className="py-24 bg-transparent">
           <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6">

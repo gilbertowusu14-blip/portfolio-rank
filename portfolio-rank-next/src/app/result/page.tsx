@@ -439,8 +439,9 @@ function ResultPage() {
         </section>
 
         {/* Full report section — blurred when locked */}
-        <section className="relative mb-16">
-          <div className="rounded-2xl bg-[#111111] border border-yellow-500/20 px-4 py-5 space-y-5 overflow-hidden">
+        <section className="mb-16">
+          <div className="relative rounded-2xl bg-[#111111] border border-yellow-500/20 px-4 py-5 space-y-5 overflow-hidden">
+            <div className={isUnlocked ? "" : "h-[500px] max-h-[600px] overflow-hidden"}>
             <div
               className={isUnlocked ? "" : "blur-[2px] opacity-70"}
             >
@@ -529,44 +530,52 @@ function ResultPage() {
                 </div>
               )}
             </div>
+            </div>
 
-            {/* Dark overlay card — hidden when unlocked */}
+            {/* Dark overlay + unlock card — hidden when unlocked */}
             {!isUnlocked && (
-            <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/80 via-[#0a0a0a]/90 to-[#0a0a0a]/95 flex items-center justify-center px-4">
-              <div className="w-full max-w-sm rounded-2xl bg-[#111111] border border-yellow-500/20 px-5 py-5 shadow-2xl">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-lg text-yellow-400">🔒</span>
-                  <h2 className="font-heading text-sm font-semibold text-white">
-                    Unlock Your Full Report:
-                  </h2>
-                </div>
-                <ul className="text-xs text-slate-300 space-y-1.5 mb-4">
-                  <li>
-                    <span>
-                      Full breakdown of all 6 portfolio metrics
-                    </span>
-                  </li>
-                  <li>
-                    <span>
-                      3 specific weaknesses dragging your score down
-                    </span>
-                  </li>
-                  <li>
-                    <span>
-                      Step-by-step action plan to reach your potential
-                    </span>
-                  </li>
-                  <li>
-                    <span>
-                      Optimised Portfolio Blueprint — what to buy and sell
-                    </span>
-                  </li>
-                  <li>
-                    <span>
-                      AI-powered analysis of your exact holdings
-                    </span>
-                  </li>
-                </ul>
+            <>
+              <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/80 via-[#0a0a0a]/90 to-[#0a0a0a]/95" aria-hidden />
+              <div className="absolute top-5 left-1/2 w-full max-w-sm px-4 -translate-x-1/2">
+                <div className="rounded-2xl bg-[#111111] border border-yellow-500/20 px-5 py-5 shadow-2xl">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-lg text-yellow-400">🔒</span>
+                    <h2 className="font-heading text-sm font-semibold text-white">
+                      Unlock Your Full Report:
+                    </h2>
+                  </div>
+                  <ul className="text-xs text-slate-300 space-y-1.5 mb-4">
+                    <li className="flex items-start gap-2">
+                      <span aria-hidden>🔍</span>
+                      <span>
+                        See why your score is {displayScore != null ? displayScore.toFixed(1) : "–"}/10 — and how to reach {displayTarget != null ? displayTarget.toFixed(1) : "–"}/10
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span aria-hidden>⚠️</span>
+                      <span>
+                        The exact weaknesses dragging your portfolio down
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span aria-hidden>🎯</span>
+                      <span>
+                        A step-by-step action plan built for your specific holdings
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span aria-hidden>📊</span>
+                      <span>
+                        Full breakdown of all 6 metrics with your real numbers
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span aria-hidden>🗺️</span>
+                      <span>
+                        Your personalised Portfolio Blueprint — what to buy, trim and avoid
+                      </span>
+                    </li>
+                  </ul>
 
                 <div className="text-[10px] font-semibold tracking-[0.24em] text-slate-500 mb-1">
                   ONE TIME PAYMENT
@@ -585,18 +594,12 @@ function ResultPage() {
                 </button>
                 <div className="flex items-center justify-between text-[10px] mt-1">
                   <span className="text-slate-500">
-                    READY IN 30 SECONDS
-                  </span>
-                  <span className="text-yellow-500">
-                    ⚠️ Price increase incoming
+                    ONE-TIME PAYMENT · NO SUBSCRIPTION
                   </span>
                 </div>
-                <div className="flex items-center justify-center gap-2 mt-4 text-slate-400 text-sm">
-                  <span>👥</span>
-                  <span>5,000+ portfolio reports completed</span>
                 </div>
               </div>
-            </div>
+            </>
             )}
           </div>
         </section>
