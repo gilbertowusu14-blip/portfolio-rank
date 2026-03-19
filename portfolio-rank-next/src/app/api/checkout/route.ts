@@ -72,7 +72,13 @@ export async function POST(request: NextRequest) {
       mode: "payment",
       line_items: [
         {
-          price: priceId,
+          price_data: {
+            currency: "gbp",
+            unit_amount: 249,
+            product_data: {
+              name: "Rankfolio Premium",
+            },
+          },
           quantity: 1,
         },
       ],
