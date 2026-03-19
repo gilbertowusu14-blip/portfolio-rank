@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     if (!secretKey) {
       return NextResponse.json({ error: "Server not configured" }, { status: 503 });
     }
-    const stripe = new Stripe(secretKey, { apiVersion: "2024-06-20" });
+    const stripe = new Stripe(secretKey, { apiVersion: "2026-02-25.clover" });
     try {
       const session = await stripe.checkout.sessions.retrieve(sessionId.trim());
       if (session.payment_status !== "paid") {

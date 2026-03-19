@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchCompanyProfile } from "@/lib/fmp";
+import { fetchCompanyProfile, type FMPProfile } from "@/lib/fmp";
 import {
   scorePortfolio,
   type PortfolioHolding,
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     new Set(normalizedHoldings.map((h) => h.ticker))
   );
 
-  const profiles = [];
+  const profiles: FMPProfile[] = [];
   for (const ticker of uniqueTickers) {
     try {
       const profile = await fetchCompanyProfile(ticker);
