@@ -67,16 +67,7 @@ export default function Home() {
           </Link>
           <a
             href="/analyze"
-            style={{
-              display: "inline-block",
-              padding: "16px 40px",
-              fontSize: "18px",
-              fontWeight: 700,
-              borderRadius: "9999px",
-              color: "#0a0a0a",
-              background: "#f59e0b",
-              boxShadow: "0 0 30px rgba(245,158,11,0.5)",
-            }}
+            className="inline-block rounded-full font-bold text-[#0a0a0a] bg-[#f59e0b] shadow-[0_0_30px_rgba(245,158,11,0.5)] text-sm px-3 py-2 md:text-base md:px-6 md:py-3"
           >
             Analyse My Portfolio →
           </a>
@@ -330,7 +321,7 @@ export default function Home() {
                 <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
                 <div className="flex items-center gap-2">
                   <h3 className="font-heading text-lg font-semibold text-yellow-400">Premium</h3>
-                  <span className="rounded-full bg-yellow-600 px-2 py-0.5 text-xs font-semibold text-white">£3.99</span>
+                  <span className="rounded-full bg-yellow-600 px-2 py-0.5 text-xs font-semibold text-white">£2.49</span>
                 </div>
                 <ul className="mt-4 space-y-2 text-sm text-slate-400">
                   <li className="flex items-center gap-2">
