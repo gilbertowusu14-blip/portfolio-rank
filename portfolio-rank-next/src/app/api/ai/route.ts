@@ -78,7 +78,13 @@ What would happen to this portfolio in a sharp downturn? Vary the example by por
 6. Path Forward —
 How to act progressively: the single first move, then next steps. Realistic and specific.
 
-Rules: Risk profile and time horizon must shape the whole response. Never lead a sentence with a score. Each section flows from the last without repeating it. Reference their tickers, weights, and subscores; keep tone direct and human.`;
+Rules: Risk profile and time horizon must shape the whole response. Never lead a sentence with a score. Each section flows from the last without repeating it. Reference their tickers, weights, and subscores; keep tone direct and human.
+
+Additional rules (anti-repetition and geographic fit):
+Geographic awareness: Look at the tickers in the portfolio to determine the user's likely market. If they hold LSE-listed tickers (ending in .L) or UCITS ETFs (VUAG, VWRL, VUSA, CSPX, IWDA etc), they are a UK/European investor — suggest UCITS ETFs only (VWRL, VUAG, VUSA, CSPX, SWRD). If they hold US-listed tickers only, suggest US ETFs (VTI, VXUS, QQQ etc). Never suggest US-listed ETFs to a UK investor.
+No repetition: Never suggest the same ETFs in strengths, weaknesses, actions AND blueprint. Each section must add new information. If you mention VTI in actions do not mention it again in the blueprint.
+Vary by portfolio: The suggestions must be specific to what is actually missing. If the portfolio already has international exposure don't suggest international ETFs. If it already has defensive exposure don't suggest defensive ETFs. Read the actual holdings before making any suggestion.
+No default basket: Never default to a fixed set of suggestions. VTI, VXUS and XLP should not appear together in every response — this pattern means you are not reading the portfolio.`;
 
 const FALLBACK_RESPONSE: AiNarrative = {
   summary:
