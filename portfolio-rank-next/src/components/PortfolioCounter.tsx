@@ -93,8 +93,9 @@ export default function PortfolioCounter({ targetCount }: { targetCount: number 
   const slotLen = Math.max(endStr.length, startStr.length);
 
   const rootRef = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-
+  /** After the section has left the viewport at least once, re-entries may animate */
+  const hasLeftViewport = useRef(false);
+  const [playToken, setPlayToken] = useState(0);
   const [display, setDisplay] = useState(start);
 
   useEffect(() => {
@@ -104,19 +105,26 @@ export default function PortfolioCounter({ targetCount }: { targetCount: number 
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setInView(true);
-          obs.disconnect();
+          if (hasLeftViewport.current) {
+            setDisplay(start);
+            setPlayToken((t) => t + 1);
+          } else {
+            setDisplay(start);
+          }
+        } else {
+          hasLeftViewport.current = true;
+          setDisplay(start);
         }
       },
-      { threshold: 0.25, rootMargin: "0px 0px -5% 0px" }
+      { threshold: 0.2, rootMargin: "0px 0px -5% 0px" }
     );
 
     obs.observe(el);
     return () => obs.disconnect();
-  }, []);
+  }, [start]);
 
   useEffect(() => {
-    if (!inView) return;
+    if (playToken === 0) return;
 
     const t0 = performance.now();
     let raf = 0;
@@ -137,7 +145,7 @@ export default function PortfolioCounter({ targetCount }: { targetCount: number 
       cancelled = true;
       cancelAnimationFrame(raf);
     };
-  }, [inView, start, end]);
+  }, [playToken, start, end]);
 
   const line = padToLength(display.toLocaleString("en-GB"), slotLen);
   const chars = line.split("");
@@ -152,9 +160,12 @@ export default function PortfolioCounter({ targetCount }: { targetCount: number 
         style={{ perspective: "720px" }}
         aria-hidden
       >
-        <div className="flex flex-wrap items-center justify-center gap-0.5 sm:gap-1">
+        <div
+          key={playToken}
+          className="flex flex-wrap items-center justify-center gap-0.5 sm:gap-1"
+        >
           {chars.map((c, i) => (
-            <ScoreChar key={`slot-${i}`} char={c} />
+            <ScoreChar key={`${playToken}-slot-${i}`} char={c} />
           ))}
         </div>
       </div>

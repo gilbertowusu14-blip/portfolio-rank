@@ -3,6 +3,7 @@ import * as SimpleIcons from "simple-icons";
 import MagneticButton from "@/components/MagneticButton";
 import PortfolioCounter from "@/components/PortfolioCounter";
 import PortfolioRankDistributionSection from "@/components/PortfolioRankDistributionSection";
+import { CTA_GOLD_BG, CTA_GOLD_SHADOW_RGB } from "@/lib/branding";
 import { getTotalAnalyses } from "@/lib/analytics";
 
 export const dynamic = "force-dynamic";
@@ -74,7 +75,11 @@ export default async function Home() {
           </Link>
           <a
             href="/analyze"
-            className="inline-block rounded-full font-bold text-[#0a0a0a] bg-[#f59e0b] shadow-[0_0_30px_rgba(245,158,11,0.5)] text-sm px-3 py-2 md:text-base md:px-6 md:py-3"
+            className="inline-block rounded-full font-bold text-[#0a0a0a] text-sm px-3 py-2 md:text-base md:px-6 md:py-3"
+            style={{
+              backgroundColor: CTA_GOLD_BG,
+              boxShadow: `0 0 30px rgba(${CTA_GOLD_SHADOW_RGB}, 0.5)`,
+            }}
           >
             Analyse My Portfolio →
           </a>
@@ -83,7 +88,7 @@ export default async function Home() {
 
       <main className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
         {/* Section 1 — Hero */}
-        <section className="pb-10 text-center md:pb-14">
+        <section className="pb-7 text-center md:pb-9">
           <div className="max-w-3xl mx-auto">
             <h1 className="font-heading text-4xl md:text-6xl font-black text-center leading-tight tracking-tight">
               <span className="text-white">How Strong Is Your</span>
@@ -125,7 +130,7 @@ export default async function Home() {
               <MagneticButton href="/analyze">
                 Analyse My Portfolio →
               </MagneticButton>
-              <div className="mt-[42px] mb-8 flex flex-wrap justify-center gap-2 md:mb-10">
+              <div className="mt-[42px] mb-5 flex flex-wrap justify-center gap-2 md:mb-7">
                 <span className="inline-flex items-center rounded-full border border-yellow-500/25 bg-[#1a1a1a] px-3 py-1.5 text-xs sm:text-sm text-slate-200">
                   ⚡ Instant Results
                 </span>
@@ -137,7 +142,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <div className="flex justify-center items-center pt-5 pb-10 md:pt-7 md:pb-14">
+        <div className="flex justify-center items-center pt-3 pb-7 md:pt-5 md:pb-9">
           <img
             src="/brand/bull-mascot.png"
             alt="Rankfolio Bull"
@@ -145,7 +150,7 @@ export default async function Home() {
           />
         </div>
 
-        <div className="mb-16 mt-4 px-4 md:mb-24 md:mt-6">
+        <div className="mb-11 mt-2.5 px-4 md:mb-16 md:mt-4">
           <PortfolioCounter targetCount={portfolioCount} />
         </div>
 
@@ -356,22 +361,6 @@ export default async function Home() {
           <MagneticButton href="/analyze" className="mt-8 flex justify-center">
             Get Your Free Score →
           </MagneticButton>
-        </section>
-
-        {/* Footer CTA */}
-        <section className="mb-16 py-28 md:mb-20 md:py-32">
-          <div className="card-glow-amber relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-center">
-            <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
-            <h2 className="font-heading text-2xl font-semibold text-white sm:text-3xl">
-              Your Portfolio Might Be Riskier Than You Think
-            </h2>
-            <p className="mt-3 text-slate-400">
-              Find out in 30 seconds. No signup required.
-            </p>
-            <MagneticButton href="/analyze" className="mt-6">
-              Analyse My Portfolio →
-            </MagneticButton>
-          </div>
         </section>
       </main>
 

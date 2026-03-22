@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { CTA_GOLD_BG, CTA_GOLD_SHADOW_RGB } from "@/lib/branding";
 
 const STORAGE_KEY = "portfolio-rank-form";
 
@@ -586,8 +587,8 @@ function ResultPage() {
                   disabled={unlockLoading || (!stored && !score)}
                   className="w-full mb-1.5 rounded-full text-sm font-semibold py-2.5 text-white disabled:opacity-70 disabled:cursor-not-allowed"
                   style={{
-                    background: "#f59e0b",
-                    boxShadow: "0 0 30px rgba(245,158,11,0.4)",
+                    background: CTA_GOLD_BG,
+                    boxShadow: `0 0 30px rgba(${CTA_GOLD_SHADOW_RGB},0.4)`,
                   }}
                 >
                   {unlockLoading ? "Redirecting to payment…" : "Unlock Full Report — £2.49"}
@@ -621,8 +622,8 @@ function ResultPage() {
             disabled={unlockLoading || (!stored && !score)}
             className="rounded-full text-sm font-semibold py-2.5 px-6 text-white disabled:opacity-70 disabled:cursor-not-allowed"
             style={{
-              background: "#f59e0b",
-              boxShadow: "0 0 20px rgba(245,158,11,0.4)",
+              background: CTA_GOLD_BG,
+              boxShadow: `0 0 20px rgba(${CTA_GOLD_SHADOW_RGB},0.4)`,
             }}
           >
             {unlockLoading ? "Redirecting to payment…" : "Unlock Now"}
