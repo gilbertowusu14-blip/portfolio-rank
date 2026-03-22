@@ -80,9 +80,9 @@ export default async function Home() {
         </div>
       </nav>
 
-      <main className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+      <main className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
         {/* Section 1 — Hero */}
-        <section className="pb-4 text-center">
+        <section className="pb-20 text-center md:pb-28">
           <div className="max-w-3xl mx-auto">
             <h1 className="font-heading text-4xl md:text-6xl font-black text-center leading-tight tracking-tight">
               <span className="text-white">How Strong Is Your</span>
@@ -96,7 +96,7 @@ export default async function Home() {
             </p>
 
             {/* 3 step cards */}
-            <div className="mt-12 grid gap-8 sm:grid-cols-3">
+            <div className="mt-14 grid gap-8 sm:mt-16 sm:grid-cols-3">
               <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
                 <div className="text-2xl">📋</div>
                 <h3 className="font-heading mt-2 font-semibold text-white">Enter Portfolio</h3>
@@ -120,11 +120,11 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className="mt-16">
+            <div className="mt-20 md:mt-24">
               <MagneticButton href="/analyze">
                 Analyse My Portfolio →
               </MagneticButton>
-              <div className="mt-[42px] flex flex-wrap justify-center gap-2">
+              <div className="mt-[42px] mb-16 flex flex-wrap justify-center gap-2 md:mb-20">
                 <span className="inline-flex items-center rounded-full border border-yellow-500/25 bg-[#1a1a1a] px-3 py-1.5 text-xs sm:text-sm text-slate-200">
                   ⚡ Instant Results
                 </span>
@@ -136,7 +136,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <div className="flex justify-center items-center py-0 mb-2">
+        <div className="flex justify-center items-center py-10 md:py-14">
           <img
             src="/brand/bull-mascot.png"
             alt="Rankfolio Bull"
@@ -144,13 +144,13 @@ export default async function Home() {
           />
         </div>
 
-        <div className="mb-8 mt-2 px-4">
+        <div className="mb-16 mt-4 px-4 md:mb-24 md:mt-6">
           <PortfolioCounter targetCount={portfolioCount} />
         </div>
 
         {/* Section 2 — Logo carousel */}
-        <section className="pb-24">
-          <h2 className="font-heading mb-8 text-center text-xl font-semibold text-white sm:text-2xl">
+        <section className="pb-28 pt-4 md:pb-36">
+          <h2 className="font-heading mb-12 text-center text-xl font-semibold text-white sm:text-2xl">
             Works with any portfolio of stocks or ETFs
           </h2>
           <div
@@ -202,7 +202,7 @@ export default async function Home() {
         </section>
 
         {/* Section 3 — Stat cards */}
-        <section className="pt-8 pb-16 bg-transparent">
+        <section className="bg-transparent pb-20 pt-12 md:pb-28 md:pt-16">
           <div className="card-glow-amber relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6">
             <h2 className="font-heading mb-8 text-center text-2xl font-semibold text-white">
               Most Portfolios Have Hidden Problems
@@ -249,7 +249,7 @@ export default async function Home() {
         </section>
 
         {/* Section 5 — How scoring works */}
-        <section className="py-24 bg-transparent">
+        <section className="bg-transparent py-28 md:py-36">
           <div className="card-glow-amber relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6">
             <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
             <h2 className="font-heading mb-10 text-center text-2xl font-semibold text-white">
@@ -307,7 +307,7 @@ export default async function Home() {
         </section>
 
         {/* Section 6 — Free score */}
-        <section className="pt-8 pb-16 text-center">
+        <section className="pb-20 pt-12 text-center md:pb-28 md:pt-16">
           <h2 className="font-heading text-2xl font-semibold text-white">
             Start With a{" "}
             <span style={{ color: ACCENT_GOLD }}>Free</span> Portfolio Score
@@ -356,7 +356,7 @@ export default async function Home() {
         </section>
 
         {/* Footer CTA */}
-        <section className="py-24 mb-12">
+        <section className="mb-16 py-28 md:mb-20 md:py-32">
           <div className="card-glow-amber relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-center">
             <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
             <h2 className="font-heading text-2xl font-semibold text-white sm:text-3xl">

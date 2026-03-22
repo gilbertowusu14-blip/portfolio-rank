@@ -1,17 +1,97 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const DURATION_MS = 1500;
+const FLIP_MS = 160;
 
-/** Counts up from (target - 50) to target on mount over 1.5s. */
-export default function PortfolioCounter({ targetCount }: { targetCount: number }) {
-  const from = Math.max(0, targetCount - 50);
-  const [display, setDisplay] = useState(from);
+function padToLength(formatted: string, len: number): string {
+  return formatted.padStart(len, " ");
+}
+
+/** Single digit or comma in a scoreboard tile; digits flip on change. */
+function ScoreChar({ char }: { char: string }) {
+  const tileRef = useRef<HTMLDivElement>(null);
+  const prevRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const start = Math.max(0, targetCount - 50);
-    const end = targetCount;
+    if (prevRef.current === null) {
+      prevRef.current = char;
+      return;
+    }
+    if (char === prevRef.current) return;
+
+    const el = tileRef.current;
+    if (!el || !/\d/.test(char)) {
+      prevRef.current = char;
+      return;
+    }
+
+    prevRef.current = char;
+    el.getAnimations?.().forEach((a) => a.cancel());
+    el.animate(
+      [
+        { transform: "rotateX(0deg)", opacity: 1 },
+        { transform: "rotateX(-85deg)", opacity: 0.2, offset: 0.42 },
+        { transform: "rotateX(85deg)", opacity: 0.2, offset: 0.58 },
+        { transform: "rotateX(0deg)", opacity: 1 },
+      ],
+      {
+        duration: FLIP_MS,
+        easing: "cubic-bezier(0.45, 0, 0.2, 1.15)",
+        fill: "forwards",
+      }
+    );
+  }, [char]);
+
+  if (char === " ") {
+    return <span className="inline-block w-2 shrink-0 sm:w-3" aria-hidden />;
+  }
+
+  if (char === ",") {
+    return (
+      <span
+        className="mx-0.5 flex h-12 w-3 shrink-0 items-end justify-center pb-1 text-xl font-bold text-amber-500/90 sm:h-14 sm:text-2xl"
+        aria-hidden
+      >
+        ,
+      </span>
+    );
+  }
+
+  return (
+    <div
+      ref={tileRef}
+      className="scoreboard-digit relative inline-flex h-12 w-8 shrink-0 items-center justify-center overflow-hidden rounded-md border sm:h-14 sm:w-10"
+      style={{
+        background: "linear-gradient(180deg, #161616 0%, #0a0a0a 45%, #101010 100%)",
+        borderColor: "rgba(245, 158, 11, 0.55)",
+        boxShadow:
+          "inset 0 1px 0 rgba(255,255,255,0.07), 0 4px 20px rgba(245, 158, 11, 0.14), 0 0 0 1px rgba(0,0,0,0.45)",
+        backfaceVisibility: "hidden",
+      }}
+    >
+      <span className="font-mono text-2xl font-bold tabular-nums tracking-tight text-white drop-shadow-[0_1px_0_rgba(0,0,0,0.85)] sm:text-3xl">
+        {char}
+      </span>
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-1/2 border-b border-white/[0.07] bg-gradient-to-b from-white/[0.06] to-transparent"
+        aria-hidden
+      />
+    </div>
+  );
+}
+
+export default function PortfolioCounter({ targetCount }: { targetCount: number }) {
+  const start = Math.max(0, targetCount - 50);
+  const end = targetCount;
+  const endStr = end.toLocaleString("en-GB");
+  const startStr = start.toLocaleString("en-GB");
+  const slotLen = Math.max(endStr.length, startStr.length);
+
+  const [display, setDisplay] = useState(start);
+
+  useEffect(() => {
     const t0 = performance.now();
     let raf = 0;
     let cancelled = false;
@@ -31,11 +111,31 @@ export default function PortfolioCounter({ targetCount }: { targetCount: number 
       cancelled = true;
       cancelAnimationFrame(raf);
     };
-  }, [targetCount]);
+  }, [start, end]);
+
+  const line = padToLength(display.toLocaleString("en-GB"), slotLen);
+  const chars = line.split("");
 
   return (
-    <p className="text-center text-base text-white">
-      👥 {display.toLocaleString("en-GB")} portfolios analysed
-    </p>
+    <div className="flex flex-col items-center justify-center gap-4">
+      <p className="sr-only">
+        {display.toLocaleString("en-GB")} portfolios analysed
+      </p>
+      <div
+        className="flex flex-wrap items-center justify-center gap-y-3"
+        style={{ perspective: "720px" }}
+        aria-hidden
+      >
+        <span className="mr-2 text-3xl leading-none sm:mr-4 sm:text-4xl">👥</span>
+        <div className="flex flex-wrap items-center justify-center gap-0.5 sm:gap-1">
+          {chars.map((c, i) => (
+            <ScoreChar key={`slot-${i}`} char={c} />
+          ))}
+        </div>
+      </div>
+      <p className="text-center text-xs text-slate-500 sm:text-sm">
+        portfolios analysed
+      </p>
+    </div>
   );
 }
