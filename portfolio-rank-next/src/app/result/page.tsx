@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { CTA_GOLD_BG, CTA_GOLD_SHADOW_RGB } from "@/lib/branding";
+/** Site-wide CTA gold — matches homepage / analyse */
+const PAYWALL_GOLD_BG = "#d4840a";
+const PAYWALL_GOLD_RGB = "212, 132, 10";
 
 const STORAGE_KEY = "portfolio-rank-form";
 
@@ -288,6 +290,19 @@ function ResultPage() {
 
   return (
     <div className="min-h-screen text-white pb-24" style={{ backgroundColor: "#0a0a0a" }}>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            @keyframes resultPaywallChevronPulse {
+              0%, 100% { transform: translateY(0); opacity: 0.65; }
+              50% { transform: translateY(5px); opacity: 1; }
+            }
+            .result-paywall-chevron {
+              animation: resultPaywallChevronPulse 2.2s ease-in-out infinite;
+            }
+          `,
+        }}
+      />
       {/* Navbar */}
       <nav className="sticky top-0 z-50 backdrop-blur-md bg-[#0a0a0a]/70 border-b border-white/10">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
@@ -442,7 +457,13 @@ function ResultPage() {
         {/* Full report section — blurred when locked */}
         <section className="mb-16">
           <div className="relative rounded-2xl bg-[#111111] border border-yellow-500/20 px-4 py-5 space-y-5 overflow-hidden">
-            <div className={isUnlocked ? "" : "h-[500px] max-h-[600px] overflow-hidden"}>
+            <div
+              className={
+                isUnlocked
+                  ? ""
+                  : "relative h-[500px] max-h-[600px] overflow-hidden"
+              }
+            >
             <div
               className={isUnlocked ? "" : "blur-[2px] opacity-70"}
             >
@@ -531,13 +552,40 @@ function ResultPage() {
                 </div>
               )}
             </div>
+
+            {/* Depth: strong fade-to-page-bg + subtle “more below” hint — locked only */}
+            {!isUnlocked && (
+              <>
+                <div
+                  className="pointer-events-none absolute inset-x-0 bottom-0 z-[4] h-64 bg-gradient-to-b from-transparent from-[8%] via-[#0a0a0a]/72 to-[#0a0a0a] md:h-72"
+                  aria-hidden
+                />
+                <div className="pointer-events-none absolute inset-x-0 bottom-52 z-[5] flex flex-col items-center justify-end gap-1 md:bottom-56">
+                  <span className="text-[11px] font-medium tracking-wide text-slate-500">
+                    More inside your report
+                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="result-paywall-chevron h-4 w-4 text-slate-500"
+                    aria-hidden
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </>
+            )}
             </div>
 
-            {/* Dark overlay + unlock card — hidden when unlocked */}
+            {/* Unlock card — hidden when unlocked */}
             {!isUnlocked && (
             <>
-              <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/80 via-[#0a0a0a]/90 to-[#0a0a0a]/95" aria-hidden />
-              <div className="absolute top-5 left-1/2 w-full max-w-sm px-4 -translate-x-1/2">
+              <div className="absolute top-5 left-1/2 z-[8] w-full max-w-sm px-4 -translate-x-1/2">
                 <div className="rounded-2xl bg-[#111111] border border-yellow-500/20 px-5 py-5 shadow-2xl">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-lg text-yellow-400">🔒</span>
@@ -587,8 +635,8 @@ function ResultPage() {
                   disabled={unlockLoading || (!stored && !score)}
                   className="w-full mb-1.5 rounded-full text-sm font-semibold py-2.5 text-white disabled:opacity-70 disabled:cursor-not-allowed"
                   style={{
-                    background: CTA_GOLD_BG,
-                    boxShadow: `0 0 30px rgba(${CTA_GOLD_SHADOW_RGB},0.4)`,
+                    background: PAYWALL_GOLD_BG,
+                    boxShadow: `0 0 30px rgba(${PAYWALL_GOLD_RGB},0.4)`,
                   }}
                 >
                   {unlockLoading ? "Redirecting to payment…" : "Unlock Full Report — £2.49"}
@@ -622,8 +670,8 @@ function ResultPage() {
             disabled={unlockLoading || (!stored && !score)}
             className="rounded-full text-sm font-semibold py-2.5 px-6 text-white disabled:opacity-70 disabled:cursor-not-allowed"
             style={{
-              background: CTA_GOLD_BG,
-              boxShadow: `0 0 20px rgba(${CTA_GOLD_SHADOW_RGB},0.4)`,
+              background: PAYWALL_GOLD_BG,
+              boxShadow: `0 0 20px rgba(${PAYWALL_GOLD_RGB},0.4)`,
             }}
           >
             {unlockLoading ? "Redirecting to payment…" : "Unlock Now"}
