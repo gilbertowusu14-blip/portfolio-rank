@@ -76,7 +76,7 @@ export default function Home() {
 
       <main className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
         {/* Section 1 — Hero */}
-        <section className="pb-12 text-center">
+        <section className="pb-4 text-center">
           <div className="max-w-3xl mx-auto">
             <h1 className="font-heading text-4xl md:text-6xl font-black text-center leading-tight tracking-tight">
               <span className="text-white">How Strong Is Your</span>
@@ -118,7 +118,7 @@ export default function Home() {
               <MagneticButton href="/analyze">
                 Analyse My Portfolio →
               </MagneticButton>
-              <div className="mt-6 flex flex-wrap justify-center gap-2">
+              <div className="mt-[42px] flex flex-wrap justify-center gap-2">
                 <span className="inline-flex items-center rounded-full border border-yellow-500/25 bg-[#1a1a1a] px-3 py-1.5 text-xs sm:text-sm text-slate-200">
                   ⚡ Instant Results
                 </span>
