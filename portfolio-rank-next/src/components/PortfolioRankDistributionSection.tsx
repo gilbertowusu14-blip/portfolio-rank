@@ -18,8 +18,6 @@ import {
 import type { ChartOptions } from "chart.js";
 import { Chart as ReactChart } from "react-chartjs-2";
 
-const ACCENT = "#f59e0b";
-
 /** Explicit registration — required for Chart.js tree-shaking + Next.js client bundle */
 Chart.register(
   CategoryScale,
@@ -38,13 +36,16 @@ Chart.register(
 /** 19 bins: 1.0, 1.5, … 10.0 */
 const LABELS = Array.from({ length: 19 }, (_, i) => (1 + i * 0.5).toFixed(1));
 
-/** Gaussian bell curve (μ ≈ 5.75, σ ≈ 1.7) peaking between 5.5–6.0 */
+/**
+ * Single peak at 5.5 (~340); 5.0 and 6.0 slightly lower (~310) — Gaussian μ=5.5, σ≈1.16
+ * so exp(-0.5²/(2σ²)) ≈ 310/340.
+ */
 const COUNTS = Array.from({ length: 19 }, (_, i) => {
   const x = 1 + i * 0.5;
-  const mu = 5.75;
-  const sigma = 1.7;
+  const mu = 5.5;
+  const sigma = 1.16;
   const raw = Math.exp(-((x - mu) ** 2) / (2 * sigma * sigma));
-  return Math.max(4, Math.round(318 * raw));
+  return Math.max(4, Math.round(340 * raw));
 });
 
 const AVG_SCORE = 5.8;
@@ -190,12 +191,6 @@ export default function PortfolioRankDistributionSection() {
             </div>
           </div>
         </div>
-
-        <p className="mt-10 text-center font-heading text-2xl font-bold md:text-3xl">
-          <span className="text-white">Average Score: </span>
-          <span style={{ color: ACCENT }}>{AVG_SCORE.toFixed(1)}</span>
-          <span className="text-white">/10</span>
-        </p>
       </div>
     </section>
   );
