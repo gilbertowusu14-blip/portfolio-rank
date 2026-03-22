@@ -159,7 +159,7 @@ export default function PortfolioRankDistributionSection() {
 
   return (
     <section className="bg-transparent pb-20 pt-12 md:pb-28 md:pt-16">
-      <div className="card-glow-amber relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#0d0d0d] p-6 md:p-8">
+      <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#0d0d0d] p-6 shadow-[0_2px_12px_rgba(212,132,10,0.15)] md:p-8">
         <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
         <h2 className="font-heading mb-8 text-center text-2xl font-semibold text-white md:text-3xl">
           Where Do Most Portfolios Rank?
@@ -181,15 +181,16 @@ export default function PortfolioRankDistributionSection() {
                   style={{
                     left: `${AVG_LINE_LEFT_PCT}%`,
                     transform: "translateX(-50%)",
-                    boxShadow: "0 0 12px rgba(251, 191, 36, 0.35)",
+                    boxShadow: "0 0 6px rgba(212, 132, 10, 0.18)",
                   }}
                 />
                 <div
-                  className="absolute rounded-md border border-amber-500/40 bg-[#111111]/95 px-2 py-0.5 text-[11px] font-bold text-amber-400 shadow-md"
+                  className="absolute rounded-md border border-amber-500/40 bg-[#111111]/95 px-2 py-0.5 text-[11px] font-bold text-amber-400"
                   style={{
                     left: `${AVG_LINE_LEFT_PCT}%`,
                     top: "2%",
                     transform: "translateX(-50%)",
+                    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.15)",
                   }}
                 >
                   Avg: 5.8

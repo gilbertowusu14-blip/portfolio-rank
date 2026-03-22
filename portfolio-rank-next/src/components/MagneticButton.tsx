@@ -1,7 +1,9 @@
 "use client";
 
 import { useRef } from "react";
-import { CTA_GOLD_BG, CTA_GOLD_SHADOW_RGB } from "@/lib/branding";
+
+const CTA_GOLD_BG = "#d4840a";
+const CTA_GOLD_SHADOW_RGB = "212, 132, 10";
 
 function MagneticButton({
   href,

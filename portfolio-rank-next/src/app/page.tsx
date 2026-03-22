@@ -3,12 +3,14 @@ import * as SimpleIcons from "simple-icons";
 import MagneticButton from "@/components/MagneticButton";
 import PortfolioCounter from "@/components/PortfolioCounter";
 import PortfolioRankDistributionSection from "@/components/PortfolioRankDistributionSection";
-import { CTA_GOLD_BG, CTA_GOLD_SHADOW_RGB } from "@/lib/branding";
 import { getTotalAnalyses } from "@/lib/analytics";
 
 export const dynamic = "force-dynamic";
 
-const ACCENT_GOLD = "#f59e0b";
+/** Primary gold (less saturated) — homepage-only styling */
+const PRIMARY_GOLD = "#d4840a";
+const PRIMARY_GOLD_RGB = "212, 132, 10";
+const ACCENT_GOLD = PRIMARY_GOLD;
 
 const CAROUSEL_SLUGS = [
   "apple",
@@ -70,15 +72,15 @@ export default async function Home() {
             <img src="/brand/bull-head.png" alt="Rankfolio" className="h-16 w-auto" />
             <span className="font-bold text-lg">
               <span className="text-white">Rank</span>
-              <span className="text-yellow-400">folio™</span>
+              <span className="text-[#d4840a]">folio™</span>
             </span>
           </Link>
           <a
             href="/analyze"
-            className="inline-block rounded-full font-bold text-[#0a0a0a] text-sm px-3 py-2 md:text-base md:px-6 md:py-3"
+            className="inline-block rounded-full font-bold text-[#0a0a0a] px-4 py-2 text-sm"
             style={{
-              backgroundColor: CTA_GOLD_BG,
-              boxShadow: `0 0 30px rgba(${CTA_GOLD_SHADOW_RGB}, 0.5)`,
+              backgroundColor: PRIMARY_GOLD,
+              boxShadow: `0 0 14px rgba(${PRIMARY_GOLD_RGB}, 0.2)`,
             }}
           >
             Analyse My Portfolio →
@@ -86,14 +88,14 @@ export default async function Home() {
         </div>
       </nav>
 
-      <main className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+      <main className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
         {/* Section 1 — Hero */}
         <section className="pb-7 text-center md:pb-9">
           <div className="max-w-3xl mx-auto">
             <h1 className="font-heading text-4xl md:text-6xl font-black text-center leading-tight tracking-tight">
               <span className="text-white">How Strong Is Your</span>
               <br />
-              <span className="text-yellow-400 whitespace-nowrap">
+              <span className="whitespace-nowrap text-[#d4840a]">
                 Investment Portfolio?
               </span>
             </h1>
@@ -102,23 +104,23 @@ export default async function Home() {
             </p>
 
             {/* 3 step cards */}
-            <div className="mt-14 grid gap-8 sm:mt-16 sm:grid-cols-3">
-              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
-                <div className="text-2xl">📋</div>
+            <div className="mt-10 grid gap-3 sm:mt-12 sm:grid-cols-3">
+              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-4 text-left">
+                <div className="text-xl">📋</div>
                 <h3 className="font-heading mt-2 font-semibold text-white">Enter Portfolio</h3>
                 <p className="mt-1 text-sm text-slate-400">
                   Add your holdings and weights in seconds
                 </p>
               </div>
-              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
-                <div className="text-2xl">⚡</div>
+              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-4 text-left">
+                <div className="text-xl">⚡</div>
                 <h3 className="font-heading mt-2 font-semibold text-white">AI Analysis</h3>
                 <p className="mt-1 text-sm text-slate-400">
                   Our engine scores diversification, risk & more
                 </p>
               </div>
-              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
-                <div className="text-2xl">📊</div>
+              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-4 text-left">
+                <div className="text-xl">📊</div>
                 <h3 className="font-heading mt-2 font-semibold text-white">Your Score</h3>
                 <p className="mt-1 text-sm text-slate-400">
                   Get an accurate, free and personalised score in 10 seconds
@@ -126,7 +128,7 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className="mt-20 md:mt-24">
+            <div className="mt-12 md:mt-16">
               <MagneticButton href="/analyze">
                 Analyse My Portfolio →
               </MagneticButton>
@@ -142,7 +144,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <div className="flex justify-center items-center pt-3 pb-7 md:pt-5 md:pb-9">
+        <div className="flex justify-center items-center pt-2 pb-5 md:pt-4 md:pb-6">
           <img
             src="/brand/bull-mascot.png"
             alt="Rankfolio Bull"
@@ -150,13 +152,13 @@ export default async function Home() {
           />
         </div>
 
-        <div className="mb-11 mt-2.5 px-4 md:mb-16 md:mt-4">
+        <div className="mb-8 mt-2 px-4 md:mb-10 md:mt-3">
           <PortfolioCounter targetCount={portfolioCount} />
         </div>
 
         {/* Section 2 — Logo carousel */}
-        <section className="pb-28 pt-4 md:pb-36">
-          <h2 className="font-heading mb-12 text-center text-xl font-semibold text-white sm:text-2xl">
+        <section className="pb-12 pt-2 md:pb-14">
+          <h2 className="font-heading mb-8 text-center text-xl font-semibold text-white sm:text-2xl">
             Works with any portfolio of stocks or ETFs
           </h2>
           <div
@@ -208,13 +210,13 @@ export default async function Home() {
         </section>
 
         {/* Section 3 — Stat cards */}
-        <section className="bg-transparent pb-20 pt-12 md:pb-28 md:pt-16">
-          <div className="card-glow-amber relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6">
+        <section className="bg-transparent pb-10 pt-10 md:pb-12 md:pt-12">
+          <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 shadow-[0_2px_12px_rgba(212,132,10,0.15)] transition-shadow duration-200 hover:shadow-[0_4px_16px_rgba(212,132,10,0.28)]">
             <h2 className="font-heading mb-8 text-center text-2xl font-semibold text-white">
               Most Portfolios Have Hidden Problems
             </h2>
-            <div className="grid gap-8 sm:grid-cols-3">
-              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-8">
+              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-4 text-center md:p-8">
                 <div
                   className="text-5xl font-black"
                   style={{ color: ACCENT_GOLD }}
@@ -226,7 +228,7 @@ export default async function Home() {
                   Retail investors are overconcentrated in a single sector
                 </p>
               </div>
-              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
+              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-4 text-center md:p-8">
                 <div
                   className="font-heading text-5xl font-black"
                   style={{ color: ACCENT_GOLD }}
@@ -238,7 +240,7 @@ export default async function Home() {
                   Average number of stocks held by retail investors
                 </p>
               </div>
-              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
+              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-4 text-center md:p-8">
                 <div
                   className="font-heading text-5xl font-black"
                   style={{ color: ACCENT_GOLD }}
@@ -257,9 +259,9 @@ export default async function Home() {
         <PortfolioRankDistributionSection />
 
         {/* Section 5 — How scoring works */}
-        <section className="bg-transparent py-28 md:py-36">
-          <div className="card-glow-amber relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6">
-            <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
+        <section className="bg-transparent py-12 md:py-14">
+          <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 shadow-[0_2px_12px_rgba(212,132,10,0.15)] transition-shadow duration-200 hover:shadow-[0_4px_16px_rgba(212,132,10,0.28)]">
+            <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#d4840a]/50 to-transparent" />
             <h2 className="font-heading mb-10 text-center text-2xl font-semibold text-white">
               How Your Portfolio Score Is Calculated
             </h2>
@@ -300,7 +302,7 @@ export default async function Home() {
                   key={item.name}
                   className="relative flex gap-4 overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6"
                 >
-                  <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
+                  <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#d4840a]/50 to-transparent" />
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/10 text-2xl">
                     {item.icon}
                   </span>
@@ -315,14 +317,14 @@ export default async function Home() {
         </section>
 
         {/* Section 6 — Free score */}
-        <section className="pb-20 pt-12 text-center md:pb-28 md:pt-16">
+        <section className="pb-10 pt-10 text-center md:pb-12 md:pt-12">
           <h2 className="font-heading text-2xl font-semibold text-white">
             Start With a{" "}
             <span style={{ color: ACCENT_GOLD }}>Free</span> Portfolio Score
           </h2>
           <div className="mx-auto mt-8 grid max-w-4xl gap-8 sm:grid-cols-2">
-              <div className="card-glow-amber relative overflow-hidden rounded-2xl bg-[#111111] border border-yellow-500/20 p-6 text-left">
-                <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
+              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left shadow-[0_2px_12px_rgba(212,132,10,0.15)] transition-shadow duration-200 hover:shadow-[0_4px_16px_rgba(212,132,10,0.28)]">
+                <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#d4840a]/50 to-transparent" />
                 <h3 className="font-heading text-lg font-semibold text-white">Free</h3>
                 <ul className="mt-4 space-y-2 text-sm text-slate-400">
                   <li className="flex items-center gap-2">
@@ -336,11 +338,11 @@ export default async function Home() {
                   </li>
                 </ul>
               </div>
-              <div className="card-glow-amber relative overflow-hidden rounded-2xl bg-[#111111] border border-yellow-500/20 p-6 text-left">
-                <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
+              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left shadow-[0_2px_12px_rgba(212,132,10,0.15)] transition-shadow duration-200 hover:shadow-[0_4px_16px_rgba(212,132,10,0.28)]">
+                <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#d4840a]/50 to-transparent" />
                 <div className="flex items-center gap-2">
-                  <h3 className="font-heading text-lg font-semibold text-yellow-400">Premium</h3>
-                  <span className="rounded-full bg-yellow-600 px-2 py-0.5 text-xs font-semibold text-white">£2.49</span>
+                  <h3 className="font-heading text-lg font-semibold text-[#d4840a]">Premium</h3>
+                  <span className="rounded-full bg-[#d4840a] px-2 py-0.5 text-xs font-semibold text-white">£2.49</span>
                 </div>
                 <ul className="mt-4 space-y-2 text-sm text-slate-400">
                   <li className="flex items-center gap-2">
@@ -365,9 +367,9 @@ export default async function Home() {
       </main>
 
       <footer className="border-t border-white/10 bg-[#0a0a0a]">
-        <div className="mx-auto max-w-6xl px-4 py-12">
+        <div className="mx-auto max-w-6xl px-4 py-10">
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start sm:justify-between">
-            <span className="font-semibold text-yellow-400">Rankfolio™</span>
+            <span className="font-semibold text-[#d4840a]">Rankfolio™</span>
             <nav
               className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm text-slate-300"
               aria-label="Footer"
