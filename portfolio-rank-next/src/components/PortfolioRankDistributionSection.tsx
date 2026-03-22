@@ -2,34 +2,37 @@
 
 import { useMemo } from "react";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
+  BarController,
   BarElement,
+  CategoryScale,
+  Chart,
+  Filler,
+  Legend,
+  LinearScale,
+  LineController,
   LineElement,
   PointElement,
   Title,
   Tooltip,
-  Legend,
-  Filler,
 } from "chart.js";
-import annotationPlugin from "chartjs-plugin-annotation";
 import type { ChartOptions } from "chart.js";
-import { Chart } from "react-chartjs-2";
+import { Chart as ReactChart } from "react-chartjs-2";
 
 const ACCENT = "#f59e0b";
 
-ChartJS.register(
+/** Explicit registration — required for Chart.js tree-shaking + Next.js client bundle */
+Chart.register(
   CategoryScale,
   LinearScale,
   BarElement,
   LineElement,
   PointElement,
+  BarController,
+  LineController,
   Title,
   Tooltip,
   Legend,
-  Filler,
-  annotationPlugin
+  Filler
 );
 
 /** Hardcoded distribution (normal-ish, peak ~5.5–6) */
@@ -50,8 +53,8 @@ const LABELS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 const COUNTS = LABELS.map((_, i) => SCORE_COUNTS[i + 1] ?? 0);
 
 const AVG_SCORE = 5.8;
-/** Category index 0 = score 1; score 5.8 → index 4.8 */
-const AVG_X_INDEX = AVG_SCORE - 1;
+/** Linear position along 1–10 for overlay (matches category centres in a uniform axis). */
+const AVG_LINE_LEFT_PCT = ((AVG_SCORE - 1) / (10 - 1)) * 100;
 
 export default function PortfolioRankDistributionSection() {
   const data = useMemo(
@@ -92,6 +95,9 @@ export default function PortfolioRankDistributionSection() {
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode: "index" as const, intersect: false },
+      layout: {
+        padding: { top: 4, right: 8, bottom: 4, left: 8 },
+      },
       plugins: {
         legend: {
           display: true,
@@ -112,28 +118,6 @@ export default function PortfolioRankDistributionSection() {
           padding: 12,
           callbacks: {
             title: (items: { label: string }[]) => `Score ${items[0]?.label ?? ""}`,
-          },
-        },
-        annotation: {
-          annotations: {
-            avgLine: {
-              type: "line" as const,
-              scaleID: "x",
-              value: AVG_X_INDEX,
-              borderColor: "rgba(251, 191, 36, 0.9)",
-              borderDash: [6, 5],
-              borderWidth: 2,
-              label: {
-                display: true,
-                content: "Avg: 5.8",
-                position: "start" as const,
-                backgroundColor: "rgba(17, 17, 17, 0.92)",
-                color: "#fbbf24",
-                font: { size: 11, weight: "bold" as const },
-                padding: { x: 8, y: 4 },
-                yAdjust: -8,
-              },
-            },
           },
         },
       },
@@ -178,8 +162,38 @@ export default function PortfolioRankDistributionSection() {
         </h2>
 
         <div className="relative mx-auto h-[min(360px,55vw)] w-full max-w-4xl">
-          {/* Mixed bar + line datasets — Chart.js supports this; react-chartjs-2 types are stricter */}
-          <Chart type="bar" data={data as never} options={options} />
+          <div className="relative h-full w-full">
+            <ReactChart type="bar" data={data as never} options={options} />
+            {/* HTML/CSS average line — avoids chartjs-plugin-annotation SSR/runtime issues */}
+            <div
+              className="pointer-events-none absolute inset-0 z-10"
+              style={{
+                padding: "4px 8px 4px 8px",
+              }}
+              aria-hidden
+            >
+              <div className="relative h-full w-full">
+                <div
+                  className="absolute bottom-[18%] top-[14%] w-0 border-l-2 border-dashed border-amber-400/95"
+                  style={{
+                    left: `${AVG_LINE_LEFT_PCT}%`,
+                    transform: "translateX(-50%)",
+                    boxShadow: "0 0 12px rgba(251, 191, 36, 0.35)",
+                  }}
+                />
+                <div
+                  className="absolute rounded-md border border-amber-500/40 bg-[#111111]/95 px-2 py-0.5 text-[11px] font-bold text-amber-400 shadow-md"
+                  style={{
+                    left: `${AVG_LINE_LEFT_PCT}%`,
+                    top: "11%",
+                    transform: "translateX(-50%)",
+                  }}
+                >
+                  Avg: 5.8
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-center gap-4 text-center sm:flex-row sm:flex-wrap sm:gap-6">
