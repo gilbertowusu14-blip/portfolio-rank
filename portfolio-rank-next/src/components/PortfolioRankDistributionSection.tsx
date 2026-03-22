@@ -33,8 +33,11 @@ Chart.register(
   Filler
 );
 
-/** 19 bins: 1.0, 1.5, … 10.0 */
-const LABELS = Array.from({ length: 19 }, (_, i) => (1 + i * 0.5).toFixed(1));
+/** 19 bins at 0.5 steps; x-axis shows only whole numbers 1–10 (half-step labels hidden). */
+const LABELS = Array.from({ length: 19 }, (_, i) => {
+  const v = 1 + i * 0.5;
+  return Number.isInteger(v) ? String(v) : "";
+});
 
 /**
  * Single peak at 5.5 (~340); 5.0 and 6.0 slightly lower (~310) — Gaussian μ=5.5, σ≈1.16
@@ -108,7 +111,11 @@ export default function PortfolioRankDistributionSection() {
           borderWidth: 1,
           padding: 12,
           callbacks: {
-            title: (items: { label: string }[]) => `Score ${items[0]?.label ?? ""}`,
+            title: (items: { dataIndex: number }[]) => {
+              const idx = items[0]?.dataIndex ?? 0;
+              const score = 1 + idx * 0.5;
+              return `Score ${score.toFixed(1)}`;
+            },
           },
         },
       },
