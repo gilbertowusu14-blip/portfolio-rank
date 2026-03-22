@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const DURATION_MS = 1500;
+const DURATION_MS = 2000;
 const FLIP_MS = 160;
 
 /** ~Half of digit tile size: tiles use text-2xl (1.5rem) / sm:text-3xl (1.875rem) */
@@ -104,7 +104,8 @@ export default function PortfolioCounter({ targetCount }: { targetCount: number 
 
     const obs = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        const enough = entry.intersectionRatio >= 0.5;
+        if (enough) {
           if (hasLeftViewport.current) {
             setDisplay(start);
             setPlayToken((t) => t + 1);
@@ -116,7 +117,8 @@ export default function PortfolioCounter({ targetCount }: { targetCount: number 
           setDisplay(start);
         }
       },
-      { threshold: 0.2, rootMargin: "0px 0px -5% 0px" }
+      // 0.5 = fire when half the counter is visible; include 0 for off-screen state
+      { threshold: [0, 0.5] }
     );
 
     obs.observe(el);
