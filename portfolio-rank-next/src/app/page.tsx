@@ -118,15 +118,12 @@ export default function Home() {
               <MagneticButton href="/analyze">
                 Analyse My Portfolio →
               </MagneticButton>
-              <div className="mt-6 flex flex-wrap justify-center gap-2">
+              <div className="mt-5 flex flex-wrap justify-center gap-2">
                 <span className="inline-flex items-center rounded-full border border-yellow-500/25 bg-[#1a1a1a] px-3 py-1.5 text-xs sm:text-sm text-slate-200">
                   ⚡ Instant Results
                 </span>
                 <span className="inline-flex items-center rounded-full border border-yellow-500/25 bg-[#1a1a1a] px-3 py-1.5 text-xs sm:text-sm text-slate-200">
                   🔒 No signup required
-                </span>
-                <span className="inline-flex items-center rounded-full border border-yellow-500/25 bg-[#1a1a1a] px-3 py-1.5 text-xs sm:text-sm text-slate-200">
-                  📊 AI Powered
                 </span>
               </div>
             </div>
