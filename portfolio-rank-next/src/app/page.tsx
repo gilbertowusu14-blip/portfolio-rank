@@ -1,6 +1,7 @@
 import Link from "next/link";
 import * as SimpleIcons from "simple-icons";
 import MagneticButton from "@/components/MagneticButton";
+import PortfolioCounter from "@/components/PortfolioCounter";
 import { getTotalAnalyses } from "@/lib/analytics";
 
 export const dynamic = "force-dynamic";
@@ -96,21 +97,21 @@ export default async function Home() {
 
             {/* 3 step cards */}
             <div className="mt-12 grid gap-8 sm:grid-cols-3">
-              <div className="card-glow-amber relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
+              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
                 <div className="text-2xl">📋</div>
                 <h3 className="font-heading mt-2 font-semibold text-white">Enter Portfolio</h3>
                 <p className="mt-1 text-sm text-slate-400">
                   Add your holdings and weights in seconds
                 </p>
               </div>
-              <div className="card-glow-amber relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
+              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
                 <div className="text-2xl">⚡</div>
                 <h3 className="font-heading mt-2 font-semibold text-white">AI Analysis</h3>
                 <p className="mt-1 text-sm text-slate-400">
                   Our engine scores diversification, risk & more
                 </p>
               </div>
-              <div className="card-glow-amber relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
+              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
                 <div className="text-2xl">📊</div>
                 <h3 className="font-heading mt-2 font-semibold text-white">Your Score</h3>
                 <p className="mt-1 text-sm text-slate-400">
@@ -120,9 +121,6 @@ export default async function Home() {
             </div>
 
             <div className="mt-16">
-              <p className="mb-4 text-center text-base text-white">
-                👥 {portfolioCount.toLocaleString("en-GB")}+ portfolios analysed
-              </p>
               <MagneticButton href="/analyze">
                 Analyse My Portfolio →
               </MagneticButton>
@@ -144,6 +142,10 @@ export default async function Home() {
             alt="Rankfolio Bull"
             className="w-56 md:w-64 drop-shadow-2xl"
           />
+        </div>
+
+        <div className="mb-8 mt-2 px-4">
+          <PortfolioCounter targetCount={portfolioCount} />
         </div>
 
         {/* Section 2 — Logo carousel */}
@@ -206,7 +208,7 @@ export default async function Home() {
               Most Portfolios Have Hidden Problems
             </h2>
             <div className="grid gap-8 sm:grid-cols-3">
-              <div className="card-glow-amber relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
+              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
                 <div
                   className="text-5xl font-black"
                   style={{ color: ACCENT_GOLD }}
@@ -218,7 +220,7 @@ export default async function Home() {
                   Retail investors are overconcentrated in a single sector
                 </p>
               </div>
-              <div className="card-glow-amber relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
+              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
                 <div
                   className="font-heading text-5xl font-black"
                   style={{ color: ACCENT_GOLD }}
@@ -230,7 +232,7 @@ export default async function Home() {
                   Average number of stocks held by retail investors
                 </p>
               </div>
-              <div className="card-glow-amber relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
+              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
                 <div
                   className="font-heading text-5xl font-black"
                   style={{ color: ACCENT_GOLD }}
@@ -288,7 +290,7 @@ export default async function Home() {
               ].map((item) => (
                 <div
                   key={item.name}
-                  className="card-glow-amber relative flex gap-4 overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6"
+                  className="relative flex gap-4 overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6"
                 >
                   <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/10 text-2xl">

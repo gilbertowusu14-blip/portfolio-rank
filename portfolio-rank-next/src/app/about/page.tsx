@@ -17,7 +17,7 @@ export default function AboutPage() {
         <p className="mt-6 text-lg leading-relaxed text-slate-200">
           Rankfolio™ is an AI-powered portfolio analysis tool built for retail investors in the UK
           and Europe. We help you understand your portfolio&apos;s strengths, weaknesses, and exactly
-          how to improve it — in seconds.
+          how to improve it in seconds.
         </p>
       </div>
     </div>
