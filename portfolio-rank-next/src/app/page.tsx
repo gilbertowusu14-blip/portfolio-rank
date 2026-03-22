@@ -82,7 +82,7 @@ export default async function Home() {
 
       <main className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
         {/* Section 1 — Hero */}
-        <section className="pb-20 text-center md:pb-28">
+        <section className="pb-10 text-center md:pb-14">
           <div className="max-w-3xl mx-auto">
             <h1 className="font-heading text-4xl md:text-6xl font-black text-center leading-tight tracking-tight">
               <span className="text-white">How Strong Is Your</span>
@@ -124,7 +124,7 @@ export default async function Home() {
               <MagneticButton href="/analyze">
                 Analyse My Portfolio →
               </MagneticButton>
-              <div className="mt-[42px] mb-16 flex flex-wrap justify-center gap-2 md:mb-20">
+              <div className="mt-[42px] mb-8 flex flex-wrap justify-center gap-2 md:mb-10">
                 <span className="inline-flex items-center rounded-full border border-yellow-500/25 bg-[#1a1a1a] px-3 py-1.5 text-xs sm:text-sm text-slate-200">
                   ⚡ Instant Results
                 </span>
@@ -136,7 +136,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <div className="flex justify-center items-center py-10 md:py-14">
+        <div className="flex justify-center items-center pt-5 pb-10 md:pt-7 md:pb-14">
           <img
             src="/brand/bull-mascot.png"
             alt="Rankfolio Bull"

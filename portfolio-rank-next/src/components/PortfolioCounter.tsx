@@ -5,6 +5,9 @@ import { useEffect, useRef, useState } from "react";
 const DURATION_MS = 1500;
 const FLIP_MS = 160;
 
+/** ~Half of digit tile size: tiles use text-2xl (1.5rem) / sm:text-3xl (1.875rem) */
+const LABEL_SIZE = "text-[0.75rem] sm:text-[0.9375rem]";
+
 function padToLength(formatted: string, len: number): string {
   return formatted.padStart(len, " ");
 }
@@ -89,9 +92,32 @@ export default function PortfolioCounter({ targetCount }: { targetCount: number 
   const startStr = start.toLocaleString("en-GB");
   const slotLen = Math.max(endStr.length, startStr.length);
 
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
   const [display, setDisplay] = useState(start);
 
   useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.25, rootMargin: "0px 0px -5% 0px" }
+    );
+
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!inView) return;
+
     const t0 = performance.now();
     let raf = 0;
     let cancelled = false;
@@ -111,13 +137,13 @@ export default function PortfolioCounter({ targetCount }: { targetCount: number 
       cancelled = true;
       cancelAnimationFrame(raf);
     };
-  }, [start, end]);
+  }, [inView, start, end]);
 
   const line = padToLength(display.toLocaleString("en-GB"), slotLen);
   const chars = line.split("");
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
+    <div ref={rootRef} className="flex flex-col items-center justify-center gap-4">
       <p className="sr-only">
         {display.toLocaleString("en-GB")} portfolios analysed
       </p>
@@ -126,14 +152,13 @@ export default function PortfolioCounter({ targetCount }: { targetCount: number 
         style={{ perspective: "720px" }}
         aria-hidden
       >
-        <span className="mr-2 text-3xl leading-none sm:mr-4 sm:text-4xl">👥</span>
         <div className="flex flex-wrap items-center justify-center gap-0.5 sm:gap-1">
           {chars.map((c, i) => (
             <ScoreChar key={`slot-${i}`} char={c} />
           ))}
         </div>
       </div>
-      <p className="text-center text-xs text-slate-500 sm:text-sm">
+      <p className={`text-center leading-tight text-slate-500 ${LABEL_SIZE}`}>
         portfolios analysed
       </p>
     </div>
