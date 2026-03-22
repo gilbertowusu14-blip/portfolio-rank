@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   BarController,
   BarElement,
@@ -58,6 +58,16 @@ const AVG_LINE_LEFT_PCT = ((AVG_SCORE - 1) / (10 - 1)) * 100;
 const GRID = "rgba(255, 255, 255, 0.05)";
 
 export default function PortfolioRankDistributionSection() {
+  const [narrowViewport, setNarrowViewport] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 639px)");
+    const update = () => setNarrowViewport(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
   const data = useMemo(
     () => ({
       labels: LABELS,
@@ -125,15 +135,18 @@ export default function PortfolioRankDistributionSection() {
             display: true,
             text: "Portfolio Score",
             color: "#a1a1aa",
-            font: { size: 13, weight: 500 },
-            padding: { top: 12 },
+            font: {
+              size: narrowViewport ? 11 : 13,
+              weight: 500,
+            },
+            padding: { top: narrowViewport ? 8 : 12 },
           },
           ticks: {
             color: "#94a3b8",
-            maxRotation: 45,
+            maxRotation: 0,
             minRotation: 0,
-            autoSkip: false,
-            font: { size: 10 },
+            autoSkip: true,
+            font: { size: narrowViewport ? 7 : 10 },
           },
           grid: {
             color: GRID,
@@ -154,7 +167,7 @@ export default function PortfolioRankDistributionSection() {
         },
       },
     }),
-    []
+    [narrowViewport]
   );
 
   return (

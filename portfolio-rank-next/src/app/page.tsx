@@ -77,10 +77,10 @@ export default async function Home() {
           </Link>
           <a
             href="/analyze"
-            className="inline-block rounded-full font-bold text-[#0a0a0a] px-4 py-2 text-sm"
+            className="inline-block rounded-full font-semibold text-[#0a0a0a] px-2.5 py-1 text-[11px] leading-tight sm:px-3 sm:py-1.5 sm:text-xs"
             style={{
               backgroundColor: PRIMARY_GOLD,
-              boxShadow: `0 0 14px rgba(${PRIMARY_GOLD_RGB}, 0.2)`,
+              boxShadow: `0 0 10px rgba(${PRIMARY_GOLD_RGB}, 0.16)`,
             }}
           >
             Analyse My Portfolio →
@@ -104,25 +104,31 @@ export default async function Home() {
             </p>
 
             {/* 3 step cards */}
-            <div className="mt-10 grid gap-3 sm:mt-12 sm:grid-cols-3">
-              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-4 text-left">
+            <div className="mt-6 grid gap-1.5 sm:mt-8 sm:grid-cols-3 sm:gap-3">
+              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-2 text-left sm:p-3">
                 <div className="text-xl">📋</div>
-                <h3 className="font-heading mt-2 font-semibold text-white">Enter Portfolio</h3>
-                <p className="mt-1 text-sm text-slate-400">
+                <h3 className="font-heading mt-1.5 font-semibold text-white text-sm sm:mt-2 sm:text-base">
+                  Enter Portfolio
+                </h3>
+                <p className="mt-0.5 text-xs text-slate-400 sm:text-sm">
                   Add your holdings and weights in seconds
                 </p>
               </div>
-              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-4 text-left">
+              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-2 text-left sm:p-3">
                 <div className="text-xl">⚡</div>
-                <h3 className="font-heading mt-2 font-semibold text-white">AI Analysis</h3>
-                <p className="mt-1 text-sm text-slate-400">
+                <h3 className="font-heading mt-1.5 font-semibold text-white text-sm sm:mt-2 sm:text-base">
+                  AI Analysis
+                </h3>
+                <p className="mt-0.5 text-xs text-slate-400 sm:text-sm">
                   Our engine scores diversification, risk & more
                 </p>
               </div>
-              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-4 text-left">
+              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-2 text-left sm:p-3">
                 <div className="text-xl">📊</div>
-                <h3 className="font-heading mt-2 font-semibold text-white">Your Score</h3>
-                <p className="mt-1 text-sm text-slate-400">
+                <h3 className="font-heading mt-1.5 font-semibold text-white text-sm sm:mt-2 sm:text-base">
+                  Your Score
+                </h3>
+                <p className="mt-0.5 text-xs text-slate-400 sm:text-sm">
                   Get an accurate, free and personalised score in 10 seconds
                 </p>
               </div>
@@ -144,15 +150,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <div className="flex justify-center items-center pt-2 pb-5 md:pt-4 md:pb-6">
-          <img
-            src="/brand/bull-mascot.png"
-            alt="Rankfolio Bull"
-            className="w-56 md:w-64 drop-shadow-2xl"
-          />
-        </div>
-
-        <div className="mb-8 mt-2 px-4 md:mb-10 md:mt-3">
+        <div className="mb-6 mt-4 px-4 md:mb-8 md:mt-6">
           <PortfolioCounter targetCount={portfolioCount} />
         </div>
 
@@ -216,41 +214,42 @@ export default async function Home() {
               Most Portfolios Have Hidden Problems
             </h2>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-8">
-              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-4 text-center md:p-8">
+              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-3 text-center md:p-8">
                 <div
-                  className="text-5xl font-black"
+                  className="text-4xl font-black md:text-5xl"
                   style={{ color: ACCENT_GOLD }}
                 >
                   72%
                 </div>
-                <p className="mt-2 text-slate-400">Overconcentrated in sector</p>
-                <p className="mt-1 text-sm text-slate-500">
-                  Retail investors are overconcentrated in a single sector
+                <p className="mt-2 text-xs leading-snug text-slate-400 md:text-sm">
+                  Often too concentrated in one sector
                 </p>
               </div>
-              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-4 text-center md:p-8">
+              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-3 text-center md:p-8">
                 <div
-                  className="font-heading text-5xl font-black"
+                  className="font-heading text-4xl font-black md:text-5xl"
                   style={{ color: ACCENT_GOLD }}
                 >
                   &lt;5
                 </div>
-                <p className="mt-2 text-slate-400">Average stocks held</p>
-                <p className="mt-1 text-sm text-slate-500">
-                  Average number of stocks held by retail investors
+                <p className="mt-2 text-xs leading-snug text-slate-400 md:text-sm">
+                  Typical retail portfolio size
                 </p>
               </div>
-              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-4 text-center md:p-8">
-                <div
-                  className="font-heading text-5xl font-black"
-                  style={{ color: ACCENT_GOLD }}
-                >
-                  2.3×
+              <div className="col-span-2 flex justify-center md:col-span-1 md:block">
+                <div className="w-[calc((100%-0.75rem)/2)] md:w-full">
+                  <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-3 text-center md:p-8">
+                    <div
+                      className="font-heading text-4xl font-black md:text-5xl"
+                      style={{ color: ACCENT_GOLD }}
+                    >
+                      2.3×
+                    </div>
+                    <p className="mt-2 text-xs leading-snug text-slate-400 md:text-sm">
+                      Drawdown risk when undiversified
+                    </p>
+                  </div>
                 </div>
-                <p className="mt-2 text-slate-400">Higher drawdown risk</p>
-                <p className="mt-1 text-sm text-slate-500">
-                  Higher drawdown risk in undiversified portfolios
-                </p>
               </div>
             </div>
           </div>
@@ -265,7 +264,7 @@ export default async function Home() {
             <h2 className="font-heading mb-10 text-center text-2xl font-semibold text-white">
               How Your Portfolio Score Is Calculated
             </h2>
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
               {[
                 {
                   name: "Diversification",
@@ -300,10 +299,10 @@ export default async function Home() {
               ].map((item) => (
                 <div
                   key={item.name}
-                  className="relative flex gap-4 overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6"
+                  className="relative flex gap-3 overflow-hidden rounded-xl border border-yellow-500/20 bg-[#111111] px-3 py-2.5 sm:gap-4 sm:rounded-2xl sm:px-4 sm:py-3"
                 >
                   <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#d4840a]/50 to-transparent" />
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/10 text-2xl">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-lg sm:h-12 sm:w-12 sm:text-2xl">
                     {item.icon}
                   </span>
                   <div>
@@ -364,6 +363,14 @@ export default async function Home() {
             Get Your Free Score →
           </MagneticButton>
         </section>
+
+        <div className="flex justify-center items-center pt-8 pb-6 md:pt-10 md:pb-8">
+          <img
+            src="/brand/bull-mascot.png"
+            alt="Rankfolio Bull"
+            className="w-56 md:w-64 drop-shadow-2xl"
+          />
+        </div>
       </main>
 
       <footer className="border-t border-white/10 bg-[#0a0a0a]">
