@@ -289,7 +289,7 @@ function ResultPage() {
       : 0;
 
   return (
-    <div className="min-h-screen text-white pb-24" style={{ backgroundColor: "#0a0a0a" }}>
+    <div className="min-h-screen text-white pb-32" style={{ backgroundColor: "#0a0a0a" }}>
       {/* Navbar */}
       <nav className="sticky top-0 z-50 backdrop-blur-md bg-[#0a0a0a]/70 border-b border-white/10">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
@@ -303,7 +303,7 @@ function ResultPage() {
         </div>
       </nav>
 
-      <div className="max-w-md mx-auto px-4 pt-6 pb-4 text-center">
+      <div className="max-w-md mx-auto px-4 pt-6 pb-32 text-center">
         <Link
           href="/analyze"
           className="text-slate-400 hover:text-yellow-400 transition-colors mb-4 inline-block"
