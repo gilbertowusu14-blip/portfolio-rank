@@ -455,7 +455,13 @@ function ResultPage() {
               className={
                 isUnlocked
                   ? ""
-                  : "select-none pointer-events-none blur-[2px] opacity-70"
+                  : "flex h-full min-h-0 flex-col select-none pointer-events-none"
+              }
+              style={isUnlocked ? undefined : { filter: "blur(3px)" }}
+            >
+            <div
+              className={
+                isUnlocked ? "" : "min-h-0 flex-1 overflow-y-auto"
               }
             >
               {/* Subscores */}
@@ -543,6 +549,12 @@ function ResultPage() {
                 </div>
               )}
             </div>
+            {!isUnlocked && (
+              <div className="flex shrink-0 justify-center py-4 text-amber-200/90">
+                <span className="block text-4xl leading-none">↓</span>
+              </div>
+            )}
+            </div>
             </div>
 
             {/* Dark overlay + unlock card — hidden when unlocked */}
@@ -552,12 +564,6 @@ function ResultPage() {
                 className="absolute inset-0 z-[1] bg-gradient-to-b from-[#0a0a0a]/80 via-[#0a0a0a]/90 to-[#0a0a0a]/95"
                 aria-hidden
               />
-              <div
-                className="pointer-events-none absolute bottom-3 left-1/2 z-[6] -translate-x-1/2 text-slate-500"
-                aria-hidden
-              >
-                <span className="block text-sm leading-none">↓</span>
-              </div>
               <div className="absolute top-5 left-1/2 z-[8] w-full max-w-sm px-4 -translate-x-1/2">
                 <div className="rounded-2xl bg-[#111111] border border-yellow-500/20 px-5 py-5 shadow-2xl">
                   <div className="flex items-center gap-2 mb-3">
