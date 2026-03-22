@@ -2,6 +2,7 @@ import Link from "next/link";
 import * as SimpleIcons from "simple-icons";
 import MagneticButton from "@/components/MagneticButton";
 import PortfolioCounter from "@/components/PortfolioCounter";
+import PortfolioRankDistributionSection from "@/components/PortfolioRankDistributionSection";
 import { getTotalAnalyses } from "@/lib/analytics";
 
 export const dynamic = "force-dynamic";
@@ -247,6 +248,8 @@ export default async function Home() {
             </div>
           </div>
         </section>
+
+        <PortfolioRankDistributionSection />
 
         {/* Section 5 — How scoring works */}
         <section className="bg-transparent py-28 md:py-36">
