@@ -85,12 +85,8 @@ export default function Home() {
                 Investment Portfolio?
               </span>
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400">
-              Enter your holdings and get an accurate, free and personalised score
-              in 10 seconds.
-            </p>
-            <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-500 text-center">
-              Developed in the UK &amp; EU · Privacy First
+            <p className="mx-auto mt-6 max-w-2xl text-base md:text-lg text-slate-200 text-center font-medium">
+              Developed in the UK · Privacy First
             </p>
 
             {/* 3 step cards */}
@@ -113,7 +109,7 @@ export default function Home() {
                 <div className="text-2xl">📊</div>
                 <h3 className="font-heading mt-2 font-semibold text-white">Your Score</h3>
                 <p className="mt-1 text-sm text-slate-400">
-                  See your grade and where to improve
+                  Get an accurate, free and personalised score in 10 seconds
                 </p>
               </div>
             </div>
@@ -122,12 +118,17 @@ export default function Home() {
               <MagneticButton href="/analyze">
                 Analyse My Portfolio →
               </MagneticButton>
-              <p className="mt-6 text-sm text-slate-400">
-                ⚡ Instant Results • 🔒 No signup required • 📊 AI Powered
-              </p>
-              <p className="mt-3 text-sm text-slate-500">
-                Built on 6 professional portfolio risk metrics used by institutional investors
-              </p>
+              <div className="mt-6 flex flex-wrap justify-center gap-2">
+                <span className="inline-flex items-center rounded-full border border-yellow-500/25 bg-[#1a1a1a] px-3 py-1.5 text-xs sm:text-sm text-slate-200">
+                  ⚡ Instant Results
+                </span>
+                <span className="inline-flex items-center rounded-full border border-yellow-500/25 bg-[#1a1a1a] px-3 py-1.5 text-xs sm:text-sm text-slate-200">
+                  🔒 No signup required
+                </span>
+                <span className="inline-flex items-center rounded-full border border-yellow-500/25 bg-[#1a1a1a] px-3 py-1.5 text-xs sm:text-sm text-slate-200">
+                  📊 AI Powered
+                </span>
+              </div>
             </div>
           </div>
         </section>
