@@ -1,6 +1,9 @@
 import Link from "next/link";
 import * as SimpleIcons from "simple-icons";
 import MagneticButton from "@/components/MagneticButton";
+import { getTotalAnalyses } from "@/lib/analytics";
+
+export const dynamic = "force-dynamic";
 
 const ACCENT_GOLD = "#f59e0b";
 
@@ -35,7 +38,9 @@ const CAROUSEL_ICONS = CAROUSEL_SLUGS.map((s) => getIcon(s)).filter(Boolean) as 
   hex: string;
 }[];
 
-export default function Home() {
+export default async function Home() {
+  const portfolioCount = await getTotalAnalyses();
+
   return (
     <div
       className="min-h-screen text-white"
@@ -91,21 +96,21 @@ export default function Home() {
 
             {/* 3 step cards */}
             <div className="mt-12 grid gap-8 sm:grid-cols-3">
-              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
+              <div className="card-glow-amber relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
                 <div className="text-2xl">📋</div>
                 <h3 className="font-heading mt-2 font-semibold text-white">Enter Portfolio</h3>
                 <p className="mt-1 text-sm text-slate-400">
                   Add your holdings and weights in seconds
                 </p>
               </div>
-              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
+              <div className="card-glow-amber relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
                 <div className="text-2xl">⚡</div>
                 <h3 className="font-heading mt-2 font-semibold text-white">AI Analysis</h3>
                 <p className="mt-1 text-sm text-slate-400">
                   Our engine scores diversification, risk & more
                 </p>
               </div>
-              <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
+              <div className="card-glow-amber relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-left">
                 <div className="text-2xl">📊</div>
                 <h3 className="font-heading mt-2 font-semibold text-white">Your Score</h3>
                 <p className="mt-1 text-sm text-slate-400">
@@ -115,6 +120,9 @@ export default function Home() {
             </div>
 
             <div className="mt-16">
+              <p className="mb-4 text-center text-base text-white">
+                👥 {portfolioCount.toLocaleString("en-GB")}+ portfolios analysed
+              </p>
               <MagneticButton href="/analyze">
                 Analyse My Portfolio →
               </MagneticButton>
@@ -193,12 +201,12 @@ export default function Home() {
 
         {/* Section 3 — Stat cards */}
         <section className="pt-8 pb-16 bg-transparent">
-          <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6">
+          <div className="card-glow-amber relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6">
             <h2 className="font-heading mb-8 text-center text-2xl font-semibold text-white">
               Most Portfolios Have Hidden Problems
             </h2>
             <div className="grid gap-8 sm:grid-cols-3">
-              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
+              <div className="card-glow-amber relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
                 <div
                   className="text-5xl font-black"
                   style={{ color: ACCENT_GOLD }}
@@ -210,7 +218,7 @@ export default function Home() {
                   Retail investors are overconcentrated in a single sector
                 </p>
               </div>
-              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
+              <div className="card-glow-amber relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
                 <div
                   className="font-heading text-5xl font-black"
                   style={{ color: ACCENT_GOLD }}
@@ -222,7 +230,7 @@ export default function Home() {
                   Average number of stocks held by retail investors
                 </p>
               </div>
-              <div className="relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
+              <div className="card-glow-amber relative rounded-2xl border border-yellow-500/20 bg-[#111111] p-8 text-center">
                 <div
                   className="font-heading text-5xl font-black"
                   style={{ color: ACCENT_GOLD }}
@@ -240,7 +248,7 @@ export default function Home() {
 
         {/* Section 5 — How scoring works */}
         <section className="py-24 bg-transparent">
-          <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6">
+          <div className="card-glow-amber relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6">
             <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
             <h2 className="font-heading mb-10 text-center text-2xl font-semibold text-white">
               How Your Portfolio Score Is Calculated
@@ -280,7 +288,7 @@ export default function Home() {
               ].map((item) => (
                 <div
                   key={item.name}
-                  className="relative flex gap-4 overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6"
+                  className="card-glow-amber relative flex gap-4 overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6"
                 >
                   <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/10 text-2xl">
@@ -303,7 +311,7 @@ export default function Home() {
             <span style={{ color: ACCENT_GOLD }}>Free</span> Portfolio Score
           </h2>
           <div className="mx-auto mt-8 grid max-w-4xl gap-8 sm:grid-cols-2">
-              <div className="relative overflow-hidden rounded-2xl bg-[#111111] border border-yellow-500/20 p-6 text-left">
+              <div className="card-glow-amber relative overflow-hidden rounded-2xl bg-[#111111] border border-yellow-500/20 p-6 text-left">
                 <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
                 <h3 className="font-heading text-lg font-semibold text-white">Free</h3>
                 <ul className="mt-4 space-y-2 text-sm text-slate-400">
@@ -318,7 +326,7 @@ export default function Home() {
                   </li>
                 </ul>
               </div>
-              <div className="relative overflow-hidden rounded-2xl bg-[#111111] border border-yellow-500/20 p-6 text-left">
+              <div className="card-glow-amber relative overflow-hidden rounded-2xl bg-[#111111] border border-yellow-500/20 p-6 text-left">
                 <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
                 <div className="flex items-center gap-2">
                   <h3 className="font-heading text-lg font-semibold text-yellow-400">Premium</h3>
@@ -347,7 +355,7 @@ export default function Home() {
 
         {/* Footer CTA */}
         <section className="py-24 mb-12">
-          <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-center">
+          <div className="card-glow-amber relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 text-center">
             <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
             <h2 className="font-heading text-2xl font-semibold text-white sm:text-3xl">
               Your Portfolio Might Be Riskier Than You Think
@@ -361,6 +369,46 @@ export default function Home() {
           </div>
         </section>
       </main>
+
+      <footer className="border-t border-white/10 bg-[#0a0a0a]">
+        <div className="mx-auto max-w-6xl px-4 py-12">
+          <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start sm:justify-between">
+            <span className="font-semibold text-yellow-400">Rankfolio™</span>
+            <nav
+              className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm text-slate-300"
+              aria-label="Footer"
+            >
+              <Link href="/about" className="hover:text-white transition-colors">
+                About
+              </Link>
+              <span className="text-slate-600" aria-hidden>
+                ·
+              </span>
+              <Link href="/privacy" className="hover:text-white transition-colors">
+                Privacy Policy
+              </Link>
+              <span className="text-slate-600" aria-hidden>
+                ·
+              </span>
+              <Link href="/terms" className="hover:text-white transition-colors">
+                Terms of Service
+              </Link>
+              <span className="text-slate-600" aria-hidden>
+                ·
+              </span>
+              <a
+                href="mailto:hello@rankfolio.app"
+                className="hover:text-white transition-colors"
+              >
+                Contact
+              </a>
+            </nav>
+          </div>
+          <p className="mt-8 text-center text-xs text-slate-500">
+            © 2026 Rankfolio™. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

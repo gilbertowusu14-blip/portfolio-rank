@@ -80,7 +80,7 @@ function parseBlueprintSections(blueprint: string): { title: string; body: strin
 function BlueprintCard({ blueprint }: { blueprint: string }) {
   const sections = parseBlueprintSections(blueprint);
   return (
-    <section className="rounded-2xl bg-[#0d0d0d] border border-yellow-500/20 p-6">
+    <section className="card-glow-amber rounded-2xl bg-[#0d0d0d] border border-yellow-500/20 p-6">
       <div className="flex items-center gap-2 mb-4">
         <span className="text-xl">🗺</span>
         <h2 className="font-heading text-sm font-semibold text-yellow-400 uppercase tracking-normal">
@@ -91,7 +91,7 @@ function BlueprintCard({ blueprint }: { blueprint: string }) {
         {sections.map(({ title, body }, idx) => (
           <div
             key={idx}
-            className="rounded-xl bg-[#111111] border border-yellow-500/20 p-4"
+            className="card-glow-amber rounded-xl bg-[#111111] border border-yellow-500/20 p-4"
           >
             <h3 className="font-heading text-sm font-semibold text-amber-400 mb-2">
               {title}
@@ -204,7 +204,7 @@ export default function PremiumPage() {
         </h1>
 
         {/* Score Summary card */}
-        <section className="rounded-2xl bg-[#111111] border border-yellow-500/20 p-6">
+        <section className="card-glow-amber rounded-2xl bg-[#111111] border border-yellow-500/20 p-6">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xl">📊</span>
             <h2 className="font-heading text-sm font-semibold text-yellow-400 uppercase tracking-normal">
@@ -228,7 +228,7 @@ export default function PremiumPage() {
         </section>
 
         {/* Full Metric Breakdown card */}
-        <section className="rounded-2xl bg-[#111111] border border-yellow-500/20 p-6">
+        <section className="card-glow-amber rounded-2xl bg-[#111111] border border-yellow-500/20 p-6">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xl">📈</span>
             <h2 className="font-heading text-sm font-semibold text-yellow-400 uppercase tracking-normal">
@@ -260,7 +260,7 @@ export default function PremiumPage() {
         </section>
 
         {/* Strengths card */}
-        <section className="rounded-2xl bg-[#111111] border border-emerald-500/30 p-6">
+        <section className="card-glow-amber rounded-2xl bg-[#111111] border border-emerald-500/30 p-6">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xl">✓</span>
             <h2 className="font-heading text-sm font-semibold text-emerald-400 uppercase tracking-normal">
@@ -280,7 +280,7 @@ export default function PremiumPage() {
         </section>
 
         {/* Weaknesses card */}
-        <section className="rounded-2xl bg-[#111111] border border-amber-500/30 p-6">
+        <section className="card-glow-amber rounded-2xl bg-[#111111] border border-amber-500/30 p-6">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xl">⚠</span>
             <h2 className="font-heading text-sm font-semibold text-amber-400 uppercase tracking-normal">
@@ -300,7 +300,7 @@ export default function PremiumPage() {
         </section>
 
         {/* Actions card */}
-        <section className="rounded-2xl bg-[#111111] border border-yellow-500/20 p-6">
+        <section className="card-glow-amber rounded-2xl bg-[#111111] border border-yellow-500/20 p-6">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xl">→</span>
             <h2 className="font-heading text-sm font-semibold text-yellow-400 uppercase tracking-normal">

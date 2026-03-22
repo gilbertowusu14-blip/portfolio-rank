@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { incrementTotalAnalyses } from "@/lib/analytics";
 import { fetchCompanyProfile, type FMPProfile } from "@/lib/fmp";
 import {
   scorePortfolio,
@@ -83,6 +84,8 @@ export async function POST(request: NextRequest) {
     riskTolerance,
     timeHorizon,
   });
+
+  void incrementTotalAnalyses();
 
   return NextResponse.json(result);
 }
