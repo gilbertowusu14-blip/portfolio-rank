@@ -62,7 +62,7 @@ export default function Home() {
             <img src="/brand/bull-head.png" alt="Rankfolio" className="h-16 w-auto" />
             <span className="font-bold text-lg">
               <span className="text-white">Rank</span>
-              <span className="text-yellow-400">folio</span>
+              <span className="text-yellow-400">folio™</span>
             </span>
           </Link>
           <a
@@ -86,8 +86,11 @@ export default function Home() {
               </span>
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-400">
-              Get an instant AI-powered score for your portfolio and discover
-              exactly where it&apos;s leaking performance.
+              Enter your holdings and get an accurate, free and personalised score
+              in 10 seconds.
+            </p>
+            <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-500 text-center">
+              Developed in the UK &amp; EU · Privacy First
             </p>
 
             {/* 3 step cards */}
@@ -204,7 +207,7 @@ export default function Home() {
                 >
                   72%
                 </div>
-                <p className="mt-2 text-slate-400">overconcentrated in sector</p>
+                <p className="mt-2 text-slate-400">Overconcentrated in sector</p>
                 <p className="mt-1 text-sm text-slate-500">
                   Retail investors are overconcentrated in a single sector
                 </p>
@@ -216,7 +219,7 @@ export default function Home() {
                 >
                   &lt;5
                 </div>
-                <p className="mt-2 text-slate-400">average stocks held</p>
+                <p className="mt-2 text-slate-400">Average stocks held</p>
                 <p className="mt-1 text-sm text-slate-500">
                   Average number of stocks held by retail investors
                 </p>
@@ -228,7 +231,7 @@ export default function Home() {
                 >
                   2.3×
                 </div>
-                <p className="mt-2 text-slate-400">higher drawdown risk</p>
+                <p className="mt-2 text-slate-400">Higher drawdown risk</p>
                 <p className="mt-1 text-sm text-slate-500">
                   Higher drawdown risk in undiversified portfolios
                 </p>
