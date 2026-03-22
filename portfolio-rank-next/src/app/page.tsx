@@ -99,7 +99,7 @@ export default async function Home() {
                 Investment Portfolio?
               </span>
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-base md:text-lg text-slate-200 text-center font-medium">
+            <p className="font-heading mx-auto mt-6 max-w-2xl text-base md:text-lg text-slate-200 text-center font-medium">
               Developed in the UK · Privacy First
             </p>
 
@@ -155,7 +155,7 @@ export default async function Home() {
         </div>
 
         {/* Section 2 — Logo carousel */}
-        <section className="pb-12 pt-2 md:pb-14">
+        <section className="py-10 md:py-12">
           <h2 className="font-heading mb-8 text-center text-xl font-semibold text-white sm:text-2xl">
             Works with any portfolio of stocks or ETFs
           </h2>
@@ -208,7 +208,7 @@ export default async function Home() {
         </section>
 
         {/* Section 3 — Stat cards */}
-        <section className="bg-transparent pb-10 pt-10 md:pb-12 md:pt-12">
+        <section className="bg-transparent py-10 md:py-12">
           <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 shadow-[0_2px_12px_rgba(212,132,10,0.15)] transition-shadow duration-200 hover:shadow-[0_4px_16px_rgba(212,132,10,0.28)]">
             <h2 className="font-heading mb-8 text-center text-2xl font-semibold text-white">
               Most Portfolios Have Hidden Problems
@@ -258,7 +258,7 @@ export default async function Home() {
         <PortfolioRankDistributionSection />
 
         {/* Section 5 — How scoring works */}
-        <section className="bg-transparent py-12 md:py-14">
+        <section className="bg-transparent py-10 md:py-12">
           <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#111111] p-6 shadow-[0_2px_12px_rgba(212,132,10,0.15)] transition-shadow duration-200 hover:shadow-[0_4px_16px_rgba(212,132,10,0.28)]">
             <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#d4840a]/50 to-transparent" />
             <h2 className="font-heading mb-10 text-center text-2xl font-semibold text-white">
@@ -364,7 +364,7 @@ export default async function Home() {
           </MagneticButton>
         </section>
 
-        <div className="flex justify-center items-center pt-8 pb-6 md:pt-10 md:pb-8">
+        <div className="flex justify-center items-center py-10 md:py-12">
           <img
             src="/brand/bull-mascot.png"
             alt="Rankfolio Bull"

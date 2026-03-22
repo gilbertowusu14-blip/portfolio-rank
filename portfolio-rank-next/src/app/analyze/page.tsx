@@ -3,7 +3,9 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { CTA_GOLD_BG, CTA_GOLD_SHADOW_RGB } from "@/lib/branding";
+/** Site-wide CTA gold — matches MagneticButton / homepage */
+const SUBMIT_GOLD_BG = "#d4840a";
+const SUBMIT_GOLD_SHADOW_RGB = "212, 132, 10";
 
 const RISK_OPTIONS = ["Conservative", "Balanced", "Aggressive"] as const;
 const HORIZON_OPTIONS = ["<1yr", "1–3yr", "3–7yr", "7yr+"] as const;
@@ -118,13 +120,13 @@ function AnalyzePage() {
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
     btn.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px) scale(1.05)`;
-    btn.style.boxShadow = `0 0 30px rgba(${CTA_GOLD_SHADOW_RGB},0.6), 0 8px 25px rgba(${CTA_GOLD_SHADOW_RGB},0.3)`;
+    btn.style.boxShadow = `0 0 30px rgba(${SUBMIT_GOLD_SHADOW_RGB},0.6), 0 8px 25px rgba(${SUBMIT_GOLD_SHADOW_RGB},0.3)`;
   };
   const onMouseLeave = () => {
     const btn = submitBtnRef.current;
     if (!btn) return;
     btn.style.transform = "translate(0px, 0px) scale(1)";
-    btn.style.boxShadow = `0 0 30px rgba(${CTA_GOLD_SHADOW_RGB},0.4)`;
+    btn.style.boxShadow = `0 0 30px rgba(${SUBMIT_GOLD_SHADOW_RGB},0.4)`;
     btn.style.transition = "transform 400ms ease-out, box-shadow 400ms ease-out";
   };
   const onMouseEnter = () => {
@@ -280,8 +282,8 @@ function AnalyzePage() {
             onMouseEnter={onMouseEnter}
             className="w-full rounded-full font-semibold py-4 text-white transition-all disabled:opacity-70 disabled:cursor-not-allowed"
             style={{
-              background: CTA_GOLD_BG,
-              boxShadow: `0 0 30px rgba(${CTA_GOLD_SHADOW_RGB},0.4)`,
+              background: SUBMIT_GOLD_BG,
+              boxShadow: `0 0 30px rgba(${SUBMIT_GOLD_SHADOW_RGB},0.4)`,
             }}
           >
             {submitLoading ? "Checking tickers…" : "Get My Portfolio Score"}
