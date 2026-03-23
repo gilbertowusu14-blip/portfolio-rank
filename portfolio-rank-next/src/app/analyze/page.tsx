@@ -144,7 +144,7 @@ function AnalyzePage() {
             <img src="/brand/bull-head.png" alt="Rankfolio" className="h-16 w-auto" />
             <span className="font-bold text-lg">
               <span className="text-white">Rank</span>
-              <span className="text-yellow-400">folio</span>
+              <span className="text-[#d4840a]">folio™</span>
             </span>
           </Link>
         </div>
