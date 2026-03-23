@@ -100,7 +100,7 @@ export default function PortfolioRankDistributionSection() {
   const options: ChartOptions<"bar"> = useMemo(
     () => ({
       responsive: true,
-      maintainAspectRatio: true,
+      maintainAspectRatio: false,
       interaction: { mode: "index" as const, intersect: false },
       layout: {
         padding: { top: 4, right: 8, bottom: 4, left: 8 },
@@ -176,7 +176,7 @@ export default function PortfolioRankDistributionSection() {
 
         <div className="relative h-56 w-full md:h-72">
           <div className="relative h-full w-full">
-            <ReactChart type="bar" data={data as never} options={options} />
+            <ReactChart className="h-full w-full" type="bar" data={data as never} options={options} />
           </div>
         </div>
       </div>
