@@ -190,14 +190,6 @@ export default function PortfolioRankDistributionSection() {
             >
               <div className="relative h-full w-full">
                 <div
-                  className="absolute bottom-[16%] top-[6%] w-0 border-l-2 border-dashed border-amber-400/95"
-                  style={{
-                    left: `${AVG_LINE_LEFT_PCT}%`,
-                    transform: "translateX(-50%)",
-                    boxShadow: "0 0 6px rgba(212, 132, 10, 0.18)",
-                  }}
-                />
-                <div
                   className="absolute rounded-md border border-amber-500/40 bg-[#111111]/95 px-2 py-0.5 text-[11px] font-bold text-amber-400"
                   style={{
                     left: `${AVG_LINE_LEFT_PCT}%`,
