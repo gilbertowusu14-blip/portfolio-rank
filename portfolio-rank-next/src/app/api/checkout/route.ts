@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
         {
           price_data: {
             currency: "gbp",
-            unit_amount: 249,
+            unit_amount: 499,
             product_data: {
               name: "Rankfolio Premium",
             },

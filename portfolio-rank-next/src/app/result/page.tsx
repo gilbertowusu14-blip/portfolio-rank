@@ -496,7 +496,7 @@ function ResultPage() {
                   boxShadow: `0 0 30px rgba(${PAYWALL_GOLD_RGB},0.4)`,
                 }}
               >
-                {unlockLoading ? "Redirecting to payment…" : "Unlock Full Report — £2.49"}
+                {unlockLoading ? "Redirecting to payment…" : "Unlock Full Report — £4.99"}
               </button>
               <div className="mt-1 flex items-center justify-between text-[10px]">
                 <span className="text-slate-500">
@@ -516,7 +516,7 @@ function ResultPage() {
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-yellow-500/20 bg-[#111111]">
         <div className="max-w-xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <span className="text-white font-medium">
-            Unlock Full Report £2.49
+            Unlock Full Report £4.99
           </span>
           <button
             type="button"

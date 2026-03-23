@@ -341,7 +341,7 @@ export default async function Home() {
                 <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#d4840a]/50 to-transparent" />
                 <div className="flex items-center gap-2">
                   <h3 className="font-heading text-lg font-semibold text-[#d4840a]">Premium</h3>
-                  <span className="rounded-full bg-[#d4840a] px-2 py-0.5 text-xs font-semibold text-white">£2.49</span>
+                  <span className="rounded-full bg-[#d4840a] px-2 py-0.5 text-xs font-semibold text-white">£4.99</span>
                 </div>
                 <ul className="mt-4 space-y-2 text-sm text-slate-400">
                   <li className="flex items-center gap-2">
