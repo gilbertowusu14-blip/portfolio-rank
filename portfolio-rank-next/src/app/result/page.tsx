@@ -289,7 +289,7 @@ function ResultPage() {
       : 0;
 
   return (
-    <div className="min-h-screen text-white pb-32" style={{ backgroundColor: "#0a0a0a" }}>
+    <div className="min-h-screen text-white pb-24" style={{ backgroundColor: "#0a0a0a" }}>
       {/* Navbar */}
       <nav className="sticky top-0 z-50 backdrop-blur-md bg-[#0a0a0a]/70 border-b border-white/10">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
@@ -303,7 +303,7 @@ function ResultPage() {
         </div>
       </nav>
 
-      <div className="max-w-md mx-auto px-4 pt-6 pb-32 text-center">
+      <div className="relative z-0 max-w-md mx-auto px-4 pt-6 pb-4 text-center">
         <Link
           href="/analyze"
           className="text-slate-400 hover:text-yellow-400 transition-colors mb-4 inline-block"
@@ -443,7 +443,11 @@ function ResultPage() {
 
         {/* Full report section — blurred when locked */}
         <section className="mb-16">
-          <div className="relative rounded-2xl bg-[#111111] border border-yellow-500/20 px-4 py-5 space-y-5 overflow-hidden">
+          <div
+            className={`relative rounded-2xl bg-[#111111] border border-yellow-500/20 px-4 space-y-5 overflow-hidden pt-5 ${
+              isUnlocked ? "pb-5" : "pb-40"
+            }`}
+          >
             <div
               className={
                 isUnlocked
@@ -565,7 +569,7 @@ function ResultPage() {
                 aria-hidden
               />
               <div className="absolute top-5 left-1/2 z-[8] w-full max-w-sm px-4 -translate-x-1/2">
-                <div className="rounded-2xl bg-[#111111] border border-yellow-500/20 px-5 py-5 shadow-2xl">
+                <div className="mb-40 rounded-2xl bg-[#111111] border border-yellow-500/20 px-5 py-5 shadow-2xl">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-lg text-yellow-400">🔒</span>
                     <h2 className="font-heading text-sm font-semibold text-white">
@@ -638,7 +642,7 @@ function ResultPage() {
 
       {/* Sticky bottom bar — hidden when report unlocked */}
       {!isUnlocked && (
-      <div className="fixed bottom-0 left-0 right-0 border-t border-yellow-500/20 bg-[#111111]">
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-yellow-500/20 bg-[#111111]">
         <div className="max-w-xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <span className="text-white font-medium">
             Unlock Full Report £2.49
