@@ -32,6 +32,8 @@ const SUBSCORE_DESCRIPTIONS: Record<(typeof SUBSCORE_KEYS)[number], string> = {
   marketComparison: "Exposure to broad market vs niche assets",
 };
 
+const OUTER_CARD_SHADOW = "0 0 14px rgba(212, 132, 10, 0.2)";
+
 function labelColor(label: string): string {
   switch (label) {
     case "Elite":
@@ -80,7 +82,10 @@ function parseBlueprintSections(blueprint: string): { title: string; body: strin
 function BlueprintCard({ blueprint }: { blueprint: string }) {
   const sections = parseBlueprintSections(blueprint);
   return (
-    <section className="card-glow-amber rounded-2xl bg-[#0d0d0d] border border-yellow-500/20 p-6">
+    <section
+      className="rounded-2xl bg-[#0d0d0d] border border-yellow-500/20 p-6"
+      style={{ boxShadow: OUTER_CARD_SHADOW }}
+    >
       <div className="flex items-center gap-2 mb-4">
         <span className="text-xl">🗺</span>
         <h2 className="font-heading text-sm font-semibold text-yellow-400 uppercase tracking-normal">
@@ -91,7 +96,7 @@ function BlueprintCard({ blueprint }: { blueprint: string }) {
         {sections.map(({ title, body }, idx) => (
           <div
             key={idx}
-            className="card-glow-amber rounded-xl bg-[#111111] border border-yellow-500/20 p-4"
+            className="rounded-xl bg-[#111111] border border-[rgba(212,132,10,0.2)] p-4"
           >
             <h3 className="font-heading text-sm font-semibold text-amber-400 mb-2">
               {title}
@@ -204,7 +209,10 @@ export default function PremiumPage() {
         </h1>
 
         {/* Score Summary card */}
-        <section className="card-glow-amber rounded-2xl bg-[#111111] border border-yellow-500/20 p-6">
+        <section
+          className="rounded-2xl bg-[#111111] border border-yellow-500/20 p-6"
+          style={{ boxShadow: OUTER_CARD_SHADOW }}
+        >
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xl">📊</span>
             <h2 className="font-heading text-sm font-semibold text-yellow-400 uppercase tracking-normal">
@@ -228,7 +236,10 @@ export default function PremiumPage() {
         </section>
 
         {/* Full Metric Breakdown card */}
-        <section className="card-glow-amber rounded-2xl bg-[#111111] border border-yellow-500/20 p-6">
+        <section
+          className="rounded-2xl bg-[#111111] border border-yellow-500/20 p-6"
+          style={{ boxShadow: OUTER_CARD_SHADOW }}
+        >
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xl">📈</span>
             <h2 className="font-heading text-sm font-semibold text-yellow-400 uppercase tracking-normal">
@@ -260,7 +271,10 @@ export default function PremiumPage() {
         </section>
 
         {/* Strengths card */}
-        <section className="card-glow-amber rounded-2xl bg-[#111111] border border-emerald-500/30 p-6">
+        <section
+          className="rounded-2xl bg-[#111111] border border-emerald-500/30 p-6"
+          style={{ boxShadow: OUTER_CARD_SHADOW }}
+        >
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xl">✓</span>
             <h2 className="font-heading text-sm font-semibold text-emerald-400 uppercase tracking-normal">
@@ -280,7 +294,10 @@ export default function PremiumPage() {
         </section>
 
         {/* Weaknesses card */}
-        <section className="card-glow-amber rounded-2xl bg-[#111111] border border-amber-500/30 p-6">
+        <section
+          className="rounded-2xl bg-[#111111] border border-amber-500/30 p-6"
+          style={{ boxShadow: OUTER_CARD_SHADOW }}
+        >
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xl">⚠</span>
             <h2 className="font-heading text-sm font-semibold text-amber-400 uppercase tracking-normal">
@@ -300,7 +317,10 @@ export default function PremiumPage() {
         </section>
 
         {/* Actions card */}
-        <section className="card-glow-amber rounded-2xl bg-[#111111] border border-yellow-500/20 p-6">
+        <section
+          className="rounded-2xl bg-[#111111] border border-yellow-500/20 p-6"
+          style={{ boxShadow: OUTER_CARD_SHADOW }}
+        >
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xl">→</span>
             <h2 className="font-heading text-sm font-semibold text-yellow-400 uppercase tracking-normal">
@@ -311,7 +331,7 @@ export default function PremiumPage() {
             {ai.actions.map((item, idx) => (
               <li
                 key={idx}
-                className="flex gap-3 px-4 py-3 rounded-xl bg-[#1a1a1a] border border-white/10"
+                className="flex gap-3 px-4 py-3 rounded-xl bg-[#1a1a1a] border border-[rgba(212,132,10,0.2)]"
               >
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-xs font-bold">
                   {idx + 1}
