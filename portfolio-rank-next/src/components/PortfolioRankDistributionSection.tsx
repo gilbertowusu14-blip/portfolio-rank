@@ -174,7 +174,7 @@ export default function PortfolioRankDistributionSection() {
           Where Do Most Portfolios Rank?
         </h2>
 
-        <div className="relative mx-auto h-56 w-full max-w-4xl md:h-72">
+        <div className="relative h-56 w-full md:h-72">
           <div className="relative h-full w-full">
             <ReactChart type="bar" data={data as never} options={options} />
           </div>
