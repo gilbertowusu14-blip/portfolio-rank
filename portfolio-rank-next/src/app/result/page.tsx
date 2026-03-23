@@ -452,21 +452,16 @@ function ResultPage() {
               className={
                 isUnlocked
                   ? ""
-                  : "h-[500px] max-h-[600px] overflow-hidden"
+                  : "max-h-32 overflow-hidden"
               }
             >
             <div
               className={
                 isUnlocked
                   ? ""
-                  : "flex h-full min-h-0 flex-col select-none pointer-events-none"
+                  : "select-none pointer-events-none"
               }
               style={isUnlocked ? undefined : { filter: "blur(3px)" }}
-            >
-            <div
-              className={
-                isUnlocked ? "" : "min-h-0 flex-1 overflow-y-auto"
-              }
             >
               {/* Subscores */}
               {score && (
@@ -552,12 +547,6 @@ function ResultPage() {
                   </div>
                 </div>
               )}
-            </div>
-            {!isUnlocked && (
-              <div className="flex shrink-0 justify-center py-4 text-amber-200/90">
-                <span className="block text-4xl leading-none">↓</span>
-              </div>
-            )}
             </div>
             </div>
 
