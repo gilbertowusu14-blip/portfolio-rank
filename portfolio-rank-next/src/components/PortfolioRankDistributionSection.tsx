@@ -104,7 +104,7 @@ export default function PortfolioRankDistributionSection() {
   const options: ChartOptions<"bar"> = useMemo(
     () => ({
       responsive: true,
-      maintainAspectRatio: false,
+      maintainAspectRatio: true,
       interaction: { mode: "index" as const, intersect: false },
       layout: {
         padding: { top: 4, right: 8, bottom: 4, left: 8 },
@@ -178,7 +178,7 @@ export default function PortfolioRankDistributionSection() {
           Where Do Most Portfolios Rank?
         </h2>
 
-        <div className="relative mx-auto h-[min(380px,58vw)] w-full max-w-4xl">
+        <div className="relative mx-auto h-64 w-full max-w-4xl md:h-80">
           <div className="relative h-full w-full">
             <ReactChart type="bar" data={data as never} options={options} />
             <div
