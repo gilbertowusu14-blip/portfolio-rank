@@ -441,189 +441,71 @@ function ResultPage() {
           </div>
         </section>
 
-        {/* Full report section — blurred when locked */}
-        <section className="mb-16">
-          <div
-            className={`relative rounded-2xl bg-[#111111] border border-yellow-500/20 px-4 space-y-5 overflow-hidden pt-5 ${
-              isUnlocked ? "pb-5" : "pb-40"
-            }`}
-          >
-            <div
-              className={
-                isUnlocked
-                  ? ""
-                  : "max-h-32 overflow-hidden"
-              }
-            >
-            <div
-              className={
-                isUnlocked
-                  ? ""
-                  : "select-none pointer-events-none"
-              }
-              style={isUnlocked ? undefined : { filter: "blur(3px)" }}
-            >
-              {/* Subscores */}
-              {score && (
-                <div className="space-y-3 mb-4">
-                  <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-[0.18em]">
-                    Full Metric Breakdown
-                  </h2>
-                  {(
-                    Object.entries(score.subscores) as [keyof ScoreSubscores, number][]
-                  ).map(([key, value]) => {
-                    const labelText =
-                      key === "concentrationRisk"
-                        ? "Concentration Risk"
-                        : key === "growthQuality"
-                        ? "Growth Quality"
-                        : key === "valuationRisk"
-                        ? "Valuation Risk"
-                        : key === "drawdownExposure"
-                        ? "Drawdown Exposure"
-                        : key === "marketComparison"
-                        ? "Market Comparison"
-                        : "Diversification";
-                    return (
-                      <div key={key} className="space-y-1">
-                        <div className="flex justify-between text-xs text-slate-400">
-                          <span>{labelText}</span>
-                          <span className="text-slate-200 font-medium">
-                            {(value / 10).toFixed(1)}/10
-                          </span>
-                        </div>
-                        <div className="h-2 w-full rounded-full bg-[#1a1a1a] overflow-hidden">
-                          <div
-                            className="h-full bg-[#f59e0b]"
-                            style={{ width: `${Math.min(value, 100)}%` }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* Strengths / weaknesses / actions / blueprint */}
-              {ai && (
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-xs font-semibold text-emerald-400 uppercase tracking-[0.18em] mb-1">
-                      Strengths
-                    </h3>
-                    <ul className="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
-                      {ai.strengths.map((item, idx) => (
-                        <li key={idx}>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h3 className="text-xs font-semibold text-rose-400 uppercase tracking-[0.18em] mb-1">
-                      Weaknesses
-                    </h3>
-                    <ul className="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
-                      {ai.weaknesses.map((item, idx) => (
-                        <li key={idx}>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h3 className="text-xs font-semibold text-sky-400 uppercase tracking-[0.18em] mb-1">
-                      Actions
-                    </h3>
-                    <ul className="text-sm text-slate-300 space-y-1.5 list-disc list-inside">
-                      {ai.actions.map((item, idx) => (
-                        <li key={idx}>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-[0.18em] mb-1">
-                      Blueprint
-                    </h3>
-                    <p className="text-sm text-slate-300 leading-relaxed">
-                      {ai.blueprint}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-            </div>
-
-            {/* Dark overlay + unlock card — hidden when unlocked */}
-            {!isUnlocked && (
-            <>
-              <div
-                className="absolute inset-0 z-[1] bg-gradient-to-b from-[#0a0a0a]/80 via-[#0a0a0a]/90 to-[#0a0a0a]/95"
-                aria-hidden
-              />
-              <div className="absolute top-5 left-1/2 z-[8] w-full max-w-sm px-4 -translate-x-1/2">
-                <div className="mb-40 rounded-2xl bg-[#111111] border border-yellow-500/20 px-5 py-5 shadow-2xl">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-lg text-yellow-400">🔒</span>
-                    <h2 className="font-heading text-sm font-semibold text-white">
-                      Unlock Your Full Report:
-                    </h2>
-                  </div>
-                  <ul className="text-xs text-slate-300 space-y-1.5 mb-4">
-                    <li className="flex items-start gap-2">
-                      <span aria-hidden>🔍</span>
-                      <span>
-                        See why your score is {displayScore != null ? displayScore.toFixed(1) : "–"}/10 — and how to reach {displayTarget != null ? displayTarget.toFixed(1) : "–"}/10
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span aria-hidden>⚠️</span>
-                      <span>
-                        The exact weaknesses dragging your portfolio down
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span aria-hidden>🎯</span>
-                      <span>
-                        A step-by-step action plan built for your specific holdings
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span aria-hidden>📊</span>
-                      <span>
-                        Full breakdown of all 6 metrics with your real numbers
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span aria-hidden>🗺️</span>
-                      <span>
-                        Your personalised Portfolio Blueprint — what to buy, trim and avoid
-                      </span>
-                    </li>
-                  </ul>
-
-                <div className="text-[10px] font-semibold tracking-[0.24em] text-slate-500 mb-1">
-                  ONE TIME PAYMENT
-                </div>
-                <button
-                  type="button"
-                  onClick={handleUnlock}
-                  disabled={unlockLoading || (!stored && !score)}
-                  className="w-full mb-1.5 rounded-full text-sm font-semibold py-2.5 text-white disabled:opacity-70 disabled:cursor-not-allowed"
-                  style={{
-                    background: PAYWALL_GOLD_BG,
-                    boxShadow: `0 0 30px rgba(${PAYWALL_GOLD_RGB},0.4)`,
-                  }}
-                >
-                  {unlockLoading ? "Redirecting to payment…" : "Unlock Full Report — £2.49"}
-                </button>
-                <div className="flex items-center justify-between text-[10px] mt-1">
-                  <span className="text-slate-500">
-                    ONE-TIME PAYMENT · NO SUBSCRIPTION
-                  </span>
-                </div>
-                </div>
+        {!isUnlocked && (
+          <section className="mb-16">
+            <div className="rounded-2xl border border-yellow-500/20 bg-[#111111] px-5 py-5 shadow-2xl">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="text-lg text-yellow-400">🔒</span>
+                <h2 className="font-heading text-sm font-semibold text-white">
+                  Unlock Your Full Report:
+                </h2>
               </div>
-            </>
-            )}
-          </div>
-        </section>
+              <ul className="mb-4 space-y-1.5 text-xs text-slate-300">
+                <li className="flex items-start gap-2">
+                  <span aria-hidden>🔍</span>
+                  <span>
+                    See why your score is {displayScore != null ? displayScore.toFixed(1) : "–"}/10 — and how to reach {displayTarget != null ? displayTarget.toFixed(1) : "–"}/10
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span aria-hidden>⚠️</span>
+                  <span>
+                    The exact weaknesses dragging your portfolio down
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span aria-hidden>🎯</span>
+                  <span>
+                    A step-by-step action plan built for your specific holdings
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span aria-hidden>📊</span>
+                  <span>
+                    Full breakdown of all 6 metrics with your real numbers
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span aria-hidden>🗺️</span>
+                  <span>
+                    Your personalised Portfolio Blueprint — what to buy, trim and avoid
+                  </span>
+                </li>
+              </ul>
+
+              <div className="mb-1 text-[10px] font-semibold tracking-[0.24em] text-slate-500">
+                ONE TIME PAYMENT
+              </div>
+              <button
+                type="button"
+                onClick={handleUnlock}
+                disabled={unlockLoading || (!stored && !score)}
+                className="mb-1.5 w-full rounded-full py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                style={{
+                  background: PAYWALL_GOLD_BG,
+                  boxShadow: `0 0 30px rgba(${PAYWALL_GOLD_RGB},0.4)`,
+                }}
+              >
+                {unlockLoading ? "Redirecting to payment…" : "Unlock Full Report — £2.49"}
+              </button>
+              <div className="mt-1 flex items-center justify-between text-[10px]">
+                <span className="text-slate-500">
+                  ONE-TIME PAYMENT · NO SUBSCRIPTION
+                </span>
+              </div>
+            </div>
+          </section>
+        )}
         </>
         )}
 
