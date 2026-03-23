@@ -51,10 +51,6 @@ const COUNTS = Array.from({ length: 19 }, (_, i) => {
   return Math.max(4, Math.round(340 * raw));
 });
 
-const AVG_SCORE = 5.8;
-/** Linear position on 1.0–10.0 axis for average marker */
-const AVG_LINE_LEFT_PCT = ((AVG_SCORE - 1) / (10 - 1)) * 100;
-
 const GRID = "rgba(255, 255, 255, 0.05)";
 
 export default function PortfolioRankDistributionSection() {
@@ -172,7 +168,7 @@ export default function PortfolioRankDistributionSection() {
 
   return (
     <section className="bg-transparent py-10 md:py-12">
-      <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#0d0d0d] p-6 shadow-[0_2px_12px_rgba(212,132,10,0.15)] md:p-8">
+      <div className="relative overflow-hidden rounded-2xl border border-yellow-500/20 bg-[#0d0d0d] px-6 pb-4 pt-6 shadow-[0_2px_12px_rgba(212,132,10,0.15)] md:px-8 md:pb-4 md:pt-8">
         <div className="absolute -top-px left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
         <h2 className="font-heading mb-8 text-center text-2xl font-semibold text-white md:text-3xl">
           Where Do Most Portfolios Rank?
@@ -181,27 +177,6 @@ export default function PortfolioRankDistributionSection() {
         <div className="relative mx-auto h-64 w-full max-w-4xl md:h-80">
           <div className="relative h-full w-full">
             <ReactChart type="bar" data={data as never} options={options} />
-            <div
-              className="pointer-events-none absolute inset-0 z-10"
-              style={{
-                padding: "4px 8px 4px 8px",
-              }}
-              aria-hidden
-            >
-              <div className="relative h-full w-full">
-                <div
-                  className="absolute rounded-md border border-amber-500/40 bg-[#111111]/95 px-2 py-0.5 text-[11px] font-bold text-amber-400"
-                  style={{
-                    left: `${AVG_LINE_LEFT_PCT}%`,
-                    top: "2%",
-                    transform: "translateX(-50%)",
-                    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.15)",
-                  }}
-                >
-                  Avg: 5.8
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
