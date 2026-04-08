@@ -56,6 +56,7 @@ const TIER1_TICKERS = new Set(
     "FWRG",
     "VWCE",
     "ISF",
+    "VWRP",
   ].map((s) => s.toUpperCase())
 );
 
@@ -83,8 +84,11 @@ function classifyHolding(
   profile: FMPProfile | undefined
 ): Tier {
   const ticker = holding.ticker.toUpperCase();
-  const type = (holding.type || profile?.type || "").toLowerCase();
-  const isEtf = type === "etf";
+  const holdingType = (holding.type ?? "").trim().toLowerCase();
+  const profileType = (profile?.type ?? "").trim().toLowerCase();
+  // Either source can mark an ETF (Yahoo quoteType → profile.type "etf", or client-held type).
+  // Never let a wrong holding.type hide profile.type — unknown ETFs must stay Tier 2+, never 3/4.
+  const isEtf = holdingType === "etf" || profileType === "etf";
   const mktCap = profile?.mktCap ?? 0;
   const beta = profile?.beta;
   const betaNum =
