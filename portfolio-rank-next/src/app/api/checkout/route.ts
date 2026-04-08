@@ -85,6 +85,7 @@ export async function POST(request: NextRequest) {
       success_url: successUrl,
       cancel_url: `${baseUrl}/result`,
       metadata,
+      allow_promotion_codes: true,
     });
 
     const url = session.url;
