@@ -14,6 +14,9 @@ export interface PortfolioHolding {
   ticker: string;
   weight: number;
   type: string;
+  /** Optional Yahoo-style names when available (improves UCITS ETF detection). */
+  longName?: string;
+  shortName?: string;
 }
 
 export interface ScoreSubscores {
@@ -65,6 +68,70 @@ const TIER2_TICKERS = new Set(
   ["QQQ", "XLV", "XLP", "XLE", "XLF", "XLK", "ARKK"].map((s) => s.toUpperCase())
 );
 
+/** UCITS ETFs Yahoo sometimes types as equity; Tier 2 minimum when names are missing. Not Tier 1. */
+const UCITS_FALLBACK_ETF_TICKERS = new Set(
+  ["CNDX", "IUSA"].map((s) => s.toUpperCase())
+);
+
+const ETF_NAME_KEYWORDS = [
+  "ETF",
+  "Fund",
+  "Index",
+  "Trust",
+  "UCITS",
+  "Accumulation",
+  "Income",
+  "iShares",
+  "Vanguard",
+  "Invesco",
+  "HSBC",
+  "Xtrackers",
+  "Amundi",
+] as const;
+
+function stripExchangeSuffix(ticker: string): string {
+  const i = ticker.lastIndexOf(".");
+  return i === -1 ? ticker : ticker.slice(0, i);
+}
+
+function nameBlobLooksLikeEtf(nameBlob: string): boolean {
+  if (!nameBlob.trim()) return false;
+  const lower = nameBlob.toLowerCase();
+  for (const kw of ETF_NAME_KEYWORDS) {
+    if (lower.includes(kw.toLowerCase())) return true;
+  }
+  if (lower.includes("ftse")) return true;
+  if (lower.includes("s&p")) return true;
+  if (lower.includes("nasdaq")) return true;
+  if (lower.includes("msci")) return true;
+  if (lower.includes("all world")) return true;
+  if (lower.includes("total market")) return true;
+  return false;
+}
+
+function looksLikeEtfSecondary(
+  holding: PortfolioHolding,
+  profile: FMPProfile | undefined,
+  tickerUpper: string
+): boolean {
+  const pNames = profile as FMPProfile & { longName?: string; shortName?: string };
+  const nameBlob = [
+    holding.longName,
+    holding.shortName,
+    pNames?.longName,
+    pNames?.shortName,
+  ]
+    .filter((s): s is string => typeof s === "string" && s.trim().length > 0)
+    .join(" ");
+
+  if (nameBlobLooksLikeEtf(nameBlob)) return true;
+
+  const base = stripExchangeSuffix(tickerUpper);
+  if (UCITS_FALLBACK_ETF_TICKERS.has(base)) return true;
+
+  return false;
+}
+
 const BLUE_CHIP_MKCAP = 100e9; // $100bn
 const BETA_BLUE_CHIP_MAX = 1.5;
 const SMALL_WEIGHT_PCT = 5;
@@ -88,14 +155,19 @@ function classifyHolding(
   const profileType = (profile?.type ?? "").trim().toLowerCase();
   // Either source can mark an ETF (Yahoo quoteType → profile.type "etf", or client-held type).
   // Never let a wrong holding.type hide profile.type — unknown ETFs must stay Tier 2+, never 3/4.
-  const isEtf = holdingType === "etf" || profileType === "etf";
+  const isPrimaryEtf = holdingType === "etf" || profileType === "etf";
+  const isMutualFund = holdingType === "mutualfund" || profileType === "mutualfund";
+  const isSecondaryEtf = looksLikeEtfSecondary(holding, profile, ticker);
+  const isTier2Listed = TIER2_TICKERS.has(ticker);
+  const etfLike = isPrimaryEtf || isMutualFund || isSecondaryEtf || isTier2Listed;
+
   const mktCap = profile?.mktCap ?? 0;
   const beta = profile?.beta;
   const betaNum =
-    beta != null && !Number.isNaN(beta) ? beta : isEtf ? 1.0 : 1.4;
+    beta != null && !Number.isNaN(beta) ? beta : etfLike ? 1.0 : 1.4;
 
   if (TIER1_TICKERS.has(ticker)) return 1;
-  if (isEtf || TIER2_TICKERS.has(ticker)) {
+  if (etfLike) {
     return 2;
   }
   if (mktCap > BLUE_CHIP_MKCAP && betaNum < BETA_BLUE_CHIP_MAX) {
